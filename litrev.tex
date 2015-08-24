@@ -1,0 +1,246 @@
+\documentclass[a4paper,12pt]{article}
+
+\usepackage[utf8x]{inputenc}
+\usepackage[english,romanian,hungarian]{babel}
+\usepackage[margin=1in,includefoot]{geometry}
+
+\usepackage{fancyhdr}
+\usepackage{indentfirst}
+
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,urlcolor=blue,pdfborder={0 0 0}}
+\usepackage{multirow}
+\usepackage[table,xcdraw]{xcolor}
+
+\usepackage{booktabs}
+\usepackage{multicol}
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+
+\setlength{\parindent}{2em}
+\setlength{\parskip}{1.25em}
+
+\renewcommand{\arraystretch}{2}
+
+\author{Roland Bogosi}
+\title{Penetration Testing and Open-Source Toolkits}
+
+\begin{document}
+
+\thispagestyle{empty}
+\selectlanguage{english}
+
+	\begin{center}
+		\textsc{\Large Sapientia University, Târgu-Mureș}\\
+		\textsc{\Large Faculty of Technical and Human Sciences}\\
+		\vspace{1mm}
+		\textsc{\Large Computer Engineering}\\
+		
+		\vspace{3.4in}
+		
+		{\LARGE Penetration Testing and Vulnerability Assessment}
+		
+		\vspace{0.5in}
+		
+		\textbf{\Large Literature Review}
+		
+		\vspace{3.5in}
+	\end{center}
+	
+	\begin{flushright}
+		{\Large \textit{Bogosi Roland}}
+	\end{flushright}
+
+\newpage
+\thispagestyle{empty}
+\section*{Table of Contents}
+\selectlanguage{english}
+
+	\begingroup
+	\renewcommand{\section}[2]{}
+	\hypersetup{linkcolor=blue}
+	\setlength{\parskip}{0em}
+	\tableofcontents
+	\endgroup
+
+\newpage
+\section{Introduction}
+
+	As the world is embracing digital technologies more and more, a lot of our services are keeping up with this trend, and have started being digitally available for the purposes of easier and faster accessibility. Digital data can be processed much faster and reliably than its analogue equivalents, which benefits the service providers by keeping the costs of providing their services low. Customers are also saved the headache of experiencing routine unpleasantries which are now alleviated by digital services, such as queuing up in order to pay the bills for various services one has subscribed to.
+	
+	Service providers, however, are not the only consumers of the benefits handed to us by the Internet. Advancements made in the past decade in the fields of software, hardware and network connectivity, have led to an exponential growth in the number of devices connected to the Internet. Due to the boom of \textit{IoT}, ("\textit{Internet of Things}") \textit{Cisco} predicts there will be 25 billion devices connected to the Internet by 2015, which number is expected to increase to 50 billion by 2020.\cite{devans11} The pool of unallocated IPv4 addresses was completely depleted when \textit{LACNIC} has allocated their last block on the 10th of June, 2014.\cite{ghouston11} This event symbolically signifies, that the Internet has become way too big for what it was initially envisioned in the 1960's.
+	
+	Our increasing reliance on digital services and data are not without its drawbacks, however. With more and more sensitive information and transactions being done over the Internet, one must question the security of it all. As one idiom states, "\textit{a chain is as strong as its weakest link}," and in the context of Internet-enabled applications, there are a lot of these aforementioned figurative "\textit{links}." Starting from the possibility of there being an attack vector on any layer of the \textit{OSI} between the two communicating devices, down to the vulnerabilities which are specific to the application being executed over the network.
+	
+\subsection{Security Awareness of IT Professionals}
+	
+	As one study done by \textit{BSIMM-V} (\textit{Building Security In Maturity Model}) which included 51 top-tier firms (mostly fortune 500) has concluded\cite{gmcgraw12}, a large percentage of product managers, software developers and system administrators have never received security awareness training nor been instructed to lay an emphasis on security, and as a result they do not prioritize it. One of the reasons why one might \textit{not} consider security awareness to be a priority is due to bogusly thinking that security aware application development and deployment is too costly. A study done by the \textit{Aberdeen Group} has shown that companies who invest in security end up with up-to a four-fold \textit{ROI} ("\textit{Return on Investments}").\cite{aberdeen11}
+	
+	Companies have a long history of showing ignorance instead of security awareness. They're continuously claiming that they are untouchable, however, this is simply not true and these companies have been proven wrong time and time again. One recent example would be \textit{General Motor}'s take on their Internet-connected cars, where their spokesperson claimed that their cars are not "hackable" due to the fact that their entertainment system is separate from the rest of the control systems. A vulnerability was found by two security researchers\cite{cmiller15} which allowed them to inject control messages into the car's CAN bus, effectively allowing them to take control over the car via either WiFi or GSM.
+	
+	Software developers who would like an introduction to security-aware development can look up many of the freely available resources, however, this is not a perfect substitute for the proper training and the appropriate mindset. In some of the times, a vulnerability that was introduced by a developer might not even be their own fault, as more factors come into play in such cases. A developer might be familiar with the quirks and security issues of a specific language/environment/stack, but then be required by circumstance to move out of their comfort zone and either implement a given task in a non-standard way, or in a language they are not familiar enough with. One such case would be a developer of a managed language (for example, C\#) be required to interface with a non-managed language (for example, a library written in C) in which case the developer is now expected to do memory management in a language that does not promote its language management tools for it is a managed language. If said library is more complex, there are very high chances, that the developer will overlook some things (or not be aware they must be looked after in the first place) and bad things can start happening, such as memory leaks and buffer over/underflows. In such case, it is recommended that a seasoned developer write a wrapper for the specific library in \textit{C++/CLI} (successor of \textit{Managed-C++}), a language designed by Microsoft for the intent purpose\cite{hstutter06} of bridging the managed and unmanaged worlds.
+	
+	There are other special circumstances under this argument, for example situations in which the developer of the application might be security-aware, or a proper penetration testing/code review was done, but the proposed security fixes might impact performance, ease of use, or even cause minor to major discomfort for the users. In such cases, risk analysis will be done, and some of these proposed solutions will be rejected as being unjustifiably too obtrusive. It is not the \textit{right} thing to do in such situations, but risk analysis is a pretty standard tool for decision makers.
+	
+	Risk analysis is generally done using the standard risk model formula of:
+	\vspace{1.25em}\\
+	$ Risk = Probability \cdot Impact $
+	
+	The \textit{Open Web Application Security Project} has defined a risk rating methodology\cite{owasp4} specifically for vulnerabilities, wherein they define the variables as:
+	\vspace{1.25em}\\
+	$ Probability = (Threat Agent + Vulnerability) / 8 $\\
+	\indent $ Threat Agent = Skill Level + Motive + Opportunity + Size $\\
+	\indent $ Vulnerability = Discovery + Exploitation + Awareness + Detection $\\
+	\vspace{1.25em}\\
+	$ Impact = (Technical + Business) / 8 $\\
+	\indent $ Technical = Confidentiality + Integrity + Availability + Accountability $\\
+	\indent $ Business = Financial + Reputation + NonCompliance + Privacy Violation $
+	
+	For each factor in the above formula, a rating from 0 to 9 will be specified. After the ratings have been summed up and their means were calculated, the following table can be used to look up the severity of the vulnerability:
+	
+	\begin{multicols}{2}
+		Column 1
+		\columnbreak
+		Column 2
+	\end{multicols}
+	
+	\begin{table}[!htbp]
+		\centering
+		\begin{tabular}{cc}
+			{\bf Score} & {\bf Severity} \\
+			0 to 2.9 & \cellcolor[HTML]{FCFF2F}Low \\
+			3 to 5.9 & \cellcolor[HTML]{F8A102}Medium \\
+			6 to 9 & \cellcolor[HTML]{FE0000}High
+		\end{tabular}
+		\caption{Score Classification}
+		\label{scoreclass}
+	\end{table}
+	
+	\begin{table}[!htbp]
+		\centering
+		\begin{tabular}{ccccc}
+			\multicolumn{1}{l}{} & \multicolumn{1}{l}{} & \multicolumn{3}{c}{{\bf Probability}} \\
+			%\multicolumn{1}{l}{} & {\bf Severity} & \cellcolor[HTML]{EFEFEF}Low &
+			\multicolumn{1}{l}{} &  & \cellcolor[HTML]{EFEFEF}Low & \cellcolor[HTML]{C0C0C0}Medium & \cellcolor[HTML]{9B9B9B}High \\
+			& \cellcolor[HTML]{9B9B9B}High & \cellcolor[HTML]{F8A102}Medium & \cellcolor[HTML]{FE0000}High & \cellcolor[HTML]{FFCCC9}Critical \\
+			& \cellcolor[HTML]{C0C0C0}Medium & \cellcolor[HTML]{FCFF2F}Low & \cellcolor[HTML]{F8A102}Medium & \cellcolor[HTML]{FE0000}High \\
+			\multirow{-3}{*}{{\bf Impact}} & \cellcolor[HTML]{EFEFEF}Low & \cellcolor[HTML]{34FF34}Note & \cellcolor[HTML]{FCFF2F}Low & \cellcolor[HTML]{F8A102}Medium
+		\end{tabular}
+		\caption{Vulnerability Risk Severity}
+		\label{vulnrisksever}
+	\end{table}
+	
+	Another special case would be IoT device ideas that have been funded through the use of crowdfunding platforms. These platforms, such as Kickstarter or IndieGoGo, are the hotbed of young entrepreneurial spirits with fresh ideas wanting to procure enough money in order to have a chance at executing them. Early prototypes of these projects are generally crafted using existing prototyping boards, such as Arduinos and Raspberry PIs. Later, when the proof of concept has proven to be viable and the first batch is moved to manufacturing, a similar architecture is built so as to allow re-use of existing code. This generally means that experimental code written in an environment in which the developer might not be comfortable enough in, is now being shipped as production code. This practice has spawned in the past lots of devices that are vulnerable and might present a huge security risk.\cite{mstan14}
+	
+\subsection{Security Awareness of Home Users}
+	
+	As Internet-connected devices are becoming more and more affordable and easier to use, home users have started adopting more and more of these devices. Unfortunately home users never receive any sort of formal security awareness training, and as such are very easily persuaded to fall for any type of attack which could have been easily prevented had they received a minimal amount of training. Even though, best-practices are usually laid out in the manual of the software being used, users tend to apply ignorance\cite{jnielsen12} even in cases when important notices and warnings are being displayed on the interface of the software and automatically click the "OK"/"Next" buttons, whatever gets them to what they wanted to be doing in the first place.
+	
+	A study done by the \textit{Colorado State University} has had some interesting\cite{ahowe12} results. When testing a group of people self-identified as having \textit{high} to \textit{very high} security awareness, 68\% of them ignored certificate errors on an HTTPS connection, and tried to determine the legitimacy of the said site based only on its content.
+	
+	A similar survey done in the U.K. has determined\cite{sfurnell07} that 93\% of the surveyed users has had some sort of anti-virus software installed, but only 50\% have installed it for themselves, and while this last point would not be an issue in and of itself, only 37\% of the respondents were applying security patches to their operating system on an at least weekly basis.
+	
+	When it comes to devices designed for, and services provided to home users, the balance of ease of use and security always comes into play. Users would like an easy-to-use device or application and would rather sacrifice security in order for experiencing a mild discomfort. In one study, in the context of online banking, a user mentioned that two-factor authentication was \textit{not} "worth spending 5 minutes for \$1.99 purchases"\cite{ecrist14}. In the same study, it is shown that only 27\% of the users have \textit{voluntarily} opted to use multi-factor authentication, when available.
+	
+\subsection{Security Assurance in Enterprise Environments}
+
+	Security is of paramount importance in enterprise environments. In such an environment, hundreds if not thousands of users (employees) depend on the IT infrastructure, and it is business-critical for these services to be functioning and data to be accessible 24/7, otherwise minor to major losses might be incurred. These hundreds or thousands of employees will all have different levels of access, controlled by strict security policies on what they can and can't do or access.
+	
+	Administrators of large organizations, however, generally have to face large amounts of bureaucracy, and need to justify every little change and downtime to their superiors. They are also on a fixed budget, which means they might not be able to use the proper tools for a requested change, or even not being able to upgrade to a more secure version of a software or operating system, as it is "not in the budget" and their justification is rejected, as the superiors do not deem it important enough. The fixed budget is generally kept at a given level for unforeseen expenditures, such as having to adapt to possible legislation changes (for example, regarding storing sensitive customer data) or coping with new business roadmaps, trends and visions.\cite{gkreiz06}
+	
+	Developing, deploying, and administering mission critical projects, are also faced with a few dilemmas, as their project has to stay afloat and secure for years to come, all while the world around them is evolving at an exponential pace.
+	
+	Both administrators of large organizations and developers of mission critical projects therefore opt for versions of software/operating system/libraries usually annotated with \textit{LTS} ("\textit{Long-Term Support}") or \textit{LTSB} ("\textit{Long-Term Servicing Branch}"). These special versions are "feature-frozen", meaning no new features will be added and no bug-fixes will be made that break backwards compatibility, but they continue to receive security patches for a long period of time, usually in the terms of years. Unfortunately there is no known and widely adopted standard as to the expected longevity of such LTS branches, which results in the practice of each project making up its own rules that it deems reasonable enough.
+	
+	Use of these special LTS versions are crucial in these cases, as \textit{without} them, one would have to face a choice as to risk using up-to-date versions, or risk using the version with which it was originally deployed with:
+	
+	\vspace{-0.15in}
+	\begin{itemize}
+		\item Using \textit{up-to-date} software might break the project due to modified behavior or deprecation of functionality. As such, mission critical projects might start misbehaving or breaking completely, which might result in damages.
+		\item Using the version that was originally \textit{deployed with}, means that the software is not receiving any updates, which solves the issues that might present themselves down the road as outlined in the first point. However, no software is perfect, and without applying any security patches, the system now becomes vulnerable to any attacks that might be disclosed during the lifetime of the project.
+	\end{itemize}
+	\vspace{-0.15in}
+	
+	One "celebrity" example for the aforementioned second point would be the \textit{Heartbleed} vulnerability in \textit{OpenSSL}. The project being a universal, highly platform-agnostic and trustworthy cryptography and PKI toolkit was the basis of the majority of daemon software which were using SSL/TLS sockets in the *NIX userland, and was also embedded in IoT devices that had any sort of web interface or have done cryptography in any way, shape or form. Every embedded device deployed with a vulnerable version of OpenSSL is now live and vulnerable, with no easy fix that can be applied by the vendor remotely, in most cases. This has been acknowledged by multiple leading networking gear vendors in statements saying "Cisco and Juniper can't just press a button and immediately replace the vulnerable software running on the machines."\cite{jpaglier14}
+	
+\newpage
+\section{Software Vulnerabilities}
+	
+	The \textit{RFC 2828} and many \textit{NIST} publications define "vulnerability" as "a flaw or weakness in system security procedures, design, implementation, or internal controls that could be exercised (accidentally triggered or intentionally exploited) and result in a security breach or a violation of the system's security policy."\cite{rfc2828,nist80030} What this means in simplified terms is, that a vulnerability is essentially a bug in the software's or web service's code, which when \textit{exploited}, (e.g. specifying an input which was specifically crafted to be bogus and known to trigger the bug) allows users to perform actions they would otherwise not be allowed to, or access data they would otherwise not be privy to.
+	
+\newpage
+\section{Bibliography}
+
+	\begingroup
+	\renewcommand{\section}[2]{}
+	\begin{thebibliography}{}
+		
+		\bibitem{devans11}
+		Dave Evans. \textit{The Internet of Things}. 2011.\\ \url{https://www.cisco.com/web/about/ac79/docs/innov/IoT\_IBSG\_0411FINAL.pdf}
+		
+		\bibitem{ghouston11}
+		Geoff Huston. \textit{IPv4 Address Report, daily generated}. 2015.\\
+		\url{http://www.potaroo.net/tools/ipv4/index.html}
+		
+		\bibitem{gmcgraw12}
+		Gary McGraw. \textit{Data supports need for security awareness training despite naysayers}. 2012.\\
+		\url{http://searchsecurity.techtarget.com/news/2240162630/Data-supports-need-for-awareness-training-despite-naysayers}
+		
+		\bibitem{aberdeen11}
+		Aberdeen Group. \textit{Business Context: The Biggest No-Brainer in Security}. 2011.\\
+		\url{http://www.enterpriseittools.com/sites/default/files/Aberdeen_SecureAppsGetStarted.pdf}
+		
+		\bibitem{cmiller15}
+		Charlie Miller, Chris Valasek. \textit{Remote Exploitation of an Unaltered Passenger Vehicle}. 2015.\\
+		\url{http://illmatics.com/Remote%20Car%20Hacking.pdf}
+		
+		\bibitem{hstutter06}
+		Herb Stutter. \textit{C++/CLI Rationale}. 2006.\\
+		\url{http://www.gotw.ca/publications/C++CLIRationale.pdf}
+		
+		\bibitem{mstan14}
+		Mark Stanislav, Zach Lanier. \textit{The Internet of Fails: Where IoT Has Gone Wrong and How We're Making It Right}. 2014.\\
+		\url{https://www.defcon.org/html/defcon-22/dc-22-speakers.html#Stanislav}
+		
+		\bibitem{jnielsen12}
+		Jakob Nielsen. \textit{User Satisfaction vs. Performance Metrics}. 2012.\\
+		\url{http://www.nngroup.com/articles/satisfaction-vs-performance-metrics/}
+		
+		\bibitem{ahowe12}
+		Adele E. Howe, Indrajit Ray, Mark Roberts, Malgorzata Urbanska, Zinta Byrne. \textit{The Psychology of Security for the Home Computer User}. 2012.\\
+		\url{http://www.ieee-security.org/TC/SP2012/papers/4681a209.pdf}
+		
+		\bibitem{sfurnell07}
+		Steven Furnell, Peter Bryant, and Andy Phippen, \textit{Assessing the Security Perceptions of Personal Internet Users}. Computers \& Security, vol. 26, no. 5, pp. 410–417. 2007.\\
+		\url{http://www.sciencedirect.com/science/article/pii/S0167404807000363}
+		
+		\bibitem{ecrist14}
+		Emiliano De Cristofaro, Honglu Du, Julien Freudiger, Greg Norcie. \textit{A Comparative Usability Study of Two-Factor Authentication}. 2014.\\
+		\url{http://arxiv.org/pdf/1309.5344.pdf}
+		
+		\bibitem{gkreiz06}
+		Gregg Kreizman, Bruce Robertson. \textit{Incorporating Security Into the Enterprise Architecture Process}. 2006.\\
+		\url{https://www.gartner.com/doc/488575}
+		
+		\bibitem{jpaglier14}
+		Jose Pagliery. \textit{Heartbleed bug affects gadgets everywhere}. 2014.\\
+		\url{http://money.cnn.com/2014/04/11/technology/security/heartbleed-gear/}
+		
+		\bibitem{rfc2828}
+		Robert W. Shirey. \textit{RFC 2828: Internet Security Glossary}. 2000.\\
+		\url{https://tools.ietf.org/html/rfc2828}
+		
+		\bibitem{nist80030}
+		Patrick D. Gallagher, Rebecca M. Blank, et al. \textit{NIST Special Publication 800-30: Guide for Conducting Risk Assessments}. 2012.\\
+		\url{http://csrc.nist.gov/publications/nistpubs/800-30-rev1/sp800_30_r1.pdf}
+		
+		\bibitem{owasp4}
+		Matteo Meucci, Andrew Muller, et al. \textit{Open Web Application Security Project Testing Guide 4.0}. 2014.\\
+		\url{https://www.owasp.org/images/5/52/OWASP_Testing_Guide_v4.pdf}
+		
+	\end{thebibliography}
+	\endgroup
+
+\end{document}
