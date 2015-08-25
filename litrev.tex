@@ -12,8 +12,10 @@
 \usepackage{multirow}
 \usepackage[table,xcdraw]{xcolor}
 
+\usepackage{graphicx}
+\usepackage{wrapfig}
+
 \usepackage{booktabs}
-\usepackage{multicol}
 
 \usepackage{amsmath}
 \usepackage{amsfonts}
@@ -82,55 +84,7 @@
 	
 	Software developers who would like an introduction to security-aware development can look up many of the freely available resources, however, this is not a perfect substitute for the proper training and the appropriate mindset. In some of the times, a vulnerability that was introduced by a developer might not even be their own fault, as more factors come into play in such cases. A developer might be familiar with the quirks and security issues of a specific language/environment/stack, but then be required by circumstance to move out of their comfort zone and either implement a given task in a non-standard way, or in a language they are not familiar enough with. One such case would be a developer of a managed language (for example, C\#) be required to interface with a non-managed language (for example, a library written in C) in which case the developer is now expected to do memory management in a language that does not promote its language management tools for it is a managed language. If said library is more complex, there are very high chances, that the developer will overlook some things (or not be aware they must be looked after in the first place) and bad things can start happening, such as memory leaks and buffer over/underflows. In such case, it is recommended that a seasoned developer write a wrapper for the specific library in \textit{C++/CLI} (successor of \textit{Managed-C++}), a language designed by Microsoft for the intent purpose\cite{hstutter06} of bridging the managed and unmanaged worlds.
 	
-	There are other special circumstances under this argument, for example situations in which the developer of the application might be security-aware, or a proper penetration testing/code review was done, but the proposed security fixes might impact performance, ease of use, or even cause minor to major discomfort for the users. In such cases, risk analysis will be done, and some of these proposed solutions will be rejected as being unjustifiably too obtrusive. It is not the \textit{right} thing to do in such situations, but risk analysis is a pretty standard tool for decision makers.
-	
-	Risk analysis is generally done using the standard risk model formula of:
-	\vspace{1.25em}\\
-	$ Risk = Probability \cdot Impact $
-	
-	The \textit{Open Web Application Security Project} has defined a risk rating methodology\cite{owasp4} specifically for vulnerabilities, wherein they define the variables as:
-	\vspace{1.25em}\\
-	$ Probability = (Threat Agent + Vulnerability) / 8 $\\
-	\indent $ Threat Agent = Skill Level + Motive + Opportunity + Size $\\
-	\indent $ Vulnerability = Discovery + Exploitation + Awareness + Detection $\\
-	\vspace{1.25em}\\
-	$ Impact = (Technical + Business) / 8 $\\
-	\indent $ Technical = Confidentiality + Integrity + Availability + Accountability $\\
-	\indent $ Business = Financial + Reputation + NonCompliance + Privacy Violation $
-	
-	For each factor in the above formula, a rating from 0 to 9 will be specified. After the ratings have been summed up and their means were calculated, the following table can be used to look up the severity of the vulnerability:
-	
-	\begin{multicols}{2}
-		Column 1
-		\columnbreak
-		Column 2
-	\end{multicols}
-	
-	\begin{table}[!htbp]
-		\centering
-		\begin{tabular}{cc}
-			{\bf Score} & {\bf Severity} \\
-			0 to 2.9 & \cellcolor[HTML]{FCFF2F}Low \\
-			3 to 5.9 & \cellcolor[HTML]{F8A102}Medium \\
-			6 to 9 & \cellcolor[HTML]{FE0000}High
-		\end{tabular}
-		\caption{Score Classification}
-		\label{scoreclass}
-	\end{table}
-	
-	\begin{table}[!htbp]
-		\centering
-		\begin{tabular}{ccccc}
-			\multicolumn{1}{l}{} & \multicolumn{1}{l}{} & \multicolumn{3}{c}{{\bf Probability}} \\
-			%\multicolumn{1}{l}{} & {\bf Severity} & \cellcolor[HTML]{EFEFEF}Low &
-			\multicolumn{1}{l}{} &  & \cellcolor[HTML]{EFEFEF}Low & \cellcolor[HTML]{C0C0C0}Medium & \cellcolor[HTML]{9B9B9B}High \\
-			& \cellcolor[HTML]{9B9B9B}High & \cellcolor[HTML]{F8A102}Medium & \cellcolor[HTML]{FE0000}High & \cellcolor[HTML]{FFCCC9}Critical \\
-			& \cellcolor[HTML]{C0C0C0}Medium & \cellcolor[HTML]{FCFF2F}Low & \cellcolor[HTML]{F8A102}Medium & \cellcolor[HTML]{FE0000}High \\
-			\multirow{-3}{*}{{\bf Impact}} & \cellcolor[HTML]{EFEFEF}Low & \cellcolor[HTML]{34FF34}Note & \cellcolor[HTML]{FCFF2F}Low & \cellcolor[HTML]{F8A102}Medium
-		\end{tabular}
-		\caption{Vulnerability Risk Severity}
-		\label{vulnrisksever}
-	\end{table}
+	There are other special circumstances under this argument, for example situations in which the developer of the application might be security-aware, or a proper penetration testing/code review was done, but the proposed security fixes might impact performance, ease of use, or even cause minor to major discomfort for the users. In such cases, risk analysis will be done, and some of these proposed solutions will be rejected as being unjustifiably too obtrusive. It is not the \textit{right} thing to do in such situations, but risk analysis[\ref{ssec:vulnriskanal}] is a pretty standard tool for decision makers.
 	
 	Another special case would be IoT device ideas that have been funded through the use of crowdfunding platforms. These platforms, such as Kickstarter or IndieGoGo, are the hotbed of young entrepreneurial spirits with fresh ideas wanting to procure enough money in order to have a chance at executing them. Early prototypes of these projects are generally crafted using existing prototyping boards, such as Arduinos and Raspberry PIs. Later, when the proof of concept has proven to be viable and the first batch is moved to manufacturing, a similar architecture is built so as to allow re-use of existing code. This generally means that experimental code written in an environment in which the developer might not be comfortable enough in, is now being shipped as production code. This practice has spawned in the past lots of devices that are vulnerable and might present a huge security risk.\cite{mstan14}
 	
@@ -165,6 +119,87 @@
 	
 	One "celebrity" example for the aforementioned second point would be the \textit{Heartbleed} vulnerability in \textit{OpenSSL}. The project being a universal, highly platform-agnostic and trustworthy cryptography and PKI toolkit was the basis of the majority of daemon software which were using SSL/TLS sockets in the *NIX userland, and was also embedded in IoT devices that had any sort of web interface or have done cryptography in any way, shape or form. Every embedded device deployed with a vulnerable version of OpenSSL is now live and vulnerable, with no easy fix that can be applied by the vendor remotely, in most cases. This has been acknowledged by multiple leading networking gear vendors in statements saying "Cisco and Juniper can't just press a button and immediately replace the vulnerable software running on the machines."\cite{jpaglier14}
 	
+\subsection{Security Assurance in the Financial Sector}
+
+	\begin{wrapfigure}{r}{0.35\textwidth}
+		\vspace{-11pt}
+		\centering
+		\includegraphics[scale=0.5]{pci.png}
+	\end{wrapfigure}
+
+	In the financial sector, major card vendors (such as Visa and MasterCard) have joined forces in order to form a council called \textit{Payment Card Industry Security Standards Council} which would then set forth a list of strict rules and requirements for parties handling sensitive financial data. These are outlined in a document called \textit{PCI DSS}. (\textit{Payment Card Industry Data Security Standard})
+	
+	Any company handling sensitive card holder information (such as merchants, payment gateways, banks, etc.) of the participating card schemes (such as Visa and MasterCard) are required to be \textit{PCI Compliant}, which means they follow the rules and regulations set forth in the \textit{PCI DSS} document. Compliance is then assessed either by an external \textit{QSA} (\textit{Qualified Security Assessor}) or, when the company is processing smaller volumes of transactions, a \textit{SAQ} (\textit{Self-Assessment Questionnaire}) can be filled out by the responsible persons within the company. Compliances are re-assessed every year, and companies processing sensitive card holder information who are \textit{not} compliant will be fined by the card schemes for every month and occurrence of non-compliance.\cite{wfargo15}
+	
+	The aforementioned document lays out 12 major requirements\cite{pcidss31} each with its own set of checklists, in order to determine full compliance with them. For the purposes of this thesis, the following requirements will be examined and discussed:
+	
+	\vspace{-0.15in}
+	\begin{itemize}
+		\item Requirement 6: "Develop and maintain secure systems and applications"
+		\item Requirement 11: "Regularly test security systems and processes"
+	\end{itemize}
+	\vspace{-0.15in}
+	
+	Both of these requirements have rules whose execution goes beyond the complexity that a few check boxes can convey, and as such have supplemental information available on the website of the council, in order to further clarify what the compliance requirements mean, address frequently asked questions and close eventual loopholes.
+	
+	The section regarding the development and maintenance of secure systems ($6^{th}$ requirement, further clarifications in \cite{pcireq6}) requires merchants to firewall and conduct a code review of their public-facing web applications. These code reviews can either be done manually by developers, or through automated tools, which are generally known as \textit{static source code analyzers}. After the deployment of the reviewed code to production, another requirement is the use of \textit{WAF} (\textit{Web Application Firewall}) whose job is to stand behind the user and the web application, trying to catch and identify any known attack vectors and common vulnerabilities.
+	
+	The second section of interest, regarding the regular testing of secure systems ($11^{th}$ requirement, further clarifications in \cite{pcireq11}) requires merchants to conduct a penetration test at least yearly (and after every significant change to the infrastructure) by a qualified personnel. The penetration test has to cover the entire environment storing and working with the sensitive data, has to include the testing of the \textit{Network} and \textit{Application layers}, and be conducted both from an \textit{internal} and \textit{external perspective}, so that sensitive customer data is protected both from attacks from outside sources (such as hackers), and attacks from inside sources (such as rouge employees).
+	
+	While strict rules are set forth for protecting sensitive data, merchants tend to try and get away with the least amount of strictness they can still get compliance certified for, by skipping rules marked as "best practice, not requirement" and rules which they can tick on a \textit{technicality} due to the phrasing of the sentence. One such example would be the fact that for a long period of time, it was possible to \textit{trick} the code review requirement by substituting automated source code analyzers with automated penetration testing, however, since version 3.0 of the security standard, it has been clarified that penetration testing is a mandatory requirement in a different section, and as such they are not a substitute for code reviews.
+	
+\subsection{Government Mandated Security}
+	
+	The standards discussed in previous sections were all \textit{best practices} where implementing bodies would do their \textit{best effort} on complying, none of it was mandated\footnote{In 2009, Nevada (USA), then a year later, the State of Washington (USA), incorporated \textit{PCI DSS} into state law\cite{wash10}, however, the incorporated standard's sole purpose is to shield compliant parties from liability in case of a data breach.}.
+	
+	Besides various "computer access acts" around the world, making unauthorized computer access punishable by law, there is not much regulation for the relevant parties regarding storing and handling sensitive information. This results in a shifting  of the liability from the data holder with low security to the person accessing the system without authorization. The problematic part in this scenario is that this means once the infrastructure has been penetrated, the data is freely available for unauthorized consumption, whereas if stricter rules were mandated regarding storing sensitive data, it might have not been available in the first place.
+	
+	There is, however, at least one sector in which there is prominent government mandated security. In the USA, the field of public health is regulated by \textit{HIPAA} (\textit{Health Insurance Portability and Accountability Act}), which was signed into law\cite{hipaa96} in 1996, and amongst others, sets forth rules and requirements about confidential handling of protected health information.
+	
+\newpage
+\subsection{Vulnerability Risk Analysis} \label{ssec:vulnriskanal}
+
+	When a vulnerability is discovered during development, or later via penetration testing, and its fix would require breaking changes or other unwanted issues, risk analysis is performed in order to assess its threat using the standard risk model formula of:
+	\vspace{1.25em}\\
+	$ Risk = Probability \cdot Impact $
+	
+	The \textit{Open Web Application Security Project} has defined a risk rating methodology\cite{owasp4} specifically for vulnerabilities, wherein they define the variables as a geometric mean of the following factors:
+	\vspace{1.25em}\\
+	$ Probability = (Threat Agent + Vulnerability) / 8 $\\
+	\indent $ Threat Agent = Skill Level + Motive + Opportunity + Size $\\
+	\indent $ Vulnerability = Discovery + Exploitation + Awareness + Detection $\\
+	$ Impact = (Technical + Business) / 8 $\\
+	\indent $ Technical = Confidentiality + Integrity + Availability + Accountability $\\
+	\indent $ Business = Financial + Reputation + NonCompliance + Privacy Violation $
+	
+	For each factor in the above formula, a rating from 0 to 9 will be specified. After the ratings have been summed up and their means were calculated, the following table can be used to look up the severity of the vulnerability:
+	
+	\begin{table}[!htbp]
+		\centering
+		\begin{tabular}{cc}
+			{\bf Score} & {\bf Severity} \\
+			0 to 2.$\bar{9}$ & \cellcolor[HTML]{FCFF2F}Low \\
+			3 to 5.$\bar{9}$ & \cellcolor[HTML]{F8A102}Medium \\
+			6 to 9 & \cellcolor[HTML]{FE0000}High
+		\end{tabular}
+		\caption{Score Classification}
+		\label{scoreclass}
+	\end{table}
+	
+	\begin{table}[!htbp]
+		\centering
+		\begin{tabular}{ccccc}
+			\multicolumn{1}{l}{} & \multicolumn{1}{l}{} & \multicolumn{3}{c}{{\bf Probability}} \\
+			%\multicolumn{1}{l}{} & {\bf Severity} & \cellcolor[HTML]{EFEFEF}Low &
+			\multicolumn{1}{l}{} &  & \cellcolor[HTML]{EFEFEF}Low & \cellcolor[HTML]{C0C0C0}Medium & \cellcolor[HTML]{9B9B9B}High \\
+			& \cellcolor[HTML]{9B9B9B}High & \cellcolor[HTML]{F8A102}Medium & \cellcolor[HTML]{FE0000}High & \cellcolor[HTML]{FFCCC9}Critical \\
+			& \cellcolor[HTML]{C0C0C0}Medium & \cellcolor[HTML]{FCFF2F}Low & \cellcolor[HTML]{F8A102}Medium & \cellcolor[HTML]{FE0000}High \\
+			\multirow{-3}{*}{{\bf Impact}} & \cellcolor[HTML]{EFEFEF}Low & \cellcolor[HTML]{34FF34}Note & \cellcolor[HTML]{FCFF2F}Low & \cellcolor[HTML]{F8A102}Medium
+		\end{tabular}
+		\caption{Vulnerability Risk Severity}
+		\label{vulnrisksever}
+	\end{table}
+
 \newpage
 \section{Software Vulnerabilities}
 	
@@ -228,6 +263,14 @@
 		Jose Pagliery. \textit{Heartbleed bug affects gadgets everywhere}. 2014.\\
 		\url{http://money.cnn.com/2014/04/11/technology/security/heartbleed-gear/}
 		
+		\bibitem{wfargo15}
+		Wells Fargo. \textit{Data Security / PCI Mandatory Compliance Programs}. 2015.\\
+		\url{https://www.wellsfargo.com/biz/merchant/service/manage/risk/security}
+		
+		\bibitem{owasp4}
+		Matteo Meucci, Andrew Muller, et al. \textit{Open Web Application Security Project Testing Guide 4.0}. 2014.\\
+		\url{https://www.owasp.org/images/5/52/OWASP_Testing_Guide_v4.pdf}
+		
 		\bibitem{rfc2828}
 		Robert W. Shirey. \textit{RFC 2828: Internet Security Glossary}. 2000.\\
 		\url{https://tools.ietf.org/html/rfc2828}
@@ -236,9 +279,25 @@
 		Patrick D. Gallagher, Rebecca M. Blank, et al. \textit{NIST Special Publication 800-30: Guide for Conducting Risk Assessments}. 2012.\\
 		\url{http://csrc.nist.gov/publications/nistpubs/800-30-rev1/sp800_30_r1.pdf}
 		
-		\bibitem{owasp4}
-		Matteo Meucci, Andrew Muller, et al. \textit{Open Web Application Security Project Testing Guide 4.0}. 2014.\\
-		\url{https://www.owasp.org/images/5/52/OWASP_Testing_Guide_v4.pdf}
+		\bibitem{pcidss31}
+		Payment Card Industry Security Standards Council. \textit{Payment Card Industry Data Security Standard, Version 3.1}. 2015.\\
+		\url{https://www.pcisecuritystandards.org/documents/PCI_DSS_v3-1.pdf}
+		
+		\bibitem{pcireq6}
+		Payment Card Industry Security Standards Council. \textit{Information Supplement: Requirement 6.6 Code Reviews and Application Firewalls Clarified}. 2008.\\
+		\url{https://www.pcisecuritystandards.org/pdfs/infosupp_6_6_applicationfirewalls_codereviews.pdf}
+		
+		\bibitem{pcireq11}
+		Payment Card Industry Security Standards Council, Penetration Test Guidance Special Interest Group. \textit{Information Supplement: Penetration Testing Guidance}. 2015.\\
+		\url{https://www.pcisecuritystandards.org/documents/Penetration_Testing_Guidance_March_2015.pdf}
+		
+		\bibitem{wash10}
+		State of Washington. \textit{Engrossed Second Substitute House Bill 1149}. 2010.\\
+		\url{http://apps.leg.wa.gov/documents/billdocs/2009-10/Pdf/Bills/Session\%20Laws/House/1149-S2.SL.pdf}
+		
+		\bibitem{hipaa96}
+		United States Congress. \textit{Health Insurance Portability and Accountability Act}. 1996.\\
+		\url{http://www.gpo.gov/fdsys/pkg/STATUTE-110/pdf/STATUTE-110-Pg1936.pdf}
 		
 	\end{thebibliography}
 	\endgroup
