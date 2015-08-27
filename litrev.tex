@@ -82,9 +82,9 @@
 	
 	Companies have a long history of showing ignorance instead of security awareness. They're continuously claiming that they are untouchable, however, this is simply not true and these companies have been proven wrong time and time again. One recent example would be \textit{General Motor}'s take on their Internet-connected cars, where their spokesperson claimed that their cars are not "hackable" due to the fact that their entertainment system is separate from the rest of the control systems. A vulnerability was found by two security researchers\cite{cmiller15} which allowed them to inject control messages into the car's CAN bus, effectively allowing them to take control over the car via either WiFi or GSM.
 	
-	Software developers who would like an introduction to security-aware development can look up many of the freely available resources, however, this is not a perfect substitute for the proper training and the appropriate mindset. In some of the times, a vulnerability that was introduced by a developer might not even be their own fault, as more factors come into play in such cases. A developer might be familiar with the quirks and security issues of a specific language/environment/stack, but then be required by circumstance to move out of their comfort zone and either implement a given task in a non-standard way, or in a language they are not familiar enough with. One such case would be a developer of a managed language (for example, C\#) be required to interface with a non-managed language (for example, a library written in C) in which case the developer is now expected to do memory management in a language that does not promote its language management tools for it is a managed language. If said library is more complex, there are very high chances, that the developer will overlook some things (or not be aware they must be looked after in the first place) and bad things can start happening, such as memory leaks and buffer over/underflows. In such case, it is recommended that a seasoned developer write a wrapper for the specific library in \textit{C++/CLI} (successor of \textit{Managed-C++}), a language designed by Microsoft for the intent purpose\cite{hstutter06} of bridging the managed and unmanaged worlds.
+	Software developers who would like an introduction to security-aware development can look up many of the freely available resources, however, this is not a perfect substitute for the proper training and the appropriate mindset. In some of the times, a vulnerability that was introduced by a developer might not even be their own fault, as more factors come into play in such cases. A developer might be familiar with the quirks and security issues of a specific language/environment/stack, but then be required by circumstance to move out of their comfort zone and either implement a given task in a non-standard way, or in a language they are not familiar enough with. One such case would be a developer of a managed language (for example, C\#) be required to interface with a non-managed language (for example, a library written in C) in which case the developer is now expected to do memory management in a language that does not promote its language management tools for it is a managed language. If said library is more complex, there are very high chances, that the developer will overlook some aspects (or not be aware they must be considered in the first place) and undesirable consequences may start happening, such as memory leaks and buffer over/underflows. In such case, it is recommended that a seasoned developer write a wrapper for the specific library in \textit{C++/CLI} (successor of \textit{Managed-C++}), a language designed by Microsoft for the intent purpose\cite{hstutter06} of bridging the managed and unmanaged worlds.
 	
-	There are other special circumstances under this argument, for example situations in which the developer of the application might be security-aware, or a proper penetration testing/code review was done, but the proposed security fixes might impact performance, ease of use, or even cause minor to major discomfort for the users. In such cases, risk analysis will be done, and some of these proposed solutions will be rejected as being unjustifiably too obtrusive. It is not the \textit{right} thing to do in such situations, but risk analysis[\ref{ssec:vulnriskanal}] is a pretty standard tool for decision makers.
+	There are other special circumstances under this argument, for example situations in which the developer of the application might be security-aware, or a proper penetration testing/code review was done, but the proposed security fixes might impact performance, ease of use, or even cause minor to major discomfort for the users. In such cases, risk analysis will be done, and some of these proposed solutions will be rejected as being unjustifiably too obtrusive. It is not the \textit{right} course of action in such situations, but risk analysis[\ref{ssec:vulnriskanal}] is a pretty standard tool for decision makers.
 	
 	Another special case would be IoT device ideas that have been funded through the use of crowdfunding platforms. These platforms, such as Kickstarter or IndieGoGo, are the hotbed of young entrepreneurial spirits with fresh ideas wanting to procure enough money in order to have a chance at executing them. Early prototypes of these projects are generally crafted using existing prototyping boards, such as Arduinos and Raspberry PIs. Later, when the proof of concept has proven to be viable and the first batch is moved to manufacturing, a similar architecture is built so as to allow re-use of existing code. This generally means that experimental code written in an environment in which the developer might not be comfortable enough in, is now being shipped as production code. This practice has spawned in the past lots of devices that are vulnerable and might present a huge security risk.\cite{mstan14}
 	
@@ -205,6 +205,40 @@
 	
 	The \textit{RFC 2828} and many \textit{NIST} publications define "vulnerability" as "a flaw or weakness in system security procedures, design, implementation, or internal controls that could be exercised (accidentally triggered or intentionally exploited) and result in a security breach or a violation of the system's security policy."\cite{rfc2828,nist80030} What this means in simplified terms is, that a vulnerability is essentially a bug in the software's or web service's code, which when \textit{exploited}, (e.g. specifying an input which was specifically crafted to be bogus and known to trigger the bug) allows users to perform actions they would otherwise not be allowed to, or access data they would otherwise not be privy to.
 	
+	Dealing with vulnerabilities found by a $3^{rd}$ party in a software or web service is a complex topic, which does not have a standard procedure defined. The person, company, or responsible industry body may have a \textit{vulnerability disclosure policy} in place if they have dealt with vulnerability disclosure in the past, however, as there is no industry standard in place, the terms in the policy will be uniquely defined as to how the vulnerability finder sees it fit.
+	
+	A common \textit{responsible} vulnerability disclosure practice is that the discovering body immediately notifies the vendor of the product of the vulnerability, and then either waits a given amount of days before making the vulnerability public, sometimes this may be cut short or prolonged depending on the reaction of the vendor. There are highly debated topics on what can be considered a \textit{responsible} vulnerability disclosure. One of such debate topics include whether the disclosure should be made public immediately after discovery, (\textit{a}) but with as little information as possible until the vendor fix comes, so as to protect vulnerable users from potential attackers, or (\textit{b}) it should include the full report, so as to make vulnerable users fully aware, in which situation they can actively try to defend themselves against it. Last, but not least, in case the discovering body withheld information about the vulnerability from the public, the other debate falls on what should the grace period be for the vendor fix, and what should a vulnerability discoverer do in case the vendor does not fix it in time or cannot be contacted. If the discovered vulnerability was not made public at all, or just partially, the situation can get infinitely more complex in cases where multiple vendors are involved. Some vendors will react faster, and will try to push the update onto the users, detailing the vulnerability, while others might react slower, and will now be vulnerable, because the competing product leaked the vulnerability details with their update. In such cases, the discovering body may attempt a \textit{coordinated disclosure} and ask the vendors to withheld the fixes and updates for a few days, or until all the vendors came up with a fix.
+	
+	Depending on the morality of the discovering person, however, one might choose to go down the illegal route and sell the newly discovered vulnerability. On the deep web, there are marketplaces for so-called "zero-day exploits," whose prices range based on the severity and impact of the vulnerability. It can go from several hundred dollars to half a million, averaging around a few thousands generally\cite{nperlroth13}.
+	
+	In order for high-profile companies to encourage security researchers to take the responsible disclosure route instead of the alternative, they have started creating programs called "bug bounties." These programs reward vulnerability reports by offering monetary recompensation to the founder person (whose value fluctuates based on the severity and impact of the reported vulnerability) and recognition for their feat. One such notable example is Google's \textit{Vulnerability Reward Program}\cite{googlevrp15}, which pays up to tens of thousands of dollars in rewards for a vulnerability in their own services, but have also extended the bug bounty to several high-risk open-source software, for which they independently pay \$500 to \$3,133.7. Google also has a related program called \textit{Patch Reward Program}, where they pay volunteers who have fixed a security issue in a high-risk open-source application. Rewards for that program range from \$500 (for "one-liner fixes") to \$10,000 (for "complicated, high-impact fixes.")
+	
+	One of the responsible industry bodies in the United States is \textit{CERT/CC} (\textit{Computer Emergency Response Team Coordination Center}) which was created by \textit{DARPA} (\textit{Defense Advanced Research Projects Agency}) in November 1988 in order to be the first organization of its kind. The need for the organization was created by the first ever computer virus distributed over the Internet, namely the \textit{Morris worm}\cite{cert15}.
+	
+	CERT/CC has their own policy regarding vulnerability disclosure, namely: notify the vendor as soon as possible, and disclose the report within 45 days, regardless whether the vendor has fixed the issue, or not.
+	
+	In Romania, \textit{CERT-RO} (\textit{Centrul Național de Răspuns la Incidente de Securitate Cibernetică}) was established in the May of 2011, through the government decision H.G. 494/2011\cite{certro12}. Its mission is to provide a national infrastructure for identification, analysis and prevention of cybernetic incidents.
+	
+	In Hungary, \textit{GovCERT-Hungary} (\textit{Kormányzati Eseménykezelő Központ}) was established in the April of 2013\cite{certhu13}, assuming the role of the responsible industry body for providing relevant services.
+	
+	Similarly, a response team is available on the European Union level. \textit{CERT-EU} (\textit{Computer Emergency Response Team European Union Task Force}) was established on the November of 2012, via mandated EU Commission decision. This body acts as a separate response team, meaning it does not exist solely to amalgamate reports of member countries' response teams.
+	
+	One of the projects sponsored by CERT/CC is \textit{CVE} (\textit{Common Vulnerabilities and Exposures}), which provides a reference method for publicly know and tracked vulnerabilities. \textit{NIST} (\textit{National Institute of Standards and Technology}) runs a website called \textit{NVD} (\textit{National Vulnerability Database}) which is a repository of public vulnerabilities represented in such a way as to allow for automatic consumption by vulnerability management software\cite{nvd15}. The aforementioned feed is called \textit{SCAP} (\textit{Security Content Automation Protocol}) and contains multiple components for each entry:
+	
+	\vspace{-0.15in}
+	\begin{itemize}
+		\item \textit{Common Vulnerabilities and Exposures} (\textit{CVE}) -- Vulnerability reference standard.
+		\item \textit{Common Configuration Enumeration} (\textit{CCE}) -- Unique identifier provider for system configuration in order to facilitate easy misconfiguration testing.
+		\item \textit{Common Platform Enumeration} (\textit{CPE}) -- Standardized method for classifying and identifying applications, operating systems and hardware devices present on a system.
+		\item \textit{Common Weakness Enumeration} (\textit{CWE}) -- Provides common language for identifying the type and source of the vulnerability.
+		\item \textit{Common Vulnerability Scoring System} (\textit{CVSS}) -- Standard metric which allows measurement of the vulnerability's impact.
+		\item \textit{Extensible Configuration Checklist Description Format} (\textit{XCCDF}) -- XML-based format for providing security checklists.
+		\item \textit{Open Vulnerability and Assessment Language} (\textit{OVAL}) -- Provides language for encoding vulnerability details in order to aid internationalization.
+	\end{itemize}
+	\vspace{-0.15in}
+	
+	These components will be further discussed in the section regarding the implementation of the vulnerability assessment engine.
+	
 \newpage
 \section{Bibliography}
 
@@ -229,7 +263,7 @@
 		
 		\bibitem{cmiller15}
 		Charlie Miller, Chris Valasek. \textit{Remote Exploitation of an Unaltered Passenger Vehicle}. 2015.\\
-		\url{http://illmatics.com/Remote%20Car%20Hacking.pdf}
+		\url{http://illmatics.com/Remote\%20Car\%20Hacking.pdf}
 		
 		\bibitem{hstutter06}
 		Herb Stutter. \textit{C++/CLI Rationale}. 2006.\\
@@ -298,6 +332,34 @@
 		\bibitem{hipaa96}
 		United States Congress. \textit{Health Insurance Portability and Accountability Act}. 1996.\\
 		\url{http://www.gpo.gov/fdsys/pkg/STATUTE-110/pdf/STATUTE-110-Pg1936.pdf}
+		
+		\bibitem{cert15}
+		Carnegie Mellon University, CERT Division. \textit{About Us}. 2015.\\
+		\url{https://cert.org/about/}
+		
+		\bibitem{certro12}
+		Romanian Computer Emergency Response Team. \textit{RFC 2350 description for CERT-RO}. 2012.\\
+		\url{https://www.cert-ro.eu/files/doc/RFC2350-CERT-RO.pdf}
+		
+		\bibitem{certhu13}
+		Government Incident Response Team of Hungary. \textit{RFC 2350 description for GovCERT-Hungary}. 2013.\\
+		\url{http://www.cert-hungary.hu/en/node/17}
+		
+		\bibitem{certeu13}
+		Computer Emergency Response Team European Union Task Force. \textit{RFC 2350 description for CERT-EU}. 2013.\\
+		\url{https://cert.europa.eu/static/RFC2350/RFC2350.pdf}
+		
+		\bibitem{nperlroth13}
+		Nicole Perlroth, David E. Sanger. \textit{Nations Buying as Hackers Sell Flaws in Computer Code}. 2013.\\
+		\url{http://www.nytimes.com/2013/07/14/world/europe/nations-buying-as-hackers-sell-computer-flaws.html}
+		
+		\bibitem{googlevrp15}
+		Google Application Security. \textit{Google Vulnerability Reward Program Rules}. 2015.\\
+		\url{https://www.google.com/about/appsecurity/reward-program/}
+		
+		\bibitem{nvd15}
+		National Institute of Standards and Technology. \textit{National Vulnerability Database}. 2015.\\
+		\url{https://nvd.nist.gov/}
 		
 	\end{thebibliography}
 	\endgroup
