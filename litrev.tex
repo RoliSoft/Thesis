@@ -213,7 +213,13 @@
 	
 	In order for high-profile companies to encourage security researchers to take the responsible disclosure route instead of the alternative, they have started creating programs called "bug bounties." These programs reward vulnerability reports by offering monetary recompensation to the founder person (whose value fluctuates based on the severity and impact of the reported vulnerability) and recognition for their feat. One such notable example is Google's \textit{Vulnerability Reward Program}\cite{googlevrp15}, which pays up to tens of thousands of dollars in rewards for a vulnerability in their own services, but have also extended the bug bounty to several high-risk open-source software, for which they independently pay \$500 to \$3,133.7. Google also has a related program called \textit{Patch Reward Program}, where they pay volunteers who have fixed a security issue in a high-risk open-source application. Rewards for that program range from \$500 (for "one-liner fixes") to \$10,000 (for "complicated, high-impact fixes.")
 	
-	One of the responsible industry bodies in the United States is \textit{CERT/CC} (\textit{Computer Emergency Response Team Coordination Center}) which was created by \textit{DARPA} (\textit{Defense Advanced Research Projects Agency}) in November 1988 in order to be the first organization of its kind. The need for the organization was created by the first ever computer virus distributed over the Internet, namely the \textit{Morris worm}\cite{cert15}.
+	\begin{wrapfigure}{r}{0.3\textwidth}
+		\vspace{-11pt}
+		\centering
+		\includegraphics[scale=0.70]{cert.png}
+	\end{wrapfigure}
+	
+	One of the responsible industry bodies in the United States is \textit{CERT/CC} (\textit{Computer Emergency Response Team Coordination Center}) which was created by \textit{DARPA} (\textit{Defense Advanced Research Projects Agency}) in November 1988 in order to be the first organization of its kind. The need for the organization was created by the first ever computer virus distributed over the Internet, namely the \textit{Morris worm}\cite{cert15}, which was the first of its kind, generating notable mainstream media attention, and resulting in the first ever arrest related to computer abuse/fraud laws in history.
 	
 	CERT/CC has their own policy regarding vulnerability disclosure, namely: notify the vendor as soon as possible, and disclose the report within 45 days, regardless whether the vendor has fixed the issue, or not.
 	
@@ -223,7 +229,9 @@
 	
 	Similarly, a response team is available on the European Union level. \textit{CERT-EU} (\textit{Computer Emergency Response Team European Union Task Force}) was established on the November of 2012, via mandated EU Commission decision. This body acts as a separate response team, meaning it does not exist solely to amalgamate reports of member countries' response teams.
 	
-	One of the projects sponsored by CERT/CC is \textit{CVE} (\textit{Common Vulnerabilities and Exposures}), which provides a reference method for publicly know and tracked vulnerabilities. \textit{NIST} (\textit{National Institute of Standards and Technology}) runs a website called \textit{NVD} (\textit{National Vulnerability Database}) which is a repository of public vulnerabilities represented in such a way as to allow for automatic consumption by vulnerability management software\cite{nvd15}. The aforementioned feed is called \textit{SCAP} (\textit{Security Content Automation Protocol}) and contains multiple components for each entry:
+	One of the projects sponsored by CERT/CC is \textit{CVE} (\textit{Common Vulnerabilities and Exposures}), which provides a reference method for publicly know and tracked vulnerabilities. \textit{NIST} (\textit{National Institute of Standards and Technology}) runs a website called \textit{NVD} (\textit{National Vulnerability Database}) which is a repository of public vulnerabilities represented in such a way as to allow for automatic consumption by vulnerability management software\cite{nvd15}.
+	
+	The feed of public vulnerabilities available for consumption in the aforementioned paragraph is called \textit{SCAP} (\textit{Security Content Automation Protocol}) and contains multiple components for each entry:
 	
 	\vspace{-0.15in}
 	\begin{itemize}
@@ -238,6 +246,25 @@
 	\vspace{-0.15in}
 	
 	These components will be further discussed in the section regarding the implementation of the vulnerability assessment engine.
+	
+\newpage
+\section{Vulnerability Assessment}
+	
+	\textit{Vulnerability assessment} is the process of identifying and quantifying[\ref{ssec:vulnriskanal}] of the vulnerabilities present within an infrastructure.
+	
+	In order to ensure the continuous security of an application, server or whole infrastructure, proactive measures need to be taken by the competent bodies. These measures generally include periodical scanning of the infrastructure in order to identify possible attack surfaces and test against newly discovered vulnerabilities.
+	
+\subsection{Static Code Analysis}
+	
+	One of the ways this can be carried out is through \textit{static analysis} of the source code. This is generally done by an automated tool, and then a software developer goes through the results, reviewing and evaluating the possibly erroneous code in the meantime. Static analyzers process the source code of the application, looking for common mistakes there were either introduced by accidentally overlooking things on the developer's part (such as variable value assignment (=) instead of comparison (==) in \textit{if} statements) or parts that would possibly behave differently than the developer intended due to various language features (such as loose comparison type juggling/inference issues.) Static analyzers, depending on their feature set, may also evaluate the control flow of a code in order to try and determine branches that would result in an error. Using static analysis has its pros and cons, for example, it can be quite practical as it can be made part of the build process, but it also has cons, for example, not being able to analyze binaries that have been provided without a source code, or the fact that pattern matching can't account for everything malicious. The code is never executed during static analysis, which also has its own strengths and limitations.
+	
+\subsection{Fuzz Testing}
+	
+	A similar software testing technique that has proven useful in the field of security is \textit{fuzz testing}. This technique feeds random malformed data to the software as input, and observes the behavior of the software as a result. While this technique is not necessarily popular, it has been used quite successfully in the past by security researchers to automatically weed out bugs in numerous applications.\cite{mzalewski15} The use of randomly generated data which breaks assumptions is very successful in confusing/breaking the state machines of the parser being tested, and potentially leading to unstability during runtime or software crash. This is essentially "vulnerability scanning by bruteforce."
+	
+\subsection{Vulnerability Scanning}
+	
+	The most offensive vulnerability assessment technique is \textit{penetration testing}, which simulates real-life attacks on an infrastructure.
 	
 \newpage
 \section{Bibliography}
@@ -360,6 +387,10 @@
 		\bibitem{nvd15}
 		National Institute of Standards and Technology. \textit{National Vulnerability Database}. 2015.\\
 		\url{https://nvd.nist.gov/}
+		
+		\bibitem{mzalewski15}
+		Michał Zalewski. \textit{American Fuzzy Lop}. 2015.\\
+		\url{http://lcamtuf.coredump.cx/afl/}
 		
 	\end{thebibliography}
 	\endgroup
