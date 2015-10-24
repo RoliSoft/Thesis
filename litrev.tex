@@ -7,7 +7,7 @@
 \usepackage{fancyhdr}
 \usepackage{indentfirst}
 
-\usepackage{hyperref}
+\usepackage[backref=false,pagebackref=true]{hyperref}
 \hypersetup{colorlinks=true,urlcolor=blue,pdfborder={0 0 0}}
 \usepackage{multirow}
 \usepackage[table,xcdraw]{xcolor}
@@ -25,6 +25,16 @@
 \setlength{\parskip}{1.25em}
 
 \renewcommand{\arraystretch}{2}
+
+\newcommand{\refspace}{\vspace{-2mm}}
+\newcommand{\redarrow}{\textcolor{red}{$\mathbf{\Rightarrow}$}}
+\makeatletter
+\def\BR@@bibitem#1#2\par{
+	\let\backrefprint\BR@backrefprint
+	\def\@linkcolor{black}
+	\BRorg@bibitem{#1}#2\redarrow \thinspace \BR@backref{#1}
+}
+\makeatother
 
 \author{Roland Bogosi}
 \title{Penetration Testing and Open-Source Toolkits}
@@ -231,7 +241,7 @@
 	
 	In Hungary, \textit{GovCERT-Hungary} (\textit{Kormányzati Eseménykezelő Központ}) was established in the April of 2013\cite{certhu13}, assuming the role of the responsible industry body for providing relevant services.
 	
-	Similarly, a response team is available on the European Union level. \textit{CERT-EU} (\textit{Computer Emergency Response Team European Union Task Force}) was established on the November of 2012, via mandated EU Commission decision. This body acts as a separate response team, meaning it does not exist solely to amalgamate reports of member countries' response teams.
+	Similarly, a response team is available on the European Union level. \textit{CERT-EU} (\textit{Computer Emergency Response Team European Union Task Force}) was established on the November of 2012\cite{certeu13}, via mandated EU Commission decision. This body acts as a separate response team, meaning it does not exist solely to amalgamate reports of member countries' response teams.
 	
 \subsection{Vulnerability Databases}
 	
@@ -319,122 +329,183 @@
 	\begin{thebibliography}{}
 		
 		\bibitem{devans11}
-		Dave Evans. \textit{The Internet of Things}. 2011.\\ \url{https://www.cisco.com/web/about/ac79/docs/innov/IoT\_IBSG\_0411FINAL.pdf}
+		Dave Evans. \textit{The Internet of Things}. 2011.
+		
+		\refspace
+		\url{https://www.cisco.com/web/about/ac79/docs/innov/IoT\_IBSG\_0411FINAL.pdf}
 		
 		\bibitem{ghouston11}
-		Geoff Huston. \textit{IPv4 Address Report, daily generated}. 2015.\\
+		Geoff Huston. \textit{IPv4 Address Report, daily generated}. 2015.
+		
+		\refspace
 		\url{http://www.potaroo.net/tools/ipv4/index.html}
 		
 		\bibitem{gmcgraw12}
-		Gary McGraw. \textit{Data supports need for security awareness training despite naysayers}. 2012.\\
+		Gary McGraw. \textit{Data supports need for security awareness training despite naysayers}. 2012.
+		
+		\refspace
 		\url{http://searchsecurity.techtarget.com/news/2240162630/Data-supports-need-for-awareness-training-despite-naysayers}
 		
 		\bibitem{aberdeen11}
-		Aberdeen Group. \textit{Business Context: The Biggest No-Brainer in Security}. 2011.\\
+		Aberdeen Group. \textit{Business Context: The Biggest No-Brainer in Security}. 2011.
+		
+		\refspace
 		\url{http://www.enterpriseittools.com/sites/default/files/Aberdeen_SecureAppsGetStarted.pdf}
 		
 		\bibitem{cmiller15}
-		Charlie Miller, Chris Valasek. \textit{Remote Exploitation of an Unaltered Passenger Vehicle}. 2015.\\
+		Charlie Miller, Chris Valasek. \textit{Remote Exploitation of an Unaltered Passenger Vehicle}. 2015.
+		
+		\refspace
 		\url{http://illmatics.com/Remote\%20Car\%20Hacking.pdf}
 		
 		\bibitem{hstutter06}
-		Herb Stutter. \textit{C++/CLI Rationale}. 2006.\\
+		Herb Stutter. \textit{C++/CLI Rationale}. 2006.
+		
+		\refspace
 		\url{http://www.gotw.ca/publications/C++CLIRationale.pdf}
 		
 		\bibitem{mstan14}
-		Mark Stanislav, Zach Lanier. \textit{The Internet of Fails: Where IoT Has Gone Wrong and How We're Making It Right}. 2014.\\
-		\url{https://www.defcon.org/html/defcon-22/dc-22-speakers.html#Stanislav}
+		Mark Stanislav, Zach Lanier. \textit{The Internet of Fails: Where IoT Has Gone Wrong and How We're Making It Right}. 2014.
+		
+		\refspace
+		\url{https://www.defcon.org/html/defcon-22/dc-22-speakers.html\#Stanislav}
 		
 		\bibitem{jnielsen12}
-		Jakob Nielsen. \textit{User Satisfaction vs. Performance Metrics}. 2012.\\
+		Jakob Nielsen. \textit{User Satisfaction vs. Performance Metrics}. 2012.
+		
+		\refspace
 		\url{http://www.nngroup.com/articles/satisfaction-vs-performance-metrics/}
 		
 		\bibitem{ahowe12}
-		Adele E. Howe, Indrajit Ray, Mark Roberts, Malgorzata Urbanska, Zinta Byrne. \textit{The Psychology of Security for the Home Computer User}. 2012.\\
+		Adele E. Howe, Indrajit Ray, Mark Roberts, Malgorzata Urbanska, Zinta Byrne. \textit{The Psychology of Security for the Home Computer User}. 2012.
+		
+		\refspace
 		\url{http://www.ieee-security.org/TC/SP2012/papers/4681a209.pdf}
 		
 		\bibitem{sfurnell07}
-		Steven Furnell, Peter Bryant, and Andy Phippen, \textit{Assessing the Security Perceptions of Personal Internet Users}. Computers \& Security, vol. 26, no. 5, pp. 410–417. 2007.\\
+		Steven Furnell, Peter Bryant, and Andy Phippen, \textit{Assessing the Security Perceptions of Personal Internet Users}. Computers \& Security, vol. 26, no. 5, pp. 410–417. 2007.
+		
+		\refspace
 		\url{http://www.sciencedirect.com/science/article/pii/S0167404807000363}
 		
 		\bibitem{ecrist14}
-		Emiliano De Cristofaro, Honglu Du, Julien Freudiger, Greg Norcie. \textit{A Comparative Usability Study of Two-Factor Authentication}. 2014.\\
+		Emiliano De Cristofaro, Honglu Du, Julien Freudiger, Greg Norcie. \textit{A Comparative Usability Study of Two-Factor Authentication}. 2014.
+		
+		\refspace
 		\url{http://arxiv.org/pdf/1309.5344.pdf}
 		
 		\bibitem{gkreiz06}
-		Gregg Kreizman, Bruce Robertson. \textit{Incorporating Security Into the Enterprise Architecture Process}. 2006.\\
+		Gregg Kreizman, Bruce Robertson. \textit{Incorporating Security Into the Enterprise Architecture Process}. 2006.
+		
+		\refspace
 		\url{https://www.gartner.com/doc/488575}
 		
 		\bibitem{jpaglier14}
-		Jose Pagliery. \textit{Heartbleed bug affects gadgets everywhere}. 2014.\\
+		Jose Pagliery. \textit{Heartbleed bug affects gadgets everywhere}. 2014.
+		
+		\refspace
 		\url{http://money.cnn.com/2014/04/11/technology/security/heartbleed-gear/}
 		
 		\bibitem{wfargo15}
-		Wells Fargo. \textit{Data Security / PCI Mandatory Compliance Programs}. 2015.\\
+		Wells Fargo. \textit{Data Security / PCI Mandatory Compliance Programs}. 2015.
+		
+		\refspace
 		\url{https://www.wellsfargo.com/biz/merchant/service/manage/risk/security}
 		
 		\bibitem{owasp4}
-		Matteo Meucci, Andrew Muller, et al. \textit{Open Web Application Security Project Testing Guide 4.0}. 2014.\\
+		Matteo Meucci, Andrew Muller, et al. \textit{Open Web Application Security Project Testing Guide 4.0}. 2014.
+		
+		\refspace
 		\url{https://www.owasp.org/images/5/52/OWASP_Testing_Guide_v4.pdf}
 		
 		\bibitem{rfc2828}
-		Robert W. Shirey. \textit{RFC 2828: Internet Security Glossary}. 2000.\\
+		Robert W. Shirey. \textit{RFC 2828: Internet Security Glossary}. 2000.
+		
+		\refspace
 		\url{https://tools.ietf.org/html/rfc2828}
 		
 		\bibitem{nist80030}
-		Patrick D. Gallagher, Rebecca M. Blank, et al. \textit{NIST Special Publication 800-30: Guide for Conducting Risk Assessments}. 2012.\\
+		Patrick D. Gallagher, Rebecca M. Blank, et al. \textit{NIST Special Publication 800-30: Guide for Conducting Risk Assessments}. 2012.
+		
+		\refspace
 		\url{http://csrc.nist.gov/publications/nistpubs/800-30-rev1/sp800_30_r1.pdf}
 		
 		\bibitem{pcidss31}
-		Payment Card Industry Security Standards Council. \textit{Payment Card Industry Data Security Standard, Version 3.1}. 2015.\\
+		Payment Card Industry Security Standards Council. \textit{Payment Card Industry Data Security Standard, Version 3.1}. 2015.
+		
+		\refspace
 		\url{https://www.pcisecuritystandards.org/documents/PCI_DSS_v3-1.pdf}
 		
 		\bibitem{pcireq6}
-		Payment Card Industry Security Standards Council. \textit{Information Supplement: Requirement 6.6 Code Reviews and Application Firewalls Clarified}. 2008.\\
+		Payment Card Industry Security Standards Council. \textit{Information Supplement: Requirement 6.6 Code Reviews and Application Firewalls Clarified}. 2008.
+		
+		\refspace
 		\url{https://www.pcisecuritystandards.org/pdfs/infosupp_6_6_applicationfirewalls_codereviews.pdf}
 		
 		\bibitem{pcireq11}
-		Payment Card Industry Security Standards Council, Penetration Test Guidance Special Interest Group. \textit{Information Supplement: Penetration Testing Guidance}. 2015.\\
+		Payment Card Industry Security Standards Council, Penetration Test Guidance Special Interest Group. \textit{Information Supplement: Penetration Testing Guidance}. 2015.
+		
+		\refspace
 		\url{https://www.pcisecuritystandards.org/documents/Penetration_Testing_Guidance_March_2015.pdf}
 		
 		\bibitem{wash10}
-		State of Washington. \textit{Engrossed Second Substitute House Bill 1149}. 2010.\\
+		State of Washington. \textit{Engrossed Second Substitute House Bill 1149}. 2010.
+		
+		\refspace
 		\url{http://apps.leg.wa.gov/documents/billdocs/2009-10/Pdf/Bills/Session\%20Laws/House/1149-S2.SL.pdf}
 		
 		\bibitem{hipaa96}
-		United States Congress. \textit{Health Insurance Portability and Accountability Act}. 1996.\\
+		United States Congress. \textit{Health Insurance Portability and Accountability Act}. 1996.
+		
+		\refspace
 		\url{http://www.gpo.gov/fdsys/pkg/STATUTE-110/pdf/STATUTE-110-Pg1936.pdf}
 		
 		\bibitem{cert15}
-		Carnegie Mellon University, CERT Division. \textit{About Us}. 2015.\\
+		Carnegie Mellon University, CERT Division. \textit{About Us}. 2015.
+		
+		\refspace
 		\url{https://cert.org/about/}
 		
 		\bibitem{certro12}
-		Romanian Computer Emergency Response Team. \textit{RFC 2350 description for CERT-RO}. 2012.\\
+		Romanian Computer Emergency Response Team. \textit{RFC 2350 description for CERT-RO}. 2012.
+		
+		\refspace
 		\url{https://www.cert-ro.eu/files/doc/RFC2350-CERT-RO.pdf}
 		
 		\bibitem{certhu13}
-		Government Incident Response Team of Hungary. \textit{RFC 2350 description for GovCERT-Hungary}. 2013.\\
+		Government Incident Response Team of Hungary. \textit{RFC 2350 description for GovCERT-Hungary}. 2013.
+		
+		\refspace
 		\url{http://www.cert-hungary.hu/en/node/17}
 		
 		\bibitem{certeu13}
-		Computer Emergency Response Team European Union Task Force. \textit{RFC 2350 description for CERT-EU}. 2013.\\
+		Computer Emergency Response Team European Union Task Force. \textit{RFC 2350 description for CERT-EU}. 2013.
+		
+		\refspace
 		\url{https://cert.europa.eu/static/RFC2350/RFC2350.pdf}
 		
 		\bibitem{nperlroth13}
-		Nicole Perlroth, David E. Sanger. \textit{Nations Buying as Hackers Sell Flaws in Computer Code}. 2013.\\
+		Nicole Perlroth, David E. Sanger. \textit{Nations Buying as Hackers Sell Flaws in Computer Code}. 2013.
+		
+		\refspace
 		\url{http://www.nytimes.com/2013/07/14/world/europe/nations-buying-as-hackers-sell-computer-flaws.html}
 		
 		\bibitem{googlevrp15}
-		Google Application Security. \textit{Google Vulnerability Reward Program Rules}. 2015.\\
+		Google Application Security. \textit{Google Vulnerability Reward Program Rules}. 2015.
+		
+		\refspace
 		\url{https://www.google.com/about/appsecurity/reward-program/}
 		
 		\bibitem{nvd15}
-		National Institute of Standards and Technology. \textit{National Vulnerability Database}. 2015.\\
+		National Institute of Standards and Technology. \textit{National Vulnerability Database}. 2015.
+		
+		\refspace
 		\url{https://nvd.nist.gov/}
 		
 		\bibitem{mzalewski15}
-		Michał Zalewski. \textit{American Fuzzy Lop}. 2015.\\
+		Michał Zalewski. \textit{American Fuzzy Lop}. 2015.
+		
+		\refspace
 		\url{http://lcamtuf.coredump.cx/afl/}
 		
 	\end{thebibliography}
