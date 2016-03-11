@@ -21,8 +21,11 @@
 \usepackage{amsfonts}
 \usepackage{amssymb}
 
+\usepackage{enumitem}
+\setlist[itemize]{itemsep=0pt}
+
 \setlength{\parindent}{2em}
-\setlength{\parskip}{1.25em}
+\setlength{\parskip}{0.25em}
 
 \renewcommand{\arraystretch}{2}
 
@@ -71,7 +74,7 @@
 		
 		\vspace{0.5in}
 		
-		\textbf{\Large Literature Review}
+		\textbf{\Large Bachelor's Thesis}
 		
 		\vspace{3.5in}
 	\end{center}
@@ -135,12 +138,10 @@
 	
 	Use of these special LTS versions are crucial in these cases, as \textit{without} them, one would have to face a choice as to risk using up-to-date versions, or risk using the version with which it was originally deployed with:
 	
-	\vspace{-0.15in}
 	\begin{itemize}
 		\item Using \textit{up-to-date} software might break the project due to modified behavior or deprecation of functionality. As such, mission critical projects might start misbehaving or breaking completely, which might result in damages.
 		\item Using the version that was originally \textit{deployed with}, means that the software is not receiving any updates, which solves the issues that might present themselves down the road as outlined in the first point. However, no software is perfect, and without applying any security patches, the system now becomes vulnerable to any attacks that might be disclosed during the lifetime of the project.
 	\end{itemize}
-	\vspace{-0.15in}
 	
 	One "celebrity" example for the aforementioned second point would be the \textit{Heartbleed} vulnerability in \textit{OpenSSL}. The project being a universal, highly platform-agnostic and trustworthy cryptography and PKI toolkit was the basis of the majority of daemon software which were using SSL/TLS sockets in the *NIX userland, and was also embedded in IoT devices that had any sort of web interface or have done cryptography in any way, shape or form. Every embedded device deployed with a vulnerable version of OpenSSL is now live and vulnerable, with no easy fix that can be applied by the vendor remotely, in most cases. This has been acknowledged by multiple leading networking gear vendors in statements saying "Cisco and Juniper can't just press a button and immediately replace the vulnerable software running on the machines."\cite{jpaglier14}
 	
@@ -158,12 +159,10 @@
 	
 	The aforementioned document lays out 12 major requirements\cite{pcidss31} each with its own set of checklists, in order to determine full compliance with them. For the purposes of this thesis, the following requirements will be examined and discussed:
 	
-	\vspace{-0.15in}
 	\begin{itemize}
-		\item Requirement 6: "Develop and maintain secure systems and applications"
-		\item Requirement 11: "Regularly test security systems and processes"
+		\item Requirement 6: ``Develop and maintain secure systems and applications"
+		\item Requirement 11: ``Regularly test security systems and processes"
 	\end{itemize}
-	\vspace{-0.15in}
 	
 	Both of these requirements have rules whose execution goes beyond the complexity that a few check boxes can convey, and as such have supplemental information available on the website of the council, in order to further clarify what the compliance requirements mean, address frequently asked questions and close eventual loopholes.
 	
@@ -264,7 +263,6 @@
 	
 	The feed of public vulnerabilities available for consumption in the aforementioned paragraph is called \textit{SCAP} (\textit{Security Content Automation Protocol}) and contains multiple components for each entry:
 	
-	\vspace{-0.15in}
 	\begin{itemize}
 		\item \textit{Common Vulnerabilities and Exposures} (\textit{CVE}) -- Vulnerability reference standard.
 		\item \textit{Common Configuration Enumeration} (\textit{CCE}) -- Unique identifier provider for system configuration in order to facilitate easy misconfiguration testing.
@@ -274,7 +272,6 @@
 		\item \textit{Extensible Configuration Checklist Description Format} (\textit{XCCDF}) -- XML-based format for providing security checklists.
 		\item \textit{Open Vulnerability and Assessment Language} (\textit{OVAL}) -- Provides language for encoding vulnerability details in order to aid internationalization.
 	\end{itemize}
-	\vspace{-0.15in}
 	
 	These components will be further discussed in the section regarding the implementation of the vulnerability assessment engine.
 	
@@ -307,28 +304,24 @@
 	
 	The most offensive vulnerability assessment technique is \textit{penetration testing}, which simulates real-life attacks on an infrastructure.
 	
-	Vulnerability scanning works well with binaries whose source is not provided, as it only simulates \textit{malicious} user interaction, and does not do code analysis. This technique also works well against live production servers, and as such fully deployed infrastructures can be scanned for vulnerabilities. 
+	Vulnerability scanning works well with binaries whose source is not provided, as it only simulates \textit{malicious} user interaction, and does not do code analysis. This technique also works well against live production servers, and as such fully deployed infrastructures can be scanned for vulnerabilities.
 	
 	\noindent Testing may be done against:
 	
-	\vspace{-0.15in}
 	\begin{itemize}
 		\item port on the server -- testing for applied patches and misconfiguration of a single service (e.g. an SMTP server);
 		\item web application -- crawling and analyzing the security of a whole web application through blind exploitation;
 		\item entire server -- scanning all the ports and running the proper vulnerability analysis for each protocol based on their service banner;
 		\item entire network -- scanning all the servers within the network, to ensure none of them are vulnerable or compromised in an environment in which sensitive data might be transferred.
 	\end{itemize}
-	\vspace{-0.15in}
 	
 	\noindent Testing may also be done from various perspectives:
 	
-	\vspace{-0.15in}
 	\begin{itemize}
 		\item public -- in order to determine attack vectors from the perspective of an outsider (e.g. vulnerability of public-facing IPs);
 		\item consumer -- to determine attack surfaces for an authenticated non-privileged user (e.g. logged-in consumer of a banking web application);
 		\item insider -- to determine the damages that can be caused by insiders (e.g. rogue employees).
 	\end{itemize}
-	\vspace{-0.15in}
 	
 \subsubsection{Intrusion Detection/Prevention Systems}
 	
