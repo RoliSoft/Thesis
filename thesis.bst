@@ -4,7 +4,7 @@
 %%
 %% The original source files were:
 %%
-%% merlin.mbs  (with options: `seq-no,ed-au,dt-jnl,yr-per,tit-it,atit-u,jttl-rm,trnum-it,vnum-nr,volp-com,jdt-pc,pgsep-c,jwdpg,jwdvol,num-xser,ser-vol,isbn,issn,doi,pp,ed,abr,ednx,xedn,and-xcom,url,url-nl,nfss,')
+%% merlin.mbs  (with options: `seq-no,ed-au,dt-jnl,yr-per,tit-it,atit-u,jttl-rm,trnum-it,vnum-nr,volp-com,jdt-pc,pgsep-c,jwdpg,jwdvol,num-xser,ser-vol,isbn,issn,doi,pp,ed,abr,ednx,xedn,and-xcom,url,url-nt,nfss,')
 %% ----------------------------------------
 %% ***  ***
 %% 
@@ -361,15 +361,6 @@ FUNCTION {bibinfo.warn}
     }
   if$
 }
-FUNCTION {write.url}
-{
-  url
-  duplicate$ empty$
-    { pop$ }
-    { "\newline\urlprefix\url{" swap$ * "}" * write$ newline$ }
-  if$
-}
-
 INTEGERS { nameptr namesleft numnames }
 
 
@@ -469,6 +460,10 @@ FUNCTION {format.doi}
 }
 FUNCTION {format.note}
 {
+  url empty$
+    'skip$
+    { "\urlprefix\url{" url * "}" * output }
+  if$
  note empty$
     { "" }
     { note #1 #1 substring$
@@ -973,7 +968,6 @@ FUNCTION {article}
   new.block
   format.note output
   fin.entry
-  write.url
 }
 FUNCTION {book}
 { output.bibitem
@@ -1008,7 +1002,6 @@ FUNCTION {book}
   new.block
   format.note output
   fin.entry
-  write.url
 }
 FUNCTION {booklet}
 { output.bibitem
@@ -1024,7 +1017,6 @@ FUNCTION {booklet}
   new.block
   format.note output
   fin.entry
-  write.url
 }
 
 FUNCTION {inbook}
@@ -1067,7 +1059,6 @@ FUNCTION {inbook}
   new.block
   format.note output
   fin.entry
-  write.url
 }
 
 FUNCTION {incollection}
@@ -1096,7 +1087,6 @@ FUNCTION {incollection}
   new.block
   format.note output
   fin.entry
-  write.url
 }
 FUNCTION {inproceedings}
 { output.bibitem
@@ -1128,7 +1118,6 @@ FUNCTION {inproceedings}
   new.block
   format.note output
   fin.entry
-  write.url
 }
 FUNCTION {conference} { inproceedings }
 FUNCTION {manual}
@@ -1166,7 +1155,6 @@ FUNCTION {manual}
   new.block
   format.note output
   fin.entry
-  write.url
 }
 
 FUNCTION {mastersthesis}
@@ -1184,7 +1172,6 @@ FUNCTION {mastersthesis}
   new.block
   format.note output
   fin.entry
-  write.url
 }
 
 FUNCTION {misc}
@@ -1199,7 +1186,6 @@ FUNCTION {misc}
   new.block
   format.note output
   fin.entry
-  write.url
   empty.misc.check
 }
 FUNCTION {phdthesis}
@@ -1217,7 +1203,6 @@ FUNCTION {phdthesis}
   new.block
   format.note output
   fin.entry
-  write.url
 }
 
 FUNCTION {proceedings}
@@ -1259,7 +1244,6 @@ FUNCTION {proceedings}
   new.block
   format.note output
   fin.entry
-  write.url
 }
 
 FUNCTION {techreport}
@@ -1277,7 +1261,6 @@ FUNCTION {techreport}
   new.block
   format.note output
   fin.entry
-  write.url
 }
 
 FUNCTION {unpublished}
@@ -1290,7 +1273,6 @@ FUNCTION {unpublished}
   new.block
   format.note "note" output.check
   fin.entry
-  write.url
 }
 
 FUNCTION {default.type} { misc }

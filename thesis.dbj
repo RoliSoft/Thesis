@@ -538,8 +538,8 @@ End of customized bst file
 %URL ADDRESS: (without REVTeX fields)
 %   %: (def) No URL
 % url,url-blk,%: Include URL
-% url,url-nt,%: URL as note
-  url,url-nl,%: URL on new line
+  url,url-nt,%: URL as note
+% url,url-nl,%: URL on new line
 %--------------------
 %REFERENCE COMPONENT TAGS:
     %: (def) No reference component tags
