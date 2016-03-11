@@ -49,9 +49,9 @@
 % \begin{lstlisting}[language=c++,caption=...]
 % \lstinline[language=c++]{...}
 
-%\usepackage{minted}
-%\renewcommand{\theFancyVerbLine}{\rmfamily\scriptsize\arabic{FancyVerbLine}}
-%\setminted{linenos,autogobble,breaklines,fontsize=\footnotesize,tabsize=4,numbersep=7pt,bgcolor=whitesmoke}
+\usepackage{minted}
+\renewcommand{\theFancyVerbLine}{\rmfamily\scriptsize\arabic{FancyVerbLine}}
+\setminted{linenos,autogobble,breaklines,fontsize=\footnotesize,tabsize=4,numbersep=7pt,bgcolor=whitesmoke}
 % \begin{minted}{cpp}
 % \mintinline{cpp}{...}
 
@@ -347,6 +347,115 @@
 	
 	These systems sit between the user and the application, sniffing and analyzing traffic for potential red flags. This method is rather limited, as it cannot detect vulnerabilities in the system, with which a user has not yet interacted with due to its limited data source being only the network traffic. Another downside of this technique is that an exploitation might slip through even in the strictest setting of the IPS, as the analyzed network traffic might simply be identified as false negative. As such, preventive measures were not taken against the traffic, and the exploitation was successful.
 	
+\newpage
+\section{Implementation}
+
+\subsection{Protocol Tokenization}
+	
+	In order to improve the quality of the input for the CPE matcher component (further discussed in \ref{ssec:matchcpe}) and thereby minimizing the chances of false positives, the application makes a best effort to try recognizing and tokenizing the extracted service banners.
+	
+	The server replies are not fully parsed using a protocol-aware parser, instead it aims to either \textit{a)} extract server names, versions and operating system tags, or if that is not possible, \textit{b)} clean any known protocol strings, leaving only implementation-specific strings in the service banner.
+	
+	Currently there are two protocol tokenizers implemented, and these are run in order of protocol popularity when a service banner needs to be cleaned. An API is exposed which does this, \mintinline{cpp}{ProtocolTokenizer::AutoTokenize(const std::string& banner)}.
+	
+	The first tokenizer is \mintinline{cpp}{HttpTokenizer}, which decides whether the specified service banner contains a valid HTTP header, and if so, proceeds to tokenize it. During tokenization, it will try to extract product names and version numbers from the appropriate places.
+	
+	The HTTP protocol has the `Server' and `X-Powered-By' header fields, which are generally used by software to indicate their name and version number. Unfortunately, the exact listing methodology is not standardized, as such different software may use different separators and notation to indicate their existence, version number, any vendor patches and possibly the operating system. Since these fields may have multiple products listed, the tokenizer makes sure to extract all the product names including any associated version numbers into separate tokens.
+	
+	\begin{listing}[H]
+		\begin{minted}{http}
+			HTTP/1.1 200 OK
+			Server: nginx/1.9.12 (Ubuntu)
+			X-Powered-By: PHP/5.6.19
+			Date: Fri, 11 Mar 2016 16:04:07 GMT
+			Connection: close
+		\end{minted}
+		\caption{Example HTTP service banner}
+		\label{httpsvcbnr}
+	\end{listing}
+	
+	\noindent The HTTP service banner shown in listing \ref{httpsvcbnr} is produced by nginx 1.9.12 with PHP 5.6.19 installed on a Ubuntu distribution. When processed by the implemented tokenizer, it will produce the elements shown in listing \ref{httpsvcbnrtokens}.
+	
+	\begin{listing}[H]
+		\begin{minted}{py}
+			[
+				// token,           later mapped to,           by component
+				"nginx/1.9.12",  // cpe:/a:nginx:nginx:1.9.12, CpeDictionaryMatcher
+				"Ubuntu",        // cpe:/o:canonical:ubuntu,   OpSysMatcher
+				"PHP/5.6.19"     // cpe:/a:php:php:5.6.19,     CpeDictionaryMatcher
+			]
+		\end{minted}
+		\caption{Extracted tokens from banner in listing \ref{httpsvcbnr}}
+		\label{httpsvcbnrtokens}
+	\end{listing}
+	
+	However, if the service banner being analyzed does not contain a valid HTTP header, the next tokenizer in order of protocol popularity to be tried is the \mintinline{cpp}{ThreeDigitTokenizer}, hereinafter referred to as the ``SMTP tokenizer'' for simplicity's sake.
+	
+	The ``three-digit'' tokenizer is a general purpose solution for parsing protocols which use a three-digit response in their protocol to the indicate message type/category of a given server reply. Such protocols include SMTP, NNTP, FTP and a few more. For these protocols, however, unfortunately there is no standardized way to announce server name and version (like the `Server' header in the HTTP protocol) and as such the server name is generally casually announced in the informational level welcome message part of the service banner. The informational messages are generally within the range of $200-299$, however this might vary depending on the actual protocol.
+	
+	\begin{listing}[H]
+		\begin{minted}{matlab}
+			220 example.com ESMTP Exim 4.87 #2 Fri, 11 Mar 2016 16:05:06 +0000
+		\end{minted}
+		\caption{Example SMTP service banner}
+		\label{smtpsvcbnr}
+	\end{listing}
+		
+	\noindent The SMTP service banner shown in listing \ref{smtpsvcbnr} is produced by Exim 4.87 listening on port 25. This banner is sent as a `greeting' as soon as the client connects to the server. This is favorable, since no further protocol probes are required to be sent in order to get a processable service banner. When this banner is processed by the implemented tokenizer, it will produce the elements shown in listing \ref{smtpsvcbnrtokens}.
+		
+	\begin{listing}[H]
+		\begin{minted}{py}
+			[
+				// token,                later mapped to,       by component
+				"ESMTP Exim 4.87 #2", // cpe:/a:exim:exim:4.87, CpeDictionaryMatcher
+			]
+		\end{minted}
+		\caption{Extracted tokens from banner in listing \ref{smtpsvcbnr}}
+		\label{smtpsvcbnrtokens}
+	\end{listing}
+	
+	It should be noted that the ``perfect'' token would be \mintinline{matlab}{Exim 4.87}, however as previously mentioned, the server name and version are not clearly advertised. As such, the processing of the banner starts by removing the protocol-specific strings, namely the response code (\mintinline{matlab}{220}), the host name (\mintinline{py}{example.com}), and the date (\mintinline{matlab}{Fri, 11 Mar 2016 16:05:06 +0000}). This leaves us with the implementation-specific string of \mintinline{matlab}{ESMTP Exim 4.87 #2}.
+	
+	The tokenizer implementation will try to remove as much non-implementation-specific tokens as possible, however in cases where a specific element cannot be determined with a high degree of certainty whether it is a protocol or implementation-specific string, the tokenizer will instead leave it in. This decision was made in order to ensure that the tokenizer does not remove any elements which are required for the CPE matcher during entry matching. If an element is left in falsely, it does not affect the scoring of the CPE matcher, however, if it was falsely removed, it could completely prevent the matching of that entry.
+	
+	If all of the implemented tokenizers fail to process a service banner, it will be sent to the next stage of discovery (usually to component described in \ref{ssec:matchcpe}) as one token, containing the whole service banner.
+	
+\subsection{Pattern Matching of Service Banners}
+
+	The purpose of the \mintinline{cpp}{ServiceRegexMatcher} component of the application is to take the original full service banner (without any tokenization) as an input, and match it against a database of regular expressions, which in turn are mapped to their own CPE names.
+
+	\begin{listing}[H]
+		\begin{minted}{matlab}
+			^HTTP/1\.[01] \d{3}.*\r\nServer: nginx(?:/([\d.]+))?
+		\end{minted}
+		\caption{Example regular expression to match \mintinline{matlab}{cpe:/a:nginx:nginx}}
+		\label{nginxregex}
+	\end{listing}
+	
+	The example regular expression in listing \ref{nginxregex} matches against the response headers produced by the HTTP server software ``nginx''. See the service banner in listing \ref{httpsvcbnr} for an example that would be matched. Furthermore, the listed regular expression contains an optional capture group, which captures the version number. If the version number is listed in the service banner, the matcher component would return the CPE name \mintinline{matlab}{cpe:/a:nginx:nginx:1.9.12}, while without a version number listed, it will still return the CPE name \mintinline{matlab}{cpe:/a:nginx:nginx}.
+	
+	This behavior is different from the matcher described in section \ref{ssec:matchcpe}: whereas here a CPE name can be produced with high confidence with or without a known version number, the CPE dictionary-based matcher \textit{requires} a known version number, since it plays a pivotal role in the identifying and scoring process.
+	
+	While the example presented in listing \ref{nginxregex} is rather straight-forward, the pattern matcher method can be used in a more subtle way, for example to match software which are not advertising their name or version number.
+	
+	\begin{listing}[H]
+		\begin{minted}{matlab}
+			^554 SMTP synchronization error\r\n
+		\end{minted}
+		\caption{Example regular expression to match \mintinline{matlab}{cpe:/a:exim:exim}}
+		\label{eximregex}
+	\end{listing}
+	
+	The example presented in listing \ref{eximregex} is a regular expression which matches an error message produced by the SMTP server software ``exim''. The reason why it is possible to determine this fact with a high confidence, is because exim is the only software returning this exact error message verbatim. Other SMTP servers will have a similar error message for this problem, with the same error code, but not with this same exact error message, as the messages themselves are not standardized byte-by-byte.
+	
+	It is even possible to associate a version number to the software behind the port. For example, exim has implemented ``SMTP Service Extension for Per-Recipient Data Responses'' in version 4.83, and it advertises this capability as `PRDR' after the handshake. A regular expression can be written to inspect the advertised capability list, and make an educated guess stating that the version of the software is 4.83 or older. This can be further improved by creating a pattern which matches a change which only applies to versions 4.86 and older, at which point we can deduce that the inspected service banner was produced by exim between the versions of $4.83-4.86$.
+	
+	For open-source software, it is possible to compare the source between different releases and check which publicly visible string changed, in order to write a pattern for detecting that range of versions. Building such a database of patterns, however, is beyond the scope of this project, and would be more suited for a community-sourced project.
+	
+\subsection{Matching of CPE Tokens in Service Banners} \label{ssec:matchcpe}
+
+	Related work \cite{shovat15}.
+
 \newpage
 \section{Bibliography}
 
