@@ -17,10 +17,7 @@
 \usepackage{wrapfig}
 
 \usepackage{booktabs}
-
-\usepackage{amsmath}
-\usepackage{amsfonts}
-\usepackage{amssymb}
+\usepackage{multicol}
 
 \usepackage{enumitem}
 \setlist[itemize]{itemsep=0pt}
@@ -44,6 +41,9 @@
 
 \definecolor{whitesmoke}{rgb}{0.96,0.96,0.96}
 
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+
 %\usepackage{listings}
 %\lstset{basicstyle=\footnotesize,numbers=left,numberstyle=\scriptsize,numbersep=7pt,breaklines=true,breakatwhitespace=true,tabsize=4,backgroundcolor=\color{whitesmoke}}
 % \begin{lstlisting}[language=c++,caption=...]
@@ -56,7 +56,7 @@
 % \mintinline{cpp}{...}
 
 \author{Roland Bogosi}
-\title{Penetration Testing and Open-Source Toolkits}
+\title{Black-Box Penetration Testing and Vulnerability Management Platform}
 
 \begin{document}
 
@@ -64,25 +64,40 @@
 \selectlanguage{english}
 
 	\begin{center}
-		\textsc{\Large Sapientia University, Târgu-Mureș}\\
-		\textsc{\Large Faculty of Technical and Human Sciences}\\
-		\vspace{1mm}
-		\textsc{\Large Computer Engineering}\\
+		{\Large Sapientia University, Târgu-Mureș}\\\vspace{0.05in}
+		{\Large Faculty of Technical and Human Sciences}\\\vspace{0.07in}
+		{\Large Computer Engineering}\\
 		
-		\vspace{3.4in}
+		\vspace{2.5in}
 		
-		{\LARGE Penetration Testing and Vulnerability Assessment}
+		{\huge Black-Box Penetration Testing and}\\\vspace{0.1in}
+		{\huge Vulnerability Management Platform}
 		
 		\vspace{0.5in}
 		
-		\textbf{\Large Bachelor's Thesis}
+		{\LARGE Bachelor's Thesis}
 		
-		\vspace{3.5in}
 	\end{center}
 	
-	\begin{flushright}
-		{\Large \textit{Bogosi Roland}}
-	\end{flushright}
+	\vspace{2.0in}
+	
+	\begin{multicols}{2}
+		\begin{flushleft}
+			{\Large Supervisor:}\\\vspace{0.05in}
+			{\LARGE {Dr. Tamás Vajda}}
+		\end{flushleft}
+		\columnbreak
+		\begin{flushright}
+			{\Large Student:}\\\vspace{0.1in}
+			{\LARGE {Roland Bogosi}}
+		\end{flushright}
+	\end{multicols}
+	
+	\vspace{1.5in}
+		
+	\begin{center}
+		{\LARGE 2016}
+	\end{center}
 
 \newpage
 \thispagestyle{empty}
