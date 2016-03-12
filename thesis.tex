@@ -544,7 +544,42 @@
 	
 	The example presented in listing \ref{eximregex} is a regular expression which matches an error message produced by the SMTP server software ``exim''. The reason why it is possible to determine this fact with a high confidence, is because exim is the only software returning this exact error message verbatim. Other SMTP servers will have a similar error message for this problem, with the same error code, but not with this same exact error message, as the messages themselves are not standardized byte-by-byte.
 	
-	It is even possible to associate a version number to the software behind the port. For example, exim has implemented ``SMTP Service Extension for Per-Recipient Data Responses'' in version 4.83, and it advertises this capability as `PRDR' after the handshake. A regular expression can be written to inspect the advertised capability list, and make an educated guess stating that the version of the software is 4.83 or older. This can be further improved by creating a pattern which matches a change which only applies to versions 4.86 and older, at which point we can deduce that the inspected service banner was produced by exim between the versions of $4.83-4.86$.
+	\begin{multicols}{2}
+		\begin{listing}[H]
+			\begin{minted}{matlab}
+				220 example-1.com ESMTP Sat, 12 Mar 2016 17:14:06 +0000
+				EHLO client-1.com
+				250-example-1.com Hello client-1.com [2a02:2f07:d18d:1100::cake]
+				250-SIZE 52428800
+				250-8BITMIME
+				250-PIPELINING
+				250-STARTTLS
+				250-PRDR
+				250 HELP
+			\end{minted}
+			\caption{Exim $\ge 4.83$}
+			\label{eximwiprdr}
+		\end{listing}
+		\begin{listing}[H]
+			\begin{minted}{matlab}
+				220 example-2.com ESMTP Sat, 12 Mar 2016 16:12:25 +0000
+				EHLO client-2.com
+				250-example-2.com Hello client-2.com [2a02:2f07:d18d:1100::cake]
+				250-SIZE 20971520
+				250-8BITMIME
+				250-PIPELINING
+				250-AUTH PLAIN LOGIN
+				250-STARTTLS
+				250 HELP
+			\end{minted}
+			\caption{Exim $< 4.83$}
+			\label{eximwoprdr}
+		\end{listing}
+	\end{multicols}
+	
+	It is even possible to associate a version number to the software behind the port. For example, exim has implemented ``SMTP Service Extension for Per-Recipient Data Responses'' in version 4.83, and it advertises this capability as `PRDR' after the handshake, as seen in listing \ref{eximwiprdr} versus the handshake of an older version in listing \ref{eximwoprdr}.
+	
+	A regular expression can be written to inspect the advertised capability list, and make an educated guess stating that the version of the software is 4.83 or older. This can be further improved by creating a pattern which matches a change which only applies to versions 4.86 and older, at which point we can deduce that the inspected service banner was produced by exim between the versions of $4.83-4.86$.
 	
 	For open-source software, it is possible to compare the source between different releases and check which publicly visible string changed, in order to write a pattern for detecting that range of versions. Building such a database of patterns, however, is beyond the scope of this project, and would be more suited for a community-sourced project.
 	
