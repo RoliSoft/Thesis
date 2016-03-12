@@ -21,6 +21,7 @@
 
 \usepackage{enumitem}
 \setlist[itemize]{itemsep=0pt}
+\setlist[enumerate]{itemsep=0pt}
 
 \setlength{\parindent}{2em}
 \setlength{\parskip}{0.25em}
@@ -161,7 +162,7 @@
 	
 	One ``celebrity'' example for the aforementioned second point would be the \textit{Heartbleed} vulnerability in \textit{OpenSSL}. The project being a universal, highly platform-agnostic and trustworthy cryptography and PKI toolkit was the basis of the majority of daemon software which were using SSL/TLS sockets in the *NIX userland, and was also embedded in IoT devices that had any sort of web interface or have done cryptography in any way, shape or form. Every embedded device deployed with a vulnerable version of OpenSSL is now live and vulnerable, with no easy fix that can be applied by the vendor remotely, in most cases. This has been acknowledged by multiple leading networking gear vendors in statements saying ``Cisco and Juniper cannot just press a button and immediately replace the vulnerable software running on the machines.''\cite{jpaglier14}
 	
-\subsection{Security Assurance in the Financial Sector}
+\subsection{Security Assurance in the Financial Sector} \label{ssec:secassfinsec}
 
 	\begin{wrapfigure}{r}{0.35\textwidth}
 		\vspace{-10pt}
@@ -197,29 +198,49 @@
 	
 	There is, however, at least one sector in which there is prominent government mandated security. In the USA, the field of public health is regulated by \textit{HIPAA} (\textit{Health Insurance Portability and Accountability Act}), which was signed into law\cite{hipaa96} in 1996, and amongst others, sets forth rules and requirements about confidential handling of protected health information.
 	
-\newpage
 \subsection{Vulnerability Risk Analysis} \label{ssec:vulnriskanal}
 
 	During the project planning phase or later down the line when a vulnerability is discovered either during development or via penetration testing, risk analysis may be performed in order to assess the severity of the risk using the standard risk model formula shown in equation \ref{eq:risk}. Generally, if its fix would be too expensive, (e.g. it would require breaking changes, full infrastructure rebuild, or other miscellaneous major inconveniences) the results of the risk analysis are carefully evaluated by managers, and if no immediate major threat is imminent with a huge impact that can be caused by the discovered bug, an alternative route may be chosen which is not as costly.
 	
 	\begin{equation} \label{eq:risk}
-		Risk = Probability \cdot Impact
+		\textrm{Risk} = \textrm{Probability} \cdot \textrm{Impact}
 	\end{equation}
 	
-	The \textit{Open Web Application Security Project} has defined a risk rating methodology\cite{owasp4} specifically for vulnerabilities, wherein they define the variables as an arithmetic mean of the following factors:
+	The \textit{Open Web Application Security Project} has defined a risk rating methodology\cite{owasp4} specifically for vulnerabilities. The steps of risk analysis for a project are:
 	
-	$ Probability = (Threat Agent + Vulnerability) / 8 $\\
-	\indent\indent $ Threat Agent = Skill Level + Motive + Opportunity + Size $\\
-	\indent\indent $ Vulnerability = Discovery + Exploitation + Awareness + Detection $\vspace{0.05in}\\
-	\indent$ Impact = (Technical + Business) / 8 $\\
-	\indent\indent $ Technical = Confidentiality + Integrity + Availability + Accountability $\\
-	\indent\indent $ Business = Financial + Reputation + NonCompliance + Privacy Violation $
+	\begin{enumerate}
+	  \item Identification of Risks
+	  \item Estimation of Probability
+	  \item Estimation of Impact
+	  \item Estimation of Severity
+	  \item Decision Regarding Risk Elimination
+	\end{enumerate}
 	
-	For each factor in the above formula, a rating should be specified on the scale of $0..9$.
+	For the first step, in case of a web application or a project with a web application subcomponent, we can start with OWASP's Top 10\cite{owasp10} list of most common security risks. After all the possible risks have been listed, we will need to go through them one-by-one and go through steps $2-5$ individually for each.
 	
-	After the ratings have been accorded and summed up, their arithmetic means need to be calculated, which then can be looked up in table \ref{scoreclass} to get the resulting classification for the \textit{probability} and \textit{impact} factors of the risk.
+	\begin{equation} \label{eq:riskprobagnt}
+		\textrm{Threat Agent} = \textrm{Skill Level} + \textrm{Motive} + \textrm{Opportunity} + \textrm{Size}
+	\end{equation}
+	\begin{equation} \label{eq:riskprobvuln}
+		\textrm{Vulnerability} = \textrm{Discovery} + \textrm{Exploitation} + \textrm{Awareness} + \textrm{Detection}
+	\end{equation}
+	\begin{equation} \label{eq:riskprob}
+		\textrm{Probability} = \frac{(\textrm{Threat Agent} + \textrm{Vulnerability})}{8}
+	\end{equation}
 	
-	The resulting severity classification for each factor can be looked up in table \ref{vulnrisksever} to determine the final severity of the risk.
+	In step 2, we estimate the probability of the risk occurring. In order to do this, we go through each factors in equations \ref{eq:riskprobagnt} and \ref{eq:riskprobvuln}, assigning them each a number on a scale of $0..9$. For example, the ``Motive'' factor is directly proportional to the reward a user might get from exploiting the vulnerability, as such, we rate 0 if no significant reward can be obtained, or 9 if major financial gain can be obtained from exploiting the vulnerability. After all the factors have been scored, we calculate the arithmetic mean as seen in equation \ref{eq:riskprob}.
+	
+	\begin{equation} \label{eq:riskimptech}
+		\textrm{Technical} = \textrm{Confidentiality} + \textrm{Integrity} + \textrm{Availability} + \textrm{Accountability}
+	\end{equation}
+	\begin{equation} \label{eq:riskimpbsns}
+		\textrm{Business} = \textrm{Financial} + \textrm{Reputation} + \textrm{Noncompliance} + \textrm{Privacy Violation}
+	\end{equation}
+	\begin{equation} \label{eq:riskimp}
+		\textrm{Impact} = \frac{(\textrm{Technical} + \textrm{Business})}{8}
+	\end{equation}
+		
+	Moving on to step 3, we calculate the impact of the risk, should it occur, from both a technical and business side. Equations \ref{eq:riskimptech} and \ref{eq:riskimpbsns} list the factors which should be considered. One important example between these factors would be ``Noncompliance,'' which might further damage the company both financially and reputation-wise. Non-compliance can lead to loss of audits, licenses, which in turn can lead to fines, loss of liability protections and inability to continue business until the company can be re-audited. For example, as discussed in section \ref{ssec:secassfinsec}, the violation of \textit{PCI compliancy} can result in fines of $\$5,000$ to $\$100,000$ per month\cite{pcicompl} by the credit card company at their own discretion. If the company has no such compliance obligations, we can rate non-compliance as a non-issue with a score of 0, or if credit card data might be leaked, a maximum score of 9 should be provided.
 	
 	\begin{table}[!htbp]
 		\begin{minipage}{.4\linewidth}
@@ -247,6 +268,12 @@
 			\label{vulnrisksever}
 		\end{minipage}
 	\end{table}
+	
+	The semifinal step of the risk analysis is determining the severity of the risk/vulnerability. This can be done by taking the values obtained from the aforementioned equations, and computing the final score from the standard risk formula as shown in \ref{eq:risk}.
+	
+	Alternatively, a more simplified visual guide can be obtained by taking the value of the ``Probability'' and ``Impact'' factors, and classifying them according to table \ref{scoreclass}. After the severity of both factors are obtained, table \ref{vulnrisksever} allows an easy lookup of the final severity of the risk.
+	
+	In the final step of the process, we make a decision regarding the mitigation of the risk. In general risk management theory, if the costs of mitigating a risk outweighs the costs of incurring the losses caused by its occurrence, the risk is not mitigated.
 
 \newpage
 \section{Software Vulnerabilities}
