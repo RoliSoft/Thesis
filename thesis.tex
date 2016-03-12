@@ -18,6 +18,7 @@
 
 \usepackage{booktabs}
 \usepackage{multicol}
+\usepackage{amsmath}
 
 \usepackage{enumitem}
 \setlist[itemize]{itemsep=0pt}
@@ -241,7 +242,7 @@
 	
 	Similarly, a response team is available on the European Union level. \textit{CERT-EU} (\textit{Computer Emergency Response Team European Union Task Force}) was established on the November of 2012\cite{certeu13}, via mandated EU Commission decision. This body acts as a separate response team, meaning it does not exist solely to amalgamate reports of member countries' response teams.
 	
-\subsection{Vulnerability Databases}
+\subsection{Vulnerability Databases} \label{ssec:vulndbs}
 	
 	One of the projects sponsored by CERT/CC is \textit{CVE} (\textit{Common Vulnerabilities and Exposures}), which provides a reference method for publicly know and tracked vulnerabilities. \textit{NIST} (\textit{National Institute of Standards and Technology}) runs a website called \textit{NVD} (\textit{National Vulnerability Database}) which is a repository of public vulnerabilities represented in such a way as to allow for automatic consumption by vulnerability management software\cite{nvd15}.
 	
@@ -335,6 +336,60 @@
 	Alternatively, a more simplified visual guide can be obtained by taking the value of the ``Probability'' and ``Impact'' factors, and classifying them according to table \ref{scoreclass}. After the severity of both factors are obtained, table \ref{vulnrisksever} allows an easy lookup of the final severity of the risk.
 	
 	In the final step of the process, we make a decision regarding the mitigation of the risk. In general risk management theory, if the costs of mitigating a risk outweighs the costs of incurring the losses caused by its occurrence, the risk is not mitigated.
+		
+\subsection{Common Vulnerability Scoring System} \label{ssec:cvss}
+	
+	NIST's \textit{CVE} database has \textit{CVSS} scores associated to their vulnerability entries. This greatly enhances the ability of the tool implemented within this thesis to aid risk analysis, as the detected vulnerabilities can be set up to automatically map onto OWASP's risk analysis (or any other similar methodology in use by the business) for easier analysis of the latest vulnerabilities that may appear on a business's infrastructure.
+	
+	The \textit{Common Vulnerability Scoring System}\cite{cvssv2} (\textit{CVSS}) provides the following factors for each vulnerability with an associated score:
+	
+	\begin{multicols}{2}
+		\begin{itemize}
+			\item Base
+				\begin{itemize}
+					\item Access Vector ($AV$)
+					\item Access Complexity ($AC$)
+					\item Authentication ($Au$)
+					\item Confidentiality Impact ($C$)
+					\item Integrity Impact ($I$)
+					\item Availability Impact ($A$)
+				\end{itemize}
+			\item Temporal
+				\begin{itemize}
+					\item Exploitability ($E$)
+					\item Remediation Level ($RL$)
+					\item Report Confidence ($RC$)
+				\end{itemize}
+			\item Environmental
+				\begin{itemize}
+					\item Collateral Damage Potential ($CDP$)
+					\item Target Distribution ($TD$)
+					\item Confidentiality Requirement ($CR$)
+					\item Integrity Requirement ($IR$)
+					\item Availability Requirement ($AR$)
+				\end{itemize}
+		\end{itemize}
+	\end{multicols}
+	
+	\begin{equation} \label{eq:cvssexp}
+		\textrm{Exploitability} = 20 \cdot \textrm{Access Complexity} \cdot \textrm{Authentication} \cdot \textrm{Access Vector}
+	\end{equation}
+	\begin{equation} \label{eq:cvssimp}
+		\textrm{Impact} = 10.41 \cdot (1 - (1 - \textrm{Conf.Impact}) \cdot (1 - \textrm{Integ.Impact}) \cdot (1 - \textrm{Avail.Impact}))
+	\end{equation}
+	\begin{equation} \label{eq:cvss}
+		\textrm{Score} = (0.6 \cdot \textrm{Impact} + 0.4 \cdot \textrm{Exploitability} - 1.5) \cdot
+		\begin{cases}
+			1.176, & \text{if Impact} > 0\\
+			0, & \text{otherwise}
+		\end{cases}
+	\end{equation}
+	
+	As with the equations discussed in section \ref{ssec:vulnriskanal}, the ``Probability'' factor seen in equation \ref{eq:riskprob} is the functional equivalent of the ``Exploitability'' factor in equation \ref{eq:cvssexp}, similarly so are the ``Impact'' factors between equations \ref{eq:riskimp} and \ref{eq:cvssimp}.
+	
+	The final score given by equation \ref{eq:cvss} is on the scale of $0..1$, and its components can be used after scaling to $0..9$ in order to determine the severity of a risk by using table \ref{scoreclass} to classify it, which can then be looked up in table \ref{vulnrisksever}.
+	
+	Since the application implemented in the scope of this thesis reports CVSS scores for automatically detected fresh CVE vulnerabilities, it speeds up the risk analysis and decision making process, as managers can determine the severity of a newly discovered vulnerability in their systems and can act fast, if required, in cases where involving a security engineer would take much more time than desired in a critical situation.
 	
 \section{Vulnerability Assessment}
 	
