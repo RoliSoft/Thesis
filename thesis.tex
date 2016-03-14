@@ -453,13 +453,15 @@
 	
 \section{Implementation}
 
-\subsection{Protocol Tokenization}
+\subsection{Protocol Tokenization} \label{ssec:tokenizer}
 	
 	In order to improve the quality of the input for the CPE matcher component (further discussed in \ref{ssec:matchcpe}) and thereby minimizing the chances of false positives, the application makes a best effort to try recognizing and tokenizing the extracted service banners.
 	
 	The server replies are not fully parsed using a protocol-aware parser, instead it aims to either \textit{a)} extract server names, versions and operating system tags, or if that is not possible, \textit{b)} clean any known protocol strings, leaving only implementation-specific strings in the service banner.
 	
 	Currently there are two protocol tokenizers implemented, and these are run in order of protocol popularity when a service banner needs to be cleaned. An API is exposed which does this, \mintinline{cpp}{ProtocolTokenizer::AutoTokenize(const std::string& banner)}.
+	
+\subsubsection{Hyper-Text Transfer Protocol Tokenizer}
 	
 	The first tokenizer is \mintinline{cpp}{HttpTokenizer}, which decides whether the specified service banner contains a valid HTTP header, and if so, proceeds to tokenize it. During tokenization, it will try to extract product names and version numbers from the appropriate places.
 	
@@ -493,6 +495,8 @@
 	\end{listing}
 	
 	However, if the service banner being analyzed does not contain a valid HTTP header, the next tokenizer in order of protocol popularity to be tried is the \mintinline{cpp}{ThreeDigitTokenizer}, hereinafter referred to as the ``SMTP tokenizer'' for simplicity's sake.
+
+\subsubsection{Generic Fallback Tokenizer}
 	
 	The ``three-digit'' tokenizer is a general purpose solution for parsing protocols which use a three-digit response in their protocol to the indicate message type/category of a given server reply. Such protocols include SMTP, NNTP, FTP and a few more. For these protocols, however, unfortunately there is no standardized way to announce server name and version (like the `Server' header in the HTTP protocol) and as such the server name is generally casually announced in the informational level welcome message part of the service banner. The informational messages are generally within the range of $200-299$, however this might vary depending on the actual protocol.
 	
@@ -538,6 +542,8 @@
 	The example regular expression in listing \ref{nginxregex} matches against the response headers produced by the HTTP server software ``nginx''. See the service banner in listing \ref{httpsvcbnr} for an example that would be matched. Furthermore, the listed regular expression contains an optional capture group, which captures the version number. If the version number is listed in the service banner, the matcher component would return the CPE name \mintinline{matlab}{cpe:/a:nginx:nginx:1.9.12}, while without a version number listed, it will still return the CPE name \mintinline{matlab}{cpe:/a:nginx:nginx}.
 	
 	This behavior is different from the matcher described in section \ref{ssec:matchcpe}: whereas here a CPE name can be produced with high confidence with or without a known version number, the CPE dictionary-based matcher \textit{requires} a known version number, since it plays a pivotal role in the identifying and scoring process.
+	
+\subsubsection{Inferring Products Without Express Announcement}
 	
 	While the example presented in listing \ref{nginxregex} is rather straight-forward, the pattern matcher method can be used in a more subtle way, for example to match software which are not advertising their name or version number.
 	
@@ -592,7 +598,139 @@
 	
 \subsection{Matching of CPE Tokens in Service Banners} \label{ssec:matchcpe}
 
-	Related work \cite{shovat15}.
+	As discussed in \ref{ssec:vulndbs}, the \textit{National Institute of Standards and Technology} runs a \textit{National Vulnerability Database}. The \mintinline{cpp}{CpeDictionaryMatcher} component presented within this section makes use of the publicly distributed, freely available and daily updated \textit{Common Platform Enumeration Dictionary}.
+	
+	The \textit{CPE} is a naming scheme for hardware, software and operating systems\cite{cpe22}. Its v2.2 format is \mintinline{matlab}{cpe:/type:vendor:product:version:update:edition:language} where the `type' component can be \mintinline{matlab}{h} for `hardware', \mintinline{matlab}{o} for `operating system' and \mintinline{matlab}{a} for `application', while the rest of the components are self-explanatory.
+	
+	For example, the CPE name for ``nginx 1.3.9'' is \mintinline{matlab}{cpe:/a:igor_sysoev:nginx:1.3.9}.
+	
+	The aforementioned \textit{CPE dictionary} is a list of CPE names aggregated and maintained by NIST which are known to be vulnerable, i.e. have associated entries in the \textit{CVE database}.
+	
+	In listing \ref{nginxcpe} an excerpt is shown, presenting an entry from the dictionary for the ``nginx 1.9.9'' software.
+	
+	\begin{listing}[H]
+		\begin{minted}[style=borland]{xml}
+			<cpe-item name="cpe:/a:nginx:nginx:1.9.9">
+				<title xml:lang="en-US">Nginx 1.9.9</title>
+				<references>
+					<reference href="http://nginx.org/">Product</reference>
+					<reference href="http://nginx.org/en/CHANGES">Change Log</reference>
+				</references>
+				<cpe-23:cpe23-item name="cpe:2.3:a:nginx:nginx:1.9.9:*:*:*:*:*:*:*"/>
+			</cpe-item>
+		\end{minted}
+		\caption{CPE entry for nginx 1.9.9}
+		\label{nginxcpe}
+	\end{listing}
+	
+	Unfortunately the CPE names are not advertised in the service banners, nor is there a direct standard to map CPE names to service banners, or any other straight-forward solution on mapping them. In paper \cite{shovat15}, the authors have tackled with the same issue of processing and mapping the entries to service banners. The method presented within the paper was the basis for the implementation of the CPE matcher component in the application developed within the scope of this thesis.
+	
+\subsubsection{Implementation Overview}
+	
+	The current implementation of the CPE matcher component loads a preprocessed version of the CPE dictionary into its memory, where the CPE names are tokenized and irrelevant data (such as product links) are stripped for memory efficiency. Listing \ref{ciscotokens} presents the tokens loaded into memory for an example CPE name. For the exact implementation, see the structures within the header file of the \mintinline{cpp}{CpeDictionaryMatcher} class.
+	
+	\begin{listing}[H]
+		\begin{minted}[style=perldoc]{js}
+			CpeEntry {
+				// cpe:/o:cisco:ios
+				"ProductSpecificTokens": ["cisco", "ios"],
+				"Versions": [
+					CpeVersionEntry {
+						// cpe:/o:cisco:ios:12.2sxi
+						"VersionNumber": "12.2",
+						"VersionSpecificTokens": ["sxi"]
+					},
+					CpeVersionEntry {
+						// cpe:/o:cisco:ios:12.2:sxh
+						"VersionNumber": "12.2",
+						"VersionSpecificTokens": ["sxh"]
+					}
+					// [further versions omitted]
+				]
+			}
+		\end{minted}
+		\caption{Approximate internal representation of tokens for \mintinline{matlab}{cpe:/o:cisco:ios:12.2sxi}}
+		\label{ciscotokens}
+	\end{listing}
+	
+	During the tokenization process, the `vendor' and `product' components of the CPE name are matched against the regular expression \mintinline{matlab}{([a-z][a-z0-9]+)} in order to extract all words individually, ignoring one character words and those starting with a number.
+	
+	Doing so, we end up with an array like \mintinline[style=vs]{js}{["apache", "tomcat"]} for the example CPE name \mintinline{matlab}{cpe:/a:apache:tomcat:4.1.36}.
+	
+	The version component of the CPE contains in some cases irrelevant characters or non-standard version notation. In order to work around this, the version number is extracted from the component using the regular expression \mintinline{matlab}{\d+\.(?:\d+\.)*\d+}, which requires at least two numbers separated by a dot.
+	
+	If the version number contains any words, these are extracted with the aforementioned regular expression in the tokenization phase. As such, in the case of the CPE name \mintinline{matlab}{cpe:/o:cisco:ios:12.2sxi}, there will be an array of `version-specific tokens' consisting of the word \mintinline[style=vs]{js}{["sxi"]}.
+	
+	During CPE matching the entries are iterated, checking to see if the product-specific tokens match. If all of the tokens match, the entry-specific versions are iterated, checking to see if any of the version numbers are present in the input. If so, version-specific tokens are checked as well. A version is not considered a match if the version number matches, but even just one of the version-specific tokens do not.
+	
+	There are entries where multiple versions may match within the same product, such edge cases are discussed in subsection \ref{ssec:cpeedges}. In situations like these, a single version number is selected as the winner, which is determined by the distance of the tokens to the version number. The further a token is from the version number, the lesser it is considered to be relevant.
+	
+	For product names however, if multiple products (including their complete version numbers with tokens) match, all of the matches will be returned. The reason for this decision is because a service banner may name multiple software in use, but not multiple versions of the same software to be in use. In listing \ref{httpsvcbnr}, the service banner reveals the existence of three products, namely ``nginx 1.9.12,'' ``PHP 5.6.19'' and ``Ubuntu.''
+	
+\subsubsection{Handling of Edge Cases} \label{ssec:cpeedges}
+
+	The now-defunct \textit{Sun Microsystems}'s vendor identifier is ``sun'', resulting in CPE names such as \mintinline{matlab}{cpe:/a:sun:jre}, \mintinline{matlab}{cpe:/a:sun:jdk} and \mintinline{matlab}{cpe:/o:sun:solaris:10.0}. The problematic part with this token is that most protocols, such as SMTP and HTTP, return the current date in the RFC 1123 format\cite{rfc2616}, which looks like this: ``Sun, 14 Mar 2016 16:33:02 GMT''.
+	
+	The first component of the date is the shortened three-letter English name of the day, which on Sundays is ``Sun''. This introduces a `random' element into the equation, as the scoring system of the CPE matcher would rank CPEs from the \textit{Sun Microsystems} vendor higher, as the ``sun'' token is now present in the service banner.
+	
+	\begin{listing}[H]
+		\begin{minted}{matlab}
+			Cisco IOS Software, s72033_rp Software (s72033_rp-IPSERVICESK9_WAN-M), Version 12.2(33)SXI3, RELEASE SOFTWARE (fc2)
+			Technical Support: http://www.cisco.com/techsupport
+			Copyright (c) 1986-2009 by Cisco Systems, Inc.
+			Compiled Tue 27-Oct-09 11:12 by prod_
+		\end{minted}
+		\caption{Example telnet service banner of Cisco routers}
+		\label{ciscosvcbnr}
+	\end{listing}
+
+	Another example would be Cisco's version numbering and their telnet service banners. In listing \ref{ciscosvcbnr}, the service banner of \mintinline{matlab}{cpe:/o:cisco:ios:12.2sxi3} is shown. The problematic part arises from the fact that Cisco has the same version number $12.2$ with the patch level specified as ``by'': \mintinline{matlab}{cpe:/o:cisco:ios:12.2by}.
+	
+	If we were to tokenize the two CPE names, we would get two arrays which would look like these: \mintinline[style=vs]{js}{["cisco", "ios", "sxi"]} and \mintinline[style=vs]{js}{["cisco", "ios", "by"]}. The version number and the first two tokens from both arrays would match, however so would both ``sxi'' and ``by''. On lines 3 and 4 of \ref{ciscosvcbnr} the copyright and compilation notices both contain the word/token ``by''.
+
+	The aforementioned ShoVAT\cite{shovat15} paper solved this issue by weighing tokens around the version number more than those further from the version number, which solution is ultimately what the application written within the scope of this thesis has also settled with on one hand.
+	
+	However, a different solution was also implemented to combat this. The protocol tokenizer component discussed in \ref{ssec:tokenizer} was developed for the express purpose of extracting product names and versions from a service banner, or if that is not possible, then removing irrelevant parts, such as dates and non-informational messages.
+		
+	\begin{listing}[H]
+		\begin{minted}[style=borland]{xml}
+			<entry id="CVE-2016-0742">
+				<summary>The resolver in nginx before 1.8.1 and 1.9.x before 1.9.10 allows remote attackers to cause a denial of service (invalid pointer dereference and worker process crash) via a crafted UDP DNS response.</summary>
+				<vulnerable-software-list>
+					<product>cpe:/a:nginx:nginx:1.9.9</product>
+					<product>cpe:/a:nginx:nginx:1.9.8</product>
+					<product>cpe:/a:nginx:nginx:1.9.7</product>
+					<product>cpe:/a:nginx:nginx:1.9.6</product>
+					<!-- [several other versions omitted] -->
+				</vulnerable-software-list>
+				<cvss>
+					<base_metrics>
+						<score>5.0</score>
+						<access-vector>NETWORK</access-vector>
+						<access-complexity>LOW</access-complexity>
+						<authentication>NONE</authentication>
+						<confidentiality-impact>NONE</confidentiality-impact>
+						<integrity-impact>NONE</integrity-impact>
+						<availability-impact>PARTIAL</availability-impact>
+						<source>http://nvd.nist.gov</source>
+					</base_metrics>
+				</cvss>
+				<references xml:lang="en" reference_type="UNKNOWN">
+					<source>CONFIRM</source>
+					<reference href="https://bugzilla.redhat.com/show_bug.cgi?id=1302587" xml:lang="en">Bug 1302587</reference>
+				</references>
+				<references xml:lang="en" reference_type="UNKNOWN">
+					<source>DEBIAN</source>
+					<reference href="http://www.debian.org/security/2016/dsa-3473" xml:lang="en">DSA-3473</reference>
+				</references>
+				<!-- [several other references omitted] -->
+				<published-datetime>2016-02-15T14:59:00.107-05:00</published-datetime>
+				<last-modified-datetime>2016-02-29T18:40:11.667-05:00</last-modified-datetime>
+			</entry>
+		\end{minted}
+		\caption{CVE-2016-0742 entry affecting nginx 1.9.9}
+		\label{nginxcve}
+	\end{listing}
 
 \newpage
 \section{Bibliography}
