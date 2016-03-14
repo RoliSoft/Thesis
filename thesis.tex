@@ -408,7 +408,7 @@
 	
 	One of the ways this can be carried out is through \textit{static analysis} of the source code. This is generally done by an automated tool, and then a software developer goes through the results, reviewing and evaluating the possibly erroneous code in the meantime.
 	
-	Static analyzers process the source code of the application, doing lexical analysis, semantic analysis, type inference, constraint analysis, and so on. Simply put, they are looking for common mistakes there were either introduced by accidentally overlooking things on the developer's part (such as variable value assignment (=) instead of comparison (==) in \textit{if} statements) or parts that would possibly behave differently than the developer intended due to various language features (such as loose comparison type juggling/inference issues.)
+	Static analyzers process the source code of the application, doing lexical analysis, semantic analysis, type inference, constraint analysis, and so on. Simply put, they are looking for common mistakes there were either introduced by accidentally overlooking things on the developer's part -- such as variable value assignment (\mintinline{cpp}{=}) instead of comparison (\mintinline{cpp}{==}) in \mintinline{cpp}{if} statements -- or parts that would possibly behave differently than the developer intended due to various language features (such as loose comparison type juggling/inference issues.)
 	
 	Depending on their feature set, static analyzers may also evaluate the \textit{control flow} of a code in order to try and determine if branches exist that would result in an unwanted behavior. Another feature can be \textit{taint analysis}, which observes the evolution of variables that have user-provided input in order to determine if any input can cause issues later on in the code. In any case, code is not executed, only the source is analyzed, which introduces some limitations.
 	
@@ -466,7 +466,7 @@
 	The HTTP protocol has the `Server' and `X-Powered-By' header fields, which are generally used by software to indicate their name and version number. Unfortunately, the exact listing methodology is not standardized, as such different software may use different separators and notation to indicate their existence, version number, any vendor patches and possibly the operating system. Since these fields may have multiple products listed, the tokenizer makes sure to extract all the product names including any associated version numbers into separate tokens.
 	
 	\begin{listing}[H]
-		\begin{minted}{http}
+		\begin{minted}[style=pastie]{http}
 			HTTP/1.1 200 OK
 			Server: nginx/1.9.12 (Ubuntu)
 			X-Powered-By: PHP/5.6.19
@@ -480,7 +480,7 @@
 	The HTTP service banner shown in listing \ref{httpsvcbnr} is produced by nginx 1.9.12 with PHP 5.6.19 installed on a Ubuntu distribution. When processed by the implemented tokenizer, it will produce the elements shown in listing \ref{httpsvcbnrtokens}.
 	
 	\begin{listing}[H]
-		\begin{minted}{py}
+		\begin{minted}[style=perldoc]{js}
 			[
 				// token,           later mapped to,           by component
 				"nginx/1.9.12",  // cpe:/a:nginx:nginx:1.9.12, CpeDictionaryMatcher
@@ -507,7 +507,7 @@
 	The SMTP service banner shown in listing \ref{smtpsvcbnr} is produced by Exim 4.87 listening on port 25. This banner is sent as a `greeting' as soon as the client connects to the server. This is favorable, since no further protocol probes are required to be sent in order to get a processable service banner. When this banner is processed by the implemented tokenizer, it will produce the elements shown in listing \ref{smtpsvcbnrtokens}.
 		
 	\begin{listing}[H]
-		\begin{minted}{py}
+		\begin{minted}[style=perldoc]{js}
 			[
 				// token,                later mapped to,       by component
 				"ESMTP Exim 4.87 #2", // cpe:/a:exim:exim:4.87, CpeDictionaryMatcher
