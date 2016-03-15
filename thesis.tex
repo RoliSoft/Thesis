@@ -20,6 +20,10 @@
 \usepackage{multicol}
 \usepackage{amsmath}
 
+\usepackage{tikz}
+\usetikzlibrary{arrows}
+\tikzstyle{es} = [-triangle 60]
+
 \usepackage{enumitem}
 \setlist[itemize]{itemsep=0pt}
 \setlist[enumerate]{itemsep=0pt}
@@ -45,6 +49,7 @@
 
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
+\usepackage{fontawesome}
 
 %\usepackage{listings}
 %\lstset{basicstyle=\footnotesize,numbers=left,numberstyle=\scriptsize,numbersep=7pt,breaklines=true,breakatwhitespace=true,tabsize=4,backgroundcolor=\color{whitesmoke}}
@@ -56,6 +61,24 @@
 \setminted{linenos,autogobble,breaklines,fontsize=\footnotesize,tabsize=4,numbersep=7pt,bgcolor=whitesmoke}
 % \begin{minted}{cpp}
 % \mintinline{cpp}{...}
+
+\usepackage{titlesec}
+\titleclass{\subsubsubsection}{straight}[\subsection]
+
+\newcounter{subsubsubsection}[subsubsection]
+\renewcommand\thesubsubsubsection{\thesubsubsection.\arabic{subsubsubsection}}
+\titleformat{\subsubsubsection}
+  {\normalfont\normalsize\bfseries}{\thesubsubsubsection}{1em}{}
+\titlespacing*{\subsubsubsection}
+{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+
+\makeatletter
+\def\toclevel@subsubsubsection{4}
+\def\l@subsubsubsection{\@dottedtocline{4}{7em}{4em}}
+\makeatother
+
+\setcounter{secnumdepth}{4}
+\setcounter{tocdepth}{4}
 
 \author{Roland Bogosi}
 \title{Black-Box Penetration Testing and Vulnerability Management Platform}
@@ -467,6 +490,63 @@
 
 \subsubsection{TCP Scanning}
 
+	The TCP port scanning functionality is implemented by the \mintinline{cpp}{TcpScanner} component. The current implementation does not require super-user or administrator rights on the host device, as the component uses the operating system's network API to initiate connections.
+	
+	All the network operations are initiated in a non-blocking mode, after which the task at hand will go back into the queue until a state change has happened, as-is task multiplexing discussed in section \ref{ssec:tasks}.
+
+	\begin{figure}[!htbp]
+		\centering
+		\begin{tikzpicture}
+			\node at (0,0) {\Huge \faLaptop};
+			\node at (4.5,0) {\Huge \faServer};
+			\draw (0,-0.5) -- (0,-6.5);
+			\draw (4.5,-0.5) -- (4.5,-6.5);
+			\node at (-1.1,-1) {\mintinline{cpp}{connect()}};
+			\draw [es](0.5,-1) -- (4,-1);
+			\node at (2.25,-0.65) {SYN $i$};
+			\draw [es](4,-2) -- (0.5,-2);
+			\node at (5.5,-2) {\mintinline{cpp}{accept()}};
+			\node at (2.25,-1.65) {SYN $j$, ACK $i+1$};
+			\node at (-1.15,-2) {established};
+			\draw [es](0.5,-3) -- (4,-3);
+			\node at (2.25,-2.65) {ACK $j+1$};
+			\draw [es](0.5,-4) -- (4,-4);
+			\node at (5.7,-3) {established};
+			\node at (2.25,-3.65) {FIN $k$};
+			\node at (-0.9,-4) {\mintinline{cpp}{close()}};
+			\draw [es](4,-5) -- (0.5,-5);
+			\node at (2.25,-4.65) {ACK $k+1$, FIN $l$};
+			\draw [es](0.5,-6) -- (4,-6);
+			\node at (-0.75,-5) {closed};
+			\node at (2.25,-5.65) {ACK $l+1$};
+			\node at (5.25,-6) {closed};
+		\end{tikzpicture}
+		\caption{Three-way handshakes of TCP connects and disconnects}
+		\label{tcp3way}
+	\end{figure}
+	
+	As seen in figure \ref{tcp3way}, the TCP scanner component initiates a new connection with the \mintinline{cpp}{connect()} function call, which in turn leads the operating system's network stack to go through the full three-way handshake in order to open the socket.
+	
+	After the connection has succeeded, the scanner will call the \mintinline{cpp}{close()} function, which initiates the proper sequence for shutting down a TCP connection, as it would otherwise leave the connections open, which would open up both the scanner and targets for denial-of-service attacks by the way of resource exhaustion\cite{erickson08}.
+	
+	There are alternative methods for port scanning, for example `SYN', `ACK' and `FIN' scanning\cite{kris07}, where instead of using the operating system's network stack in order to initiate connections, the software crafts its own TCP packets, and uses raw sockets in order to send them and listen for replies. However, the use of raw sockets is generally restricted to superuser/administrator users on most operating systems, including Linux, Windows and various BSD flavors, including Mac OS X.
+	
+	Such alternative scanning methods are generally used to infiltrate firewalls or evade logging, as a firewall which does not implement a proper stateful stack may let non-`SYN' packets in and `RST'/`FIN' packets out. Similarly, if a connection is not opened fully by the way of a three-way handshake, the server software may never end up logging the connection attempt, but enough information is leaked beforehand to the attacker in order to determine whether the port is open, closed or filtered.
+	
+	As the software implemented within the scope of this thesis requires full service banners (port state information alone is not enough) and was intended to be used only by authorized personnel (such as network administrators and security researchers), it was decided that firewall evasion techniques are irrelevant and beyond the scope of this application.
+
+\subsubsubsection{Service Probing}
+
+	When a connection initiates, some protocols dictate that the server will send a ``welcome message,'' otherwise known as a service banner. For protocols, such as SSH, SMTP and FTP, this is enough to run analysis on them and determine the protocol type, software name and version.
+	
+	However, HTTP and other TLS-wrapped services require the client to send its request first, which is problematic, as there is no method at that point for determining what kind of protocol is the server listening for.
+	
+	One way would be to check the list of ``well-known'' ports\cite{iana16}, which is maintained by \textit{IANA} (\textit{Internet Assigned Numbers Authority}). While most of the port numbers coincide with the ones used in the real world, this is not an accurate method to deduce the service behind a port, as an administrator may choose to run a service on another port for security though obscurity reasons, evasion of firewall for the clients, or simply just due to running multiple instances of a server. Other than that, the list does not contain associations for ports between 49152 and 65535, as these are considered dynamic/ephemeral ports, which makes the identification of services on these ports impossible through this method.
+	
+	As such, this list is not utilized at all and active protocol probing is done instead. If the connection succeeds and no service banner was sent within a specified timeframe, the scanner sends a \mintinline[style=pastie]{http}{GET / HTTP/1.0}\mintinline{matlab}{\r\n\r\n} message to the server. If the reply is not satisfactory, the scanner will re-try the connection and send the \mintinline{matlab}{HELP\r\n} message.
+	
+	At this point if the server still has not sent a satisfactory reply, the server sends a TLS `ClientHello' packet in the hopes of negotiating a TLS connection. If the secure connection established, the previous plain text protocol probes are re-tried in the hopes of getting a satisfactory reply message which can by analyzed by the other components of the application.
+
 \subsubsection{UDP Scanning}
 
 \subsection{Passive Reconnaissance}
@@ -475,7 +555,7 @@
 
 \subsubsection{Censys}
 
-\subsection{Multiplexing Task Runner}
+\subsection{Multiplexing Task Runner} \label{ssec:tasks}
 
 \subsection{Protocol Tokenization} \label{ssec:tokenizer}
 	
