@@ -61,6 +61,7 @@
 \usepackage{minted}
 \renewcommand{\theFancyVerbLine}{\rmfamily\scriptsize\arabic{FancyVerbLine}}
 \setminted{linenos,autogobble,breaklines,fontsize=\footnotesize,tabsize=4,numbersep=7pt,bgcolor=whitesmoke}
+\AtBeginEnvironment{minted}{\renewcommand{\fcolorbox}[4][]{#4}}
 % \begin{minted}{cpp}
 % \mintinline{cpp}{...}
 
@@ -497,7 +498,7 @@
 
 \subsubsection{ICMP Echo Requests}
 
-	The ICMP protocol has an `EchoRequest' packet type, to which the kernels of the intended destinations, if not explicitly disabled, will reply with an `EchoReply' packet, sending the received payload back, including its sequence number, which can then be used for statistical analysis purposes by the requesting party.
+	The \textit{Internet Control Message Protocol} (\textit{ICMP}) has an `EchoRequest' packet type, to which the kernels of the intended destinations, if not explicitly disabled, will reply with an `EchoReply' packet, sending the received payload back, including its sequence number, which can then be used for statistical analysis purposes by the requesting party.
 
 	The command line utility \mintinline{bash}{ping} uses this ICMP `EchoRequest' mechanism in order to ``ping'' a remote destination and compute the round-trip time of the communication.
 	
@@ -539,6 +540,143 @@
 	Such ``ping'' requests cannot be sent on a per-port basis, as such it cannot be used to discover the available services on a host, and can only be used for host discovery within a network. While this is the most standard way of probing a host for availability state, most firewalls are configured by default to drop such packets, as they are not crucial for the normal operation of a network. They are generally only used for troubleshooting purposes or by outside actors to try and map a given network.
 
 \subsubsection{ARP Solicitation}
+
+	The \textit{Address Resolution Protocol} (\textit{ARP}) is the mechanism responsible for mapping network-layer IPv4 addresses to link-layer MAC addresses.
+	
+	When a client would like to receive the MAC address of an IP address within a network, as shown in figure \ref{arpreq}, it will craft an ARP packet consisting of its own data, and the requested data set to zeros.
+
+	\begin{figure}[!htbp]
+		\centering
+		\begin{tikzpicture}
+			\node at (0,0) {\Huge \faLaptop};
+			\node at (6,0) {\Huge \faServer};
+			\draw [es](1,0) -- (5,0);
+			\node at (3,0.5) {Who has 192.168.13.37$^{1}$?};
+			\draw [es](7,0) -- (11,0);
+			\node at (12,3) {\huge \faDesktop};
+			\node at (12,0) {\Huge \faLaptop};
+			\node at (12,-3) {\Huge \faMobile};
+			\draw [es](7,0) -- (11,3);
+			\draw [es](7,0) -- (11,-3);
+			\node at (0,-0.75) {Client $a$};
+			\node at (12,2.25) {Client $b$};
+			\node at (12,-0.75) {Client $c$};
+			\node at (12,-3.75) {Client $d$};
+			\node at (6,-0.75) {Router};
+			\node at (6,-1.65) {$^{1}$ARP Packet Fields};
+			\draw[fill=whitesmoke] (3.5,-1.9) rectangle (8.5,-4);
+			\draw (3.5,-1.4) rectangle (8.5,-1.9);
+			\node[align=left] at (6,-3) {\footnotesize Source IP: \ \ \ \ 192.168.13.31\\\footnotesize Source MAC: 46:25:f4:d3:18:67\\\footnotesize Target IP: \ \ \ \ 192.168.13.37\\\footnotesize Target MAC: 00:00:00:00:00:00};
+		\end{tikzpicture}
+		\caption{ARP Request for MAC address of IP 192.168.13.37}
+		\label{arpreq}
+	\end{figure}
+	
+	The aforementioned ARP packet is then broadcasted throughout the network, and if a client has the information which the packet is requesting, it will reply back with the zeroed fields filled out and source-target fields swapped, as shown in figure \ref{arpresp}. 
+	
+	\begin{figure}[!htbp]
+		\centering
+		\begin{tikzpicture}
+			\node at (0,0) {\Huge \faLaptop};
+			\node at (6,0) {\Huge \faServer};
+			\draw [es](5,0) -- (1,0);
+			\node at (9,0.5) {I have 192.168.13.37$^{2}$!};
+			\draw [es](11,0) -- (7,0);
+			\node[color=gray] at (12,3) {\huge \faDesktop};
+			\node at (12,0) {\Huge \faLaptop};
+			\node[color=gray] at (12,-3) {\Huge \faMobile};
+			\node at (0,-0.75) {Client $a$};
+			\node[color=gray] at (12,2.25) {Client $b$};
+			\node at (12,-0.75) {Client $c$};
+			\node[color=gray] at (12,-3.75) {Client $d$};
+			\node at (6,-0.75) {Router};
+			\node at (6,-1.65) {$^{2}$ARP Packet Fields};
+			\draw[fill=whitesmoke] (3.5,-1.9) rectangle (8.5,-4);
+			\draw (3.5,-1.4) rectangle (8.5,-1.9);
+			\node[align=left] at (6,-3) {\footnotesize Source IP: \ \ \ \ 192.168.13.37\\\footnotesize Source MAC: 1e:41:56:a9:a8:81\\\footnotesize Target IP: \ \ \ \ 192.168.13.31\\\footnotesize Target MAC: 46:25:f4:d3:18:67};
+		\end{tikzpicture}
+		\caption{ARP Response with MAC address of IP 192.168.13.37}
+		\label{arpresp}
+	\end{figure}
+
+	This mechanism is crucial to the proper functioning of an IPv4 network, and as such firewalls cannot interfere with it\footnote{Except in cases where the clients are isolated on the network, and as such are not supposed to communicate with each other.}.
+	
+	Similarly to ICMP, this functionality is only useful for discovering the hosts connected to a specific network, and not to determine the port states on the hosts themselves.
+	
+\subsubsubsection{Cross-Platform Implementation Challenges}
+
+	The implementation of the \mintinline{cpp}{ArpPinger} component was one of the most challenging and time-consuming components of the application developed within the scope of this thesis. None of the targeted operating systems provides out-of-the-box support for crafting, sending and receiving ARP packets. Documentation is also scarce on the subject, and the ones that do exist are generally too platform-specific.
+	
+	The bird's-eye overview of the implementation is that a raw socket is opened which can send link-layer packets, as opposed to network-layer communication which is generally the default mode for raw sockets. After this, the \mintinline{cpp}{ArpPinger::sendRequest(Host* host)} function manually constructs an Ethernet frame, with the underlying ARP `WhoHas' request, which is filled with the known information and the information sought after left as zeros.
+
+	After the packet is sent through the opened socket, the component will invoke the \mintinline{cpp}{ArpPinger::sniffReplies(Interfaces* ifaces, Hosts* hosts)} function in a new thread, which will listen for any incoming ARP responses and checks if any of them is a response to any of the specified sent requests in argument \mintinline{cpp}{hosts}. The implementation of this phase greatly varies on every operating system, and will be discussed in the following sections.
+
+\subsubsubsection{Linux-Specific Implementation}
+
+	The Linux-specific implementation was the easiest, as the kernel does not try to impose various senseless limitations upon the developers.
+	
+	The \mintinline{cpp}{getifaddrs(struct ifaddrs **ifap)} function returns the list of connected interfaces, from which the \mintinline{cpp}{AF_PACKET} type interfaces are being saved for later use.
+
+	In order to send the crafted ARP packet, a link-layer socket can be opened with the \mintinline{cpp}{socket(PF_PACKET, SOCK_RAW, ETH_P_ALL)} call.
+	
+	Similarly, the same socket can be used to listen for incoming link-layer packets. In order to speed up the process, the Linux kernel has support for Berkeley Packet Filter byte-codes, which allow filtering of the received packets on the socket in kernel-space. This will be further discussed in the BSD-specific implementation, as the BSD kernel is where it is originating from.
+
+\subsubsubsection{BSD/Darwin-Specific Implementation}
+
+	The BSD/Darwin-specific implementation was largely based on the Linux-specific implementation, as most function calls shared the same behavior, however some subtle parametering and structure differences have crept up here and there, creating the need for a different implementation.
+
+	As with Linux, the \mintinline{cpp}{getifaddrs(struct ifaddrs **ifap)} function returns the list of connected interfaces, from which the \mintinline{cpp}{AF_LINK} type interfaces are being saved for later use. While both \mintinline{cpp}{AF_PACKET} and \mintinline{cpp}{AF_LINK} represent the same interface, they use a different underlying structure to represent information about them, and as such require differing implementations.
+	
+	Unfortunately BSD does not allow the creation of a link-layer socket with a simple \mintinline{cpp}{socket()} call as Linux does, however it does have support for Berkeley Packet Filter devices, which can be used to, amongst other things, send and receive link-layer packets.
+	
+	In order to open a BPF device, the scanner first tries to open the next available descriptor in the range of \mintinline{bash}{/dev/bpf0} to \mintinline{bash}{/dev/bpf1000}. Once the device is open, it will be bound to a network interface with the \mintinline{cpp}{ioctl(bpf, BIOCSETIF, &inf)} call. At this point, link-layer packets can be sent by writing Ethernet frames to the \mintinline{cpp}{bpf} descriptor.
+	
+	Similarly, the same device can be read in order to listen for incoming link-layer packets. In order to speed up the process, the BSD kernel has support for parsing and evaluating Berkeley Packet Filter byte-codes, which allow for kernel-space filtering of packets before they reach the BPF device to be handled by the application running in user-space.
+	
+	An assembly-like BPF instruction list can be seen in listing \ref{bpfasm}, as generated by Wireshark, to filter packets other than ARP.
+	
+	\begin{listing}[H]
+		\begin{minted}{nasm}
+			ldh [12]             ; skip 12 bytes
+			jeq #0x806 jt 2 jf 3 ; if Eth type is ARP goto 2 else 3
+			ret #262144          ; return packet [when ARP]
+			ret #0               ; return null
+		\end{minted}
+		\caption{Berkeley Packet Filter instructions to filter packets other than ARP}
+		\label{bpfasm}
+	\end{listing}
+	
+	In order to apply this instruction list to a BPF device, the code first has to be built into a list of \mintinline{cpp}{bpf_insn} type array, as shown in listing \ref{bpfcpp}. This can then be wrapped into a \mintinline{cpp}{bpf_program} type structure, which in turn is ready to be attached to a device via the \mintinline{cpp}{ioctl(bpf, BIOCSETF, &bfprog)} call.
+	
+	\begin{listing}[H]
+		\begin{minted}{cpp}
+			struct bpf_insn bfcode[4];
+			bfcode[0] = BPF_STMT(BPF_LD + BPF_H + BPF_ABS, 12); // skip 12 bytes
+			bfcode[1] = BPF_JUMP(BPF_JMP + BPF_JEQ + BPF_K, ETH_P_ARP, 0, 1); // if Eth type is ARP goto +0 else +1
+			bfcode[2] = BPF_STMT(BPF_RET + BPF_K, sizeof(struct EthHeader) + sizeof(struct ArpHeader)); // return packet [when ARP]
+			bfcode[3] = BPF_STMT(BPF_RET + BPF_K, 0); // return null
+		\end{minted}
+		\caption{Specifying the Berkeley Packet Filter instructions shown in listing \ref{bpfasm}}
+		\label{bpfcpp}
+	\end{listing}
+	
+	The Darwin kernel and Mac OS X distributions inherit the BPF device, as such this implementation of the scanner is fully supported on these platforms.
+
+\subsubsubsection{Windows-Specific Implementation}
+
+	The Windows-specific implementation was a complete rewrite of the algorithm. Even though the Windows networking stack is based on BSD sockets, various senseless limitations were introduced, which make it impossible to send and receive link-layer packets, without resorting to extreme measures.
+
+	In order to get the list of interfaces on Windows, there is an exposed API which can be used, namely \mintinline{cpp}{GetAdaptersInfo(PIP_ADAPTER_INFO pAdapterInfo, PULONG pOutBufLen)}. The filtering is then done based on the \mintinline{cpp}{MIB_IF_TYPE_ETHERNET} type in order to only retain virtual and physical Ethernet interfaces.
+	
+	However, the list of functions that are supported via exposed APIs ends here, since Windows does not allow the sending and receiving of link-layer packets by user-space applications. In order to get this type of scanner working on Windows, I had to resort to the aforementioned `extreme measures.'
+	
+	In order to send and receive link-layer packets on Windows, as shown in \cite{xing10}, the WinPcap library can be utilized, which is a $3^{rd}$-party port of the libpcap interface to the Windows operating system, complete with its own virtual driver to allow low-level network access.
+	
+	After opening the network interface using \mintinline{cpp}{pcap_open(...)}, the resulting instance pointer can be used to either send packets at the link-layer level through the driver using the \mintinline{cpp}{pcap_sendpacket(pcap_t *p, u_char *buf, int size)} function, or to receive packets by calling the \mintinline{cpp}{pcap_next_ex(pcap_t *p, pcap_pkthdr **pkt_header, u_char **pkt_data)} function in a loop until either the sought after packet is read from the device or a specified time frame has elapsed.
+	
+	The aforementioned Berkeley Packet Filter functionality is also available within WinPcap, and the presented instructions in listings \ref{bpfasm} and \ref{bpfcpp} can be activated on the device using the \mintinline{cpp}{pcap_setfilter(pcap_t *p, bpf_program *fp)} function.
+	
+	As a result of this library usage due to this scanner, in order to compile the application with the ARP scanner included on Windows, the ``WinPcap Developer's Pack'' has to be installed and its path specified to CMake on the compiling machine, while the hosts running the application will need to have the WinPcap device driver installed.
 
 \subsubsection{TCP Scanning}
 
@@ -871,7 +1009,7 @@
 	
 	It is even possible to associate a version number to the software behind the port. For example, exim has implemented ``SMTP Service Extension for Per-Recipient Data Responses'' in version 4.83, and it advertises this capability as `PRDR' after the handshake, as seen in listing \ref{eximwiprdr} versus the handshake of an older version in listing \ref{eximwoprdr}.
 	
-	A regular expression can be written to inspect the advertised capability list, and make an educated guess stating that the version of the software is 4.83 or older. This can be further improved by creating a pattern which matches a change which only applies to versions 4.86 and older, at which point we can deduce that the inspected service banner was produced by exim between the versions of $4.83-4.86$.
+	A regular expression can be written to inspect the advertised capability list, and make an educated guess stating that the version of the software is 4.83 or older. This can be further improved by creating a pattern which matches a change which only applies to versions 4.86 and older, at which point it can deduced that the inspected service banner was produced by exim between the versions of $4.83-4.86$.
 	
 	For open-source software, it is possible to compare the source between different releases and check which publicly visible string changed, in order to write a pattern for detecting that range of versions. Building such a database of patterns, however, is beyond the scope of this project, and would be more suited for a community-sourced project.
 	
@@ -934,7 +1072,7 @@
 	
 	During the tokenization process, the `vendor' and `product' components of the CPE name are matched against the regular expression \mintinline{matlab}{([a-z][a-z0-9]+)} in order to extract all words individually, ignoring one character words and those starting with a number.
 	
-	Doing so, we end up with an array like \mintinline[style=vs]{js}{["apache", "tomcat"]} for the example CPE name \mintinline{matlab}{cpe:/a:apache:tomcat:4.1.36}.
+	Doing so, the resulting array will end up looking like \mintinline[style=vs]{js}{["apache", "tomcat"]} for the example CPE name \mintinline{matlab}{cpe:/a:apache:tomcat:4.1.36}.
 	
 	The version component of the CPE contains in some cases irrelevant characters or non-standard version notation. In order to work around this, the version number is extracted from the component using the regular expression \mintinline{matlab}{\d+\.(?:\d+\.)*\d+}, which requires at least two numbers separated by a dot.
 	
@@ -965,7 +1103,7 @@
 
 	Another example would be Cisco's version numbering and their telnet service banners. In listing \ref{ciscosvcbnr}, the service banner of \mintinline{matlab}{cpe:/o:cisco:ios:12.2sxi3} is shown. The problematic part arises from the fact that Cisco has the same version number $12.2$ with the patch level specified as ``by'': \mintinline{matlab}{cpe:/o:cisco:ios:12.2by}.
 	
-	If we were to tokenize the two CPE names, we would get two arrays which would look like these: \mintinline[style=vs]{js}{["cisco", "ios", "sxi"]} and \mintinline[style=vs]{js}{["cisco", "ios", "by"]}. The version number and the first two tokens from both arrays would match, however so would both ``sxi'' and ``by''. On lines 3 and 4 of \ref{ciscosvcbnr} the copyright and compilation notices both contain the word/token ``by''.
+	If one were to tokenize the two CPE names, they would get two arrays which would look like these: \mintinline[style=vs]{js}{["cisco", "ios", "sxi"]} and \mintinline[style=vs]{js}{["cisco", "ios", "by"]}. The version number and the first two tokens from both arrays would match, however so would both ``sxi'' and ``by''. On lines 3 and 4 of \ref{ciscosvcbnr} the copyright and compilation notices both contain the word/token ``by''.
 
 	The aforementioned ShoVAT\cite{shovat15} paper solved this issue by weighing tokens around the version number more than those further from the version number, which solution is ultimately what the application written within the scope of this thesis has also settled with on one hand.
 	
