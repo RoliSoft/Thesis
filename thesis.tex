@@ -491,7 +491,52 @@
 
 \subsection{Active Reconnaissance}
 
+	This section presents the components implemented within this application which engage in active target probing, to be more exact, those that are actively sending packets towards the scanned targets in order to determine port states and grab service banners for analysis.
+	
+	It should be noted that the legality of this practice varies by region, and one should generally not aim towards targets for which they previously have not received authorization to do so.
+
 \subsubsection{ICMP Echo Requests}
+
+	The ICMP protocol has an `EchoRequest' packet type, to which the kernels of the intended destinations, if not explicitly disabled, will reply with an `EchoReply' packet, sending the received payload back, including its sequence number, which can then be used for statistical analysis purposes by the requesting party.
+
+	The command line utility \mintinline{bash}{ping} uses this ICMP `EchoRequest' mechanism in order to ``ping'' a remote destination and compute the round-trip time of the communication.
+	
+	As shown in listings \ref{icmpdatawindows} and \ref{icmpdatalinux}, the \mintinline{bash}{ping} implementations that come bundled with both Windows and various Linux\footnote{Only Linux distributions which come bundled with GNU userland tools.} distributions utilize a static payload. This opens up the scanning party for fingerprinting, and firewalls may choose to drop such packets, if they are configured based on filtering these static payloads.
+	
+	\begin{listing}[H]
+		\begin{minted}{py}
+			00000000: 6162 6364 6566 6768 696a 6b6c 6d6e 6f70  abcdefghijklmnop
+			00000010: 7172 7374 7576 7761 6263 6465 6667 6869  qrstuvwabcdefghi
+		\end{minted}
+		\caption{Static payload sent by the Windows implementation of \mintinline{bash}{ping}}
+		\label{icmpdatawindows}
+	\end{listing}
+	
+	\begin{listing}[H]
+		\begin{minted}{py}
+			00000000: aa4a e956 0000 0000 9b2c 0c00 0000 0000  .J.V.....,......
+			00000010: 1011 1213 1415 1617 1819 1a1b 1c1d 1e1f  ................
+			00000020: 2021 2223 2425 2627 2829 2a2b 2c2d 2e2f   ....%&.()*+,-./
+			00000030: 3031 3233 3435 3637                      01234567
+		\end{minted}
+		\caption{Static payload sent by the GNU implementation of \mintinline{bash}{ping}}
+		\label{icmpdatalinux}
+	\end{listing}
+	
+	In order to work around the fingerprinting issue, the \mintinline{cpp}{IcmpPinger} component generates a random 32-byte payload, as shown in listing \ref{icmpdatarand}.
+	
+	\begin{listing}[H]
+		\begin{minted}{py}
+			00000000: 54e4 d362 3644 a768 147b 9538 2fcb 0fa2  T..b6D.h.{.8/...
+			00000010: 5810 8906 fcaa cbe7 430b dcc9 09a7 f39a  X.......C.......
+		\end{minted}
+		\caption{Example random payload generated as the `EchoRequest' data}
+		\label{icmpdatarand}
+	\end{listing}
+
+	The implementation of the scanner uses raw sockets in order to craft the `EchoRequest' packets, the use of which is restricted to super-user or administrator users on most operating systems, including Linux, Windows and various BSD flavors.
+
+	Such ``ping'' requests cannot be sent on a per-port basis, as such it cannot be used to discover the available services on a host, and can only be used for host discovery within a network. While this is the most standard way of probing a host for availability state, most firewalls are configured by default to drop such packets, as they are not crucial for the normal operation of a network. They are generally only used for troubleshooting purposes or by outside actors to try and map a given network.
 
 \subsubsection{ARP Solicitation}
 
@@ -536,7 +581,7 @@
 	
 	After the connection has succeeded, the scanner will call the \mintinline{cpp}{close()} function, which initiates the proper sequence for shutting down a TCP connection, as it would otherwise leave the connections open, which would open up both the scanner and targets for denial-of-service attacks by the way of resource exhaustion\cite{erickson08}.
 	
-	There are alternative methods for port scanning, for example `SYN', `ACK' and `FIN' scanning\cite{kris07}, where instead of using the operating system's network stack in order to initiate connections, the software crafts its own TCP packets, and uses raw sockets in order to send them and listen for replies. However, the use of raw sockets is generally restricted to superuser/administrator users on most operating systems, including Linux, Windows and various BSD flavors, including Mac OS X.
+	There are alternative methods for port scanning, for example `SYN', `ACK' and `FIN' scanning\cite{kris07}, where instead of using the operating system's network stack in order to initiate connections, the software crafts its own TCP packets, and uses raw sockets in order to send them and listen for replies. However, the use of raw sockets is generally restricted to super-user or administrator users on most operating systems, including Linux, Windows and various BSD flavors, including Mac OS X.
 	
 	Such alternative scanning methods are generally used to infiltrate firewalls or evade logging, as a firewall which does not implement a proper stateful stack may let non-`SYN' packets in and `RST'/`FIN' packets out. Similarly, if a connection is not opened fully by the way of a three-way handshake, the server software may never end up logging the connection attempt, but enough information is leaked beforehand to the attacker in order to determine whether the port is open, closed or filtered.
 	
