@@ -8,10 +8,14 @@
 \usepackage{fancyhdr}
 \pagestyle{fancy}
 
+\usepackage[table,xcdraw,dvipsnames]{xcolor}
+\definecolor{whitesmoke}{rgb}{0.96,0.96,0.96}
+\definecolor{lightblue}{rgb}{0.22,0.45,0.70}
+\definecolor{darkred}{rgb}{0.9,0.0,0.0}
+
 \usepackage[backref=false,pagebackref=true]{hyperref}
-\hypersetup{colorlinks=true,urlcolor=blue,pdfborder={0 0 0}}
+\hypersetup{colorlinks=true,urlcolor=lightblue,citecolor=green!75!black,linkcolor=orange!98!black,pdfborder={0 0 0}}
 \usepackage{multirow}
-\usepackage[table,xcdraw]{xcolor}
 
 \usepackage{graphicx}
 \usepackage{wrapfig}
@@ -36,7 +40,7 @@
 \newcommand{\urlprefix}{Retrieved from \urlstyle{rm}}
 
 \newcommand{\refspace}{\vspace{-2mm}}
-\newcommand{\redarrow}{\textcolor{red}{$\mathbf{\Rightarrow}$}}
+\newcommand{\redarrow}{\textcolor{darkred}{$\mathbf{\to}$}}
 \makeatletter
 \def\BR@@bibitem#1#2\par{
 	\let\backrefprint\BR@backrefprint
@@ -44,8 +48,6 @@
 	\BRorg@bibitem{#1}#2\redarrow \thinspace \BR@backref{#1}
 }
 \makeatother
-
-\definecolor{whitesmoke}{rgb}{0.96,0.96,0.96}
 
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
@@ -131,9 +133,12 @@
 
 	\begingroup
 	\renewcommand{\section}[2]{}
-	\hypersetup{linkcolor=blue}
+	\hypersetup{linkcolor=lightblue}
 	\setlength{\parskip}{0em}
 	\tableofcontents
+	%\listoffigures
+	%\listoftables
+	%\listoflistings
 	\endgroup
 
 \newpage
@@ -472,7 +477,9 @@
 	
 	Penetration testing is an \textit{active} vulnerability scanning technique which simulates real-life attacks on the infrastructure, however a \textit{passive} version of this technique exists under the name of \textit{IDS}/\textit{IPS}. (\textit{Intrusion Detection/Prevention System})
 	
-	These systems sit between the user and the application, sniffing and analyzing traffic for potential red flags. This method is rather limited, as it cannot detect vulnerabilities in the system, with which a user has not yet interacted with due to its limited data source being only the network traffic. Another downside of this technique is that an exploitation might slip through even in the strictest setting of the IPS, as the analyzed network traffic might simply be identified as false negative. As such, preventive measures were not taken against the traffic, and the exploitation was successful.
+	These systems sit between the user and the application, sniffing and analyzing traffic for potential red flags. This method is rather limited, as it cannot detect vulnerabilities in the system, with which a user has not yet interacted with due to its limited data source being only the network traffic.
+	
+	Another downside of this technique is that an exploitation might slip through even in the strictest setting of the IPS, as the analyzed network traffic might simply be identified as false negative. As such, preventive measures were not taken against the traffic, and the exploitation was successful.
 	
 \section{Implementation}
 
@@ -591,6 +598,10 @@
 	For the purposes of host aliveness detection, an ICMP `PortUnreachable' message to a random UDP port informs the scanner that the host is in fact online, but that specific port is not, as opposed to an ICMP `HostUnreachable' message, which is sometimes sent by a router along the way to the host, informing the scanner that the host is not online.
 
 \subsection{Passive Reconnaissance}
+
+	This section presents the components implemented within the application which allow passive reconnaissance, that is, probing of IP addresses without actively contacting them.
+	
+	Such feat can be achieved by utilizing $3^{rd}$-party services which scan the public IP address space on a regular basis and make the results available either in a downloadable database dump or a publicly consumable API format.
 
 \subsubsection{Shodan}
 
