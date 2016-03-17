@@ -37,6 +37,10 @@
 
 \renewcommand{\arraystretch}{2}
 
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{fontawesome}
+
 \newcommand{\urlprefix}{Retrieved from \urlstyle{rm}}
 
 \newcommand{\refspace}{\vspace{-2mm}}
@@ -48,22 +52,6 @@
 	\BRorg@bibitem{#1}#2\redarrow \thinspace \BR@backref{#1}
 }
 \makeatother
-
-\usepackage[T1]{fontenc}
-\usepackage{lmodern}
-\usepackage{fontawesome}
-
-%\usepackage{listings}
-%\lstset{basicstyle=\footnotesize,numbers=left,numberstyle=\scriptsize,numbersep=7pt,breaklines=true,breakatwhitespace=true,tabsize=4,backgroundcolor=\color{whitesmoke}}
-% \begin{lstlisting}[language=c++,caption=...]
-% \lstinline[language=c++]{...}
-
-\usepackage{minted}
-\renewcommand{\theFancyVerbLine}{\rmfamily\scriptsize\arabic{FancyVerbLine}}
-\setminted{linenos,autogobble,breaklines,fontsize=\footnotesize,tabsize=4,numbersep=7pt,bgcolor=whitesmoke}
-\AtBeginEnvironment{minted}{\renewcommand{\fcolorbox}[4][]{#4}}
-% \begin{minted}{cpp}
-% \mintinline{cpp}{...}
 
 \usepackage{titlesec}
 \titleclass{\subsubsubsection}{straight}[\subsection]
@@ -83,8 +71,52 @@
 \setcounter{secnumdepth}{4}
 \setcounter{tocdepth}{4}
 
+\makeatletter
+\newcommand\hungariantableofcontents{%
+  \selectlanguage{hungarian}%
+  \section*{\contentsname
+    \@mkboth{\MakeUppercase\contentsname}{\MakeUppercase\contentsname}}%
+  \@starttoc{toc.hu}%
+  \selectlanguage{english}%
+ }
+\makeatother
+
+\newcommand\sectionhu[1]{\addcontentsline{toc.hu}{section} {\protect\numberline{\thesection} #1}}
+\newcommand\subsectionhu[1]{\addcontentsline{toc.hu}{subsection} {\protect\numberline{\thesubsection} #1}}
+\newcommand\subsubsectionhu[1]{\addcontentsline{toc.hu}{subsubsection} {\protect\numberline{\thesubsubsection} #1}}
+\newcommand\subsubsubsectionhu[1]{\addcontentsline{toc.hu}{subsubsubsection} {\protect\numberline{\thesubsubsubsection} #1}}
+
+\makeatletter
+\newcommand\romaniantableofcontents{%
+  \selectlanguage{romanian}%
+  \section*{\contentsname
+    \@mkboth{\MakeUppercase\contentsname}{\MakeUppercase\contentsname}}%
+  \@starttoc{toc.ro}%
+  \selectlanguage{english}%
+ }
+\makeatother
+
+\newcommand\sectionro[1]{\addcontentsline{toc.ro}{section} {\protect\numberline{\thesection} #1}}
+\newcommand\subsectionro[1]{\addcontentsline{toc.ro}{subsection} {\protect\numberline{\thesubsection} #1}}
+\newcommand\subsubsectionro[1]{\addcontentsline{toc.ro}{subsubsection} {\protect\numberline{\thesubsubsection} #1}}
+\newcommand\subsubsubsectionro[1]{\addcontentsline{toc.ro}{subsubsubsection} {\protect\numberline{\thesubsubsubsection} #1}}
+
+%\usepackage{listings}
+%\lstset{basicstyle=\footnotesize,numbers=left,numberstyle=\scriptsize,numbersep=7pt,breaklines=true,breakatwhitespace=true,tabsize=4,backgroundcolor=\color{whitesmoke}}
+% \begin{lstlisting}[language=c++,caption=...]
+% \lstinline[language=c++]{...}
+
+\usepackage{minted}
+\renewcommand{\theFancyVerbLine}{\rmfamily\scriptsize\arabic{FancyVerbLine}}
+\setminted{linenos,autogobble,breaklines,fontsize=\footnotesize,tabsize=4,numbersep=7pt,bgcolor=whitesmoke}
+\AtBeginEnvironment{minted}{\renewcommand{\fcolorbox}[4][]{#4}}
+% \begin{minted}{cpp}
+% \mintinline{cpp}{...}
+
 \author{Roland Bogosi}
 \title{Black-Box Penetration Testing and Vulnerability Management Platform}
+
+\PrerenderUnicode{áéúóőűíăâîșț}
 
 \begin{document}
 
@@ -128,6 +160,8 @@
 	\end{center}
 
 \newpage
+\fancyhead[R]{}
+\fancyhead[L]{}
 \thispagestyle{empty}
 \section*{Table of Contents}
 \selectlanguage{english}
@@ -137,13 +171,44 @@
 	\hypersetup{linkcolor=lightblue}
 	\setlength{\parskip}{0em}
 	\tableofcontents
-	%\listoffigures
-	%\listoftables
-	%\listoflistings
+	\endgroup
+
+	\begingroup
+	\hypersetup{linkcolor=lightblue}
+	\listoffigures
+	\listoftables
+	\listoflistings
 	\endgroup
 
 \newpage
+\thispagestyle{empty}
+\section*{Tartalomjegyzék}
+\selectlanguage{hungarian}
+
+	\begingroup
+	\renewcommand{\section}[2]{}
+	\hypersetup{linkcolor=lightblue}
+	\setlength{\parskip}{0em}
+	\hungariantableofcontents
+	\endgroup
+
+\newpage
+\thispagestyle{empty}
+\section*{Cuprins}
+\selectlanguage{romanian}
+
+	\begingroup
+	\renewcommand{\section}[2]{}
+	\hypersetup{linkcolor=lightblue}
+	\setlength{\parskip}{0em}
+	\romaniantableofcontents
+	\endgroup
+
+\newpage
+\fancyhead[R]{\slshape \leftmark}
+\fancyhead[L]{\slshape \rightmark}
 \section{Introduction}
+\sectionhu{Bevezető} \sectionro{Introducere}
 
 	As the world is embracing digital technologies more and more, a lot of our services are keeping up with this trend, and have started being digitally available for the purposes of easier and faster accessibility. Digital data can be processed much faster and reliably than its analogue equivalents, which benefits the service providers by keeping the costs of providing their services low. Customers are also saved the headache of experiencing routine unpleasantries which are now alleviated by digital services, such as queuing up in order to pay the bills for various services one has subscribed to.
 	
@@ -152,6 +217,7 @@
 	Our increasing reliance on digital services and data are not without its drawbacks, however. With more and more sensitive information and transactions being done over the Internet, one must question the security of it all. As one idiom states, ``\textit{a chain is as strong as its weakest link},'' and in the context of Internet-enabled applications, there are a lot of these aforementioned figurative ``\textit{links}.'' Starting from the possibility of there being an attack vector on any layer of the \textit{OSI} between the two communicating devices, down to the vulnerabilities which are specific to the application being executed over the network.
 	
 \subsection{Security Awareness of IT Professionals}
+\subsectionhu{Biztonsági Tudatosság az IT Szakértőkben} \subsectionro{Conștiința de Securitate al Profesioniștilor IT}
 	
 	As one study done by \textit{BSIMM-V} (\textit{Building Security In Maturity Model}) which included 51 top-tier firms (mostly fortune 500) has concluded\cite{gmcgraw12}, a large percentage of product managers, software developers and system administrators have never received security awareness training nor been instructed to lay an emphasis on security, and as a result they do not prioritize it. One of the reasons why one might \textit{not} consider security awareness to be a priority is due to bogusly thinking that security aware application development and deployment is too costly. A study done by the \textit{Aberdeen Group} has shown that companies who invest in security end up with up-to a four-fold \textit{ROI} (``\textit{Return on Investments}'').\cite{aberdeen11}
 	
@@ -166,6 +232,7 @@
 	Another special case would be IoT device ideas that have been funded through the use of crowdfunding platforms. These platforms, such as Kickstarter or IndieGoGo, are the hotbed of young entrepreneurial spirits with fresh ideas wanting to procure enough money in order to have a chance at executing them. Early prototypes of these projects are generally crafted using existing prototyping boards, such as Arduinos and Raspberry PIs. Later, when the proof of concept has proven to be viable and the first batch is moved to manufacturing, a similar architecture is built so as to allow re-use of existing code. This generally means that experimental code written in an environment in which the developer might not be comfortable enough in, is now being shipped as production code. This practice has spawned in the past lots of devices that are vulnerable and might present a huge security risk.\cite{mstan14}
 	
 \subsection{Security Awareness of Home Users}
+\subsectionhu{Biztonsági Tudatosság az Otthoni Felhasználókban} \subsectionro{Conștiința de Securitate al Utilizatorilor Casnici}
 	
 	As Internet-connected devices are becoming more and more affordable and easier to use, home users have started adopting more and more of these devices. Unfortunately home users never receive any sort of formal security awareness training, and as such are very easily persuaded to fall for any type of attack which could have been easily prevented had they received a minimal amount of training. Even though, best-practices are usually laid out in the manual of the software being used, users tend to apply ignorance\cite{jnielsen12} even in cases when important notices and warnings are being displayed on the interface of the software and automatically click the ``OK''/``Next'' buttons, whatever gets them to what they wanted to be doing in the first place.
 	
@@ -176,6 +243,7 @@
 	When it comes to devices designed for, and services provided to home users, the balance of ease of use and security always comes into play. Users would like an easy-to-use device or application and would rather sacrifice security in order for experiencing a mild discomfort. In one study, in the context of online banking, a user mentioned that two-factor authentication was ``\textit{not} worth spending 5 minutes for \$1.99 purchases''\cite{ecrist14}. In the same study, it is shown that only 27\% of the users have \textit{voluntarily} opted to use multi-factor authentication, when available.
 	
 \subsection{Security Assurance in Enterprise Environments}
+\subsectionhu{Biztonsági Tudatosság a Vállalati Környezetekben} \subsectionro{Conștiința de Securitate în Mediile de Întreprindere}
 
 	Security is of paramount importance in enterprise environments. In such an environment, hundreds if not thousands of users (employees) depend on the IT infrastructure, and it is business-critical for these services to be functioning and data to be accessible 24/7, otherwise minor to major losses might be incurred. These hundreds or thousands of employees will all have different levels of access, controlled by strict security policies on what they can and cannot do or access.
 	
@@ -195,6 +263,7 @@
 	One ``celebrity'' example for the aforementioned second point would be the \textit{Heartbleed} vulnerability in \textit{OpenSSL}. The project being a universal, highly platform-agnostic and trustworthy cryptography and PKI toolkit was the basis of the majority of daemon software which were using SSL/TLS sockets in the *NIX userland, and was also embedded in IoT devices that had any sort of web interface or have done cryptography in any way, shape or form. Every embedded device deployed with a vulnerable version of OpenSSL is now live and vulnerable, with no easy fix that can be applied by the vendor remotely, in most cases. This has been acknowledged by multiple leading networking gear vendors in statements saying ``Cisco and Juniper cannot just press a button and immediately replace the vulnerable software running on the machines.''\cite{jpaglier14}
 	
 \subsection{Security Assurance in the Financial Sector} \label{ssec:secassfinsec}
+\subsectionhu{Biztonsági Tudatosság a Pénzügyi Ágazatban} \subsectionro{Conștiința de Securitate în Sectorul Financiar}
 
 	\begin{wrapfigure}{r}{0.35\textwidth}
 		\vspace{-10pt}
@@ -223,6 +292,7 @@
 	While strict rules are set forth for protecting sensitive data, merchants tend to try and get away with the least amount of strictness they can still get compliance certified for, by skipping rules marked as ``best practice, not requirement'' and rules which they can tick on a \textit{technicality} due to the phrasing of the sentence. One such example would be the fact that for a long period of time, it was possible to \textit{trick} the code review requirement by substituting automated source code analyzers with automated penetration testing, however, since version 3.0 of the security standard, it has been clarified that penetration testing is a mandatory requirement in a different section, and as such they are not a substitute for code reviews.
 	
 \subsection{Government Mandated Security}
+\subsectionhu{Törvényileg Kötelezett Biztonság} \subsectionro{Securitate Obligat de Lege}
 	
 	The standards discussed in previous sections were all \textit{best practices} where implementing bodies would do their \textit{best effort} on complying, none of it was mandated\footnote{In 2009, Nevada (USA), then a year later, the State of Washington (USA), incorporated \textit{PCI DSS} into state law\cite{wash10}, however, the incorporated standard's sole purpose is to shield compliant parties from liability in case of a data breach.}.
 	
@@ -231,10 +301,12 @@
 	There is, however, at least one sector in which there is prominent government mandated security. In the USA, the field of public health is regulated by \textit{HIPAA} (\textit{Health Insurance Portability and Accountability Act}), which was signed into law\cite{hipaa96} in 1996, and amongst others, sets forth rules and requirements about confidential handling of protected health information.
 
 \section{Software Vulnerabilities}
+\sectionhu{Szoftver Sebezhetőségek} \sectionro{Vulnerabilități de Software}
 	
 	The \textit{RFC 2828} and many \textit{NIST} publications define ``vulnerability'' as ``a flaw or weakness in system security procedures, design, implementation, or internal controls that could be exercised (accidentally triggered or intentionally exploited) and result in a security breach or a violation of the system's security policy.''\cite{rfc2828,nist80030} What this means in simplified terms is, that a vulnerability is essentially a bug in the software's or web service's code, which when \textit{exploited}, (e.g. specifying an input which was specifically crafted to be bogus and known to trigger the bug) allows users to perform actions they would otherwise not be allowed to, or access data they would otherwise not be privy to.
 	
 \subsection{Disclosure Procedures and Policies}
+\subsectionhu{Közzétételi Eljárások és Politikák} \subsectionro{Proceduri și Politici de Publicare}
 	
 	Dealing with vulnerabilities found by a $3^{rd}$-party in a software or web service is a complex topic, which does not have a standard procedure defined. The person, company, or responsible industry body may have a \textit{vulnerability disclosure policy} in place if they have dealt with vulnerability disclosure in the past, however, as there is no industry standard in place, the terms in the policy will be uniquely defined as to how the vulnerability finder sees it fit.
 	
@@ -253,6 +325,7 @@
 	One such notable example is Google's \textit{Vulnerability Reward Program}\cite{googlevrp15}, which pays up to tens of thousands of dollars in rewards for a vulnerability in their own services, but have also extended the bug bounty to several high-risk open-source software, for which they independently pay \$500 to \$3,133.7. Google also has a related program called \textit{Patch Reward Program}, where they pay volunteers who have fixed a security issue in a high-risk open-source application. Rewards for that program range from \$500 (for ``one-liner fixes'') to \$10,000 (for ``complicated, high-impact fixes.'')
 	
 \subsection{Regulatory Industry Bodies}
+\subsectionhu{Szabályozó Szervek} \subsectionro{Organismele de Reglementare din Industrie}
 	
 	\begin{wrapfigure}{r}{0.35\textwidth}
 		\vspace{-10pt}
@@ -272,6 +345,7 @@
 	Similarly, a response team is available on the European Union level. \textit{CERT-EU} (\textit{Computer Emergency Response Team European Union Task Force}) was established on the November of 2012\cite{certeu13}, via mandated EU Commission decision. This body acts as a separate response team, meaning it does not exist solely to amalgamate reports of member countries' response teams.
 	
 \subsection{Vulnerability Databases} \label{ssec:vulndbs}
+\subsectionhu{Sebezhetőségi Adatbázisok} \subsectionro{Bază de Date al Vulnerabilităților}
 	
 	One of the projects sponsored by CERT/CC is \textit{CVE} (\textit{Common Vulnerabilities and Exposures}), which provides a reference method for publicly know and tracked vulnerabilities. \textit{NIST} (\textit{National Institute of Standards and Technology}) runs a website called \textit{NVD} (\textit{National Vulnerability Database}) which is a repository of public vulnerabilities represented in such a way as to allow for automatic consumption by vulnerability management software\cite{nvd15}.
 	
@@ -290,6 +364,7 @@
 	These components will be further discussed in the section regarding the implementation of the vulnerability assessment engine.
 	
 \subsection{Vulnerability Risk Analysis} \label{ssec:vulnriskanal}
+\subsectionhu{Sebezhetőségek Kockázatelemzése} \subsectionro{Analiză de Risc pentru Vulnerabilități}
 
 	During the project planning phase or later down the line when a vulnerability is discovered either during development or via penetration testing, risk analysis may be performed in order to assess the severity of the risk using the standard risk model formula shown in equation \ref{eq:risk}. Generally, if its fix would be too expensive, (e.g. it would require breaking changes, full infrastructure rebuild, or other miscellaneous major inconveniences) the results of the risk analysis are carefully evaluated by managers, and if no immediate major threat is imminent with a huge impact that can be caused by the discovered bug, an alternative route may be chosen which is not as costly.
 	
@@ -367,6 +442,7 @@
 	In the final step of the process, we make a decision regarding the mitigation of the risk. In general risk management theory, if the costs of mitigating a risk outweighs the costs of incurring the losses caused by its occurrence, the risk is not mitigated.
 		
 \subsection{Common Vulnerability Scoring System} \label{ssec:cvss}
+\subsectionhu{CVSS Pontozási Rendszer} \subsectionro{Sistem de Notare CVSS}
 	
 	\begin{wrapfigure}{r}{0.3\textwidth}
 		\vspace{-10pt}
@@ -428,12 +504,14 @@
 	Since the application implemented in the scope of this thesis reports CVSS scores for automatically detected fresh CVE vulnerabilities, it speeds up the risk analysis and decision making process, as managers can determine the severity of a newly discovered vulnerability in their systems and can act fast, if required, in cases where involving a security engineer would take much more time than desired in a critical situation.
 	
 \section{Vulnerability Assessment}
+\sectionhu{Sebezhetőségek Felderítése} \sectionro{Descoperirea Vulnerabilităților}
 	
 	\textit{Vulnerability assessment} is the process of identifying and quantifying[\ref{ssec:vulnriskanal}] of the vulnerabilities present within an infrastructure.
 	
 	In order to ensure the continuous security of an application, server or whole infrastructure, proactive measures need to be taken by the competent bodies. These measures generally include periodical scanning of the infrastructure in order to identify possible attack surfaces and test against newly discovered vulnerabilities.
 	
 \subsection{Static Code Analysis}
+\subsectionhu{Statikus Kódelemzés} \subsectionro{Analiză Statică de Cod}
 	
 	One of the ways this can be carried out is through \textit{static analysis} of the source code. This is generally done by an automated tool, and then a software developer goes through the results, reviewing and evaluating the possibly erroneous code in the meantime.
 	
@@ -444,14 +522,17 @@
 	Using static analysis tools have their pros and cons, for example, they can be enforced by integrating it into the build process, but they also have cons, for example, not being able to analyze binaries that have been provided without a source code, or the fact that pattern matching cannot account for everything, resulting in \textit{false negatives}. (Also known as, malicious code that was analyzed but not deemed malicious.)
 	
 \subsection{Fuzz Testing}
+\subsectionhu{``Fuzz'' Tesztelés} \subsectionro{Testare ``Fuzz''}
 	
 	A similar software testing technique that has proven useful in the field of security is \textit{fuzz testing}. This technique feeds random malformed data to the software as input, and observes the behavior of the software as a result.
 	
 	While this technique is not necessarily popular, it has been used quite successfully in the past by security researchers to automatically weed out bugs in numerous applications.\cite{mzalewski15} The use of randomly generated data which breaks assumptions is very successful in confusing/breaking the state machines of the parser being tested, and potentially leading to unstability during runtime or software crash. This is essentially ``vulnerability scanning by bruteforce.''
 	
 \subsection{Vulnerability Scanning}
+\subsectionhu{Sebezhetőség Keresés} \subsectionro{Scanare Vulnerabilități}
 	
 \subsubsection{Penetration Testing}
+\subsubsectionhu{Behatolás Tesztelés} \subsubsectionro{Test de Penetrare}
 	
 	The most offensive vulnerability assessment technique is \textit{penetration testing}, which simulates real-life attacks on an infrastructure.
 	
@@ -475,6 +556,7 @@
 	\end{itemize}
 	
 \subsubsection{Intrusion Detection/Prevention Systems}
+\subsubsectionhu{Behatolást Megelőző Rendszerek} \subsubsectionro{Sistem de Prevenire a Penetrației}
 	
 	Penetration testing is an \textit{active} vulnerability scanning technique which simulates real-life attacks on the infrastructure, however a \textit{passive} version of this technique exists under the name of \textit{IDS}/\textit{IPS}. (\textit{Intrusion Detection/Prevention System})
 	
@@ -483,6 +565,7 @@
 	Another downside of this technique is that an exploitation might slip through even in the strictest setting of the IPS, as the analyzed network traffic might simply be identified as false negative. As such, preventive measures were not taken against the traffic, and the exploitation was successful.
 	
 \section{Implementation}
+\sectionhu{Kivitelezés} \sectionro{Realizarea}
 
 	The application and scripts developed within the scope of this thesis are free and open-source software.
 	
@@ -491,12 +574,14 @@
 	The various scripts written mainly for the purposes of data processing and experimentation, are available at \url{https://github.com/RoliSoft/Host-Scanner-Scripts} and can be freely used, modified and redistributed under the terms of the MIT license\cite{mit}.
 
 \subsection{Active Reconnaissance}
+\subsectionhu{Aktív Feltérképezés} \subsectionro{Scanare Activă}
 
 	This section presents the components implemented within this application which engage in active target probing, to be more exact, those that are actively sending packets towards the scanned targets in order to determine port states and grab service banners for analysis.
 	
 	It should be noted that the legality of this practice varies by region, and one should generally not aim towards targets for which they previously have not received authorization to do so.
 
 \subsubsection{ICMP Echo Requests}
+\subsubsectionhu{ICMP `EchoRequest' Kérések} \subsubsectionro{Scanare cu ICMP `EchoRequest'}
 
 	The \textit{Internet Control Message Protocol} (\textit{ICMP}) has an `EchoRequest' packet type, to which the kernels of the intended destinations, if not explicitly disabled, will reply with an `EchoReply' packet, sending the received payload back, including its sequence number, which can then be used for statistical analysis purposes by the requesting party.
 
@@ -540,6 +625,7 @@
 	Such ``ping'' requests cannot be sent on a per-port basis, as such it cannot be used to discover the available services on a host, and can only be used for host discovery within a network. While this is the most standard way of probing a host for availability state, most firewalls are configured by default to drop such packets, as they are not crucial for the normal operation of a network. They are generally only used for troubleshooting purposes or by outside actors to try and map a given network.
 
 \subsubsection{ARP Solicitation}
+\subsubsectionhu{ARP `WhoHas' Kérések} \subsubsectionro{Scanare cu ARP `WhoHas'}
 
 	The \textit{Address Resolution Protocol} (\textit{ARP}) is the mechanism responsible for mapping network-layer IPv4 addresses to link-layer MAC addresses.
 	
@@ -604,6 +690,7 @@
 	Similarly to ICMP, this functionality is only useful for discovering the hosts connected to a specific network, and not to determine the port states on the hosts themselves.
 	
 \subsubsubsection{Cross-Platform Implementation Challenges}
+\subsubsubsectionhu{Platform-Független Kivitelezés Kihívásai} \subsubsubsectionro{Provocări al Implementației Platform Independente}
 
 	The implementation of the \mintinline{cpp}{ArpPinger} component was one of the most challenging and time-consuming components of the application developed within the scope of this thesis. None of the targeted operating systems provides out-of-the-box support for crafting, sending and receiving ARP packets. Documentation is also scarce on the subject, and the ones that do exist are generally too platform-specific.
 	
@@ -612,6 +699,7 @@
 	After the packet is sent through the opened socket, the component will invoke the \mintinline{cpp}{ArpPinger::sniffReplies(Interfaces* ifaces, Hosts* hosts)} function in a new thread, which will listen for any incoming ARP responses and checks if any of them is a response to any of the specified sent requests in argument \mintinline{cpp}{hosts}. The implementation of this phase greatly varies on every operating system, and will be discussed in the following sections.
 
 \subsubsubsection{Linux-Specific Implementation}
+\subsubsubsectionhu{Linux Implementáció} \subsubsubsectionro{Implementația pentru Linux}
 
 	The Linux-specific implementation was the easiest, as the kernel does not try to impose various senseless limitations upon the developers.
 	
@@ -622,6 +710,7 @@
 	Similarly, the same socket can be used to listen for incoming link-layer packets. In order to speed up the process, the Linux kernel has support for Berkeley Packet Filter byte-codes, which allow filtering of the received packets on the socket in kernel-space. This will be further discussed in the BSD-specific implementation, as the BSD kernel is where it is originating from.
 
 \subsubsubsection{BSD/Darwin-Specific Implementation}
+\subsubsubsectionhu{BSD/Darwin Implementáció} \subsubsubsectionro{Implementația pentru BSD/Darwin}
 
 	The BSD/Darwin-specific implementation was largely based on the Linux-specific implementation, as most function calls shared the same behavior, however some subtle parametering and structure differences have crept up here and there, creating the need for a different implementation.
 
@@ -663,6 +752,7 @@
 	The Darwin kernel and Mac OS X distributions inherit the BPF device, as such this implementation of the scanner is fully supported on these platforms.
 
 \subsubsubsection{Windows-Specific Implementation}
+\subsubsubsectionhu{Windows Implementáció} \subsubsubsectionro{Implementația pentru Windows}
 
 	The Windows-specific implementation was a complete rewrite of the algorithm. Even though the Windows networking stack is based on BSD sockets, various senseless limitations were introduced, which make it impossible to send and receive link-layer packets, without resorting to extreme measures.
 
@@ -679,6 +769,7 @@
 	As a result of this library usage due to this scanner, in order to compile the application with the ARP scanner included on Windows, the ``WinPcap Developer's Pack'' has to be installed and its path specified to CMake on the compiling machine, while the hosts running the application will need to have the WinPcap device driver installed.
 
 \subsubsection{TCP Scanning}
+\subsubsectionhu{TCP Letapogatás} \subsubsectionro{Scanare TCP}
 
 	The TCP port scanning functionality is implemented by the \mintinline{cpp}{TcpScanner} component. The current implementation does not require super-user or administrator rights on the host device, as the component uses the operating system's network API to initiate connections.
 	
@@ -726,6 +817,7 @@
 	As the software implemented within the scope of this thesis requires full service banners (port state information alone is not enough) and was intended to be used only by authorized personnel (such as network administrators and security researchers), it was decided that firewall evasion techniques are irrelevant and beyond the scope of this application.
 
 \subsubsubsection{Protocol Probing}
+\subsubsubsectionhu{Protokoll Beazonosítása} \subsubsubsectionro{Identificarea Protocolului}
 
 	When a connection initiates, some protocols dictate that the server will send a ``welcome message,'' otherwise known as a service banner. For protocols, such as SSH, SMTP and FTP, this is enough to run analysis on them and determine the protocol type, software name and version.
 	
@@ -738,6 +830,7 @@
 	At this point if the server still has not sent a satisfactory reply, the server sends a TLS `ClientHello' packet in the hopes of negotiating a TLS connection. If the secure connection established, the previous plain text protocol probes are re-tried in the hopes of getting a satisfactory reply message which can by analyzed by the other components of the application.
 
 \subsubsection{UDP Scanning}
+\subsubsectionhu{UDP Letapogatás} \subsubsectionro{Scanare UDP}
 
 	The UDP protocol, as opposed to TCP, is connectionless. This means that it cannot be reliably determined whether a server is listening on the scanned port at all. Even if a server is listening, it might be possible that its implementation drops all packets which are not well-formed, instead of returning an error message which can be used to deduce the protocol.
 	
@@ -781,12 +874,14 @@
 	For the purposes of host aliveness detection, an ICMP `PortUnreachable' message to a random UDP port informs the scanner that the host is in fact online, but that specific port is not, as opposed to an ICMP `HostUnreachable' message, which is sometimes sent by a router along the way to the host, informing the scanner that the host is not online.
 
 \subsection{Passive Reconnaissance}
+\subsectionhu{Passzív Feltérképezés} \subsectionro{Scanare Pasivă}
 
 	This section presents the components implemented within the application which allow passive reconnaissance, that is, probing of IP addresses without actively contacting them.
 	
 	Such feat can be achieved by utilizing $3^{rd}$-party services which scan the public IP address space on a regular basis and make the results available either in a downloadable database dump or a publicly consumable API format.
 
 \subsubsection{Shodan} \label{ssec:shodan}
+\subsubsectionhu{Shodan} \subsubsectionro{Shodan}
 
 	Shodan\cite{shodan16} is a project which scans the entire IPv4 address space continuously and exposes the gathered data on a web interface in the form of a search engine. It also exposes various APIs which allows developers and security researchers to generate reports on queries, or query the database and consume the results themselves. Figure \ref{shodanscr} shows the data readily available on the service for a queried IP address.
 
@@ -802,6 +897,7 @@
 	Implementation-wise, the \mintinline{cpp}{ShodanScanner} component takes care of contacting the Shodan JSON API interface and retrieving the data available for the specified IP addresses. This component extends the \mintinline{cpp}{HostScanner} class, and as such it is possible to substitute the default scanner to Shodan data for any scanning needs.
 
 \subsubsection{Censys} \label{ssec:censys}
+\subsubsectionhu{Censys} \subsubsectionro{Censys}
 
 	Censys\cite{censys15} is a project created and run by the Regents of the University of Michigan. Similarly to the previously discussed service, it also gathers its data by regular Internet-wide scanning efforts. It allows developers and security researchers to initiate structured queries, full-text search queries or raw SQL queries from their web interface or the exposed RESTful API. Figure \ref{censysscr} shows the data readily available on the service for a queried IP address.
 	
@@ -819,6 +915,7 @@
 	Implementation-wise, the \mintinline{cpp}{CensysScanner} component takes care of contacting the Censys JSON API interface and retrieving the data available for the specified IP addresses. Similarly, this component also extends the \mintinline{cpp}{HostScanner} class, and as such it is possible to substitute the default scanner to Censys data for any scanning needs.
 
 \subsubsection{Amalgamation}
+\subsubsectionhu{Egyesítés} \subsubsectionro{Amalgamare}
 
 	The \mintinline{cpp}{PassiveScanner} component of the application initiates the requested scan tasks on both Shodan[\ref{ssec:shodan}] and Censys[\ref{ssec:censys}], merging the results at the end.
 	
@@ -869,6 +966,7 @@
 	In cases where both services return a service banner for a specific port, the longer banner is chosen during the amalgamation phase. One of the reasons for this decision was because ban messages are generally shorter\cite{qualys11} in order to avoid denial of service attacks. The other reason was because a longer banner generally means that the service in question possibly probed the port further (e.g. `STARTTLS' command sent to SMTP servers by Censys, but not by Shodan) which allows the pattern matching component described in \ref{ssec:patternmatch} to have more data available.
 
 \subsection{Class Hierarchy of Data Reconnaissance Components}
+\subsectionhu{Adatszerző Komponensek Osztályhierarhiája} \subsectionro{Ierarhia de Clasă a Componentelor Colectoare de Date}
 
 	\begin{figure}[!htbp]
 		\centering
@@ -925,8 +1023,10 @@
 	\end{figure}
 
 \subsection{Multiplexing Task Runner} \label{ssec:tasks}
+\subsectionhu{Feladatok Párhuzamosítása} \subsectionro{Paralelizarea Sarcinilor}
 
 \subsection{Protocol Tokenization} \label{ssec:tokenizer}
+\subsectionhu{Protokoll Értelmezés} \subsectionro{Interpretor de Protocoale}
 	
 	In order to improve the quality of the input for the CPE matcher component (further discussed in \ref{ssec:matchcpe}) and thereby minimizing the chances of false positives, the application makes a best effort to try recognizing and tokenizing the extracted service banners.
 	
@@ -935,6 +1035,7 @@
 	Currently there are two protocol tokenizers implemented, and these are run in order of protocol popularity when a service banner needs to be cleaned. An API is exposed which does this, \mintinline{cpp}{ProtocolTokenizer::AutoTokenize(const std::string& banner)}.
 	
 \subsubsection{Hyper-Text Transfer Protocol Tokenizer}
+\subsubsectionhu{HTTP Értelmező} \subsubsectionro{Interpretor de HTTP}
 	
 	The first tokenizer is \mintinline{cpp}{HttpTokenizer}, which decides whether the specified service banner contains a valid HTTP header, and if so, proceeds to tokenize it. During tokenization, it will try to extract product names and version numbers from the appropriate places.
 	
@@ -970,6 +1071,7 @@
 	However, if the service banner being analyzed does not contain a valid HTTP header, the next tokenizer in order of protocol popularity to be tried is the \mintinline{cpp}{ThreeDigitTokenizer}, hereinafter referred to as the ``SMTP tokenizer'' for simplicity's sake.
 
 \subsubsection{Generic Fallback Tokenizer}
+\subsubsectionhu{Generikus Értelmező} \subsubsectionro{Interpretor Generic}
 	
 	The ``three-digit'' tokenizer is a general purpose solution for parsing protocols which use a three-digit response in their protocol to the indicate message type/category of a given server reply. Such protocols include SMTP, NNTP, FTP and a few more. For these protocols, however, unfortunately there is no standardized way to announce server name and version (like the `Server' header in the HTTP protocol) and as such the server name is generally casually announced in the informational level welcome message part of the service banner. The informational messages are generally within the range of $200-299$, however this might vary depending on the actual protocol.
 	
@@ -1001,6 +1103,7 @@
 	If all of the implemented tokenizers fail to process a service banner, it will be sent to the next stage of discovery (usually to component described in \ref{ssec:matchcpe}) as one token, containing the whole service banner.
 	
 \subsection{Pattern Matching of Service Banners} \label{ssec:patternmatch}
+\subsectionhu{Szerverek Minta-alapú Beazonosítása} \subsectionro{Identificare Software pe Bază de Model}
 
 	The purpose of the \mintinline{cpp}{ServiceRegexMatcher} component of the application is to take the original full service banner (without any tokenization) as an input, and match it against a database of regular expressions, which in turn are mapped to their own CPE names.
 
@@ -1017,6 +1120,7 @@
 	This behavior is different from the matcher described in section \ref{ssec:matchcpe}: whereas here a CPE name can be produced with high confidence with or without a known version number, the CPE dictionary-based matcher \textit{requires} a known version number, since it plays a pivotal role in the identifying and scoring process.
 	
 \subsubsection{Inferring Products Without Express Announcement}
+\subsubsectionhu{Identitás Kikövetkeztetése Névhírdetés Nélkül} \subsubsectionro{Deducerea Identității fără Anunțul cu Nume}
 	
 	While the example presented in listing \ref{nginxregex} is rather straight-forward, the pattern matcher method can be used in a more subtle way, for example to match software which are not advertising their name or version number.
 	
@@ -1070,6 +1174,7 @@
 	For open-source software, it is possible to compare the source between different releases and check which publicly visible string changed, in order to write a pattern for detecting that range of versions. Building such a database of patterns, however, is beyond the scope of this project, and would be more suited for a community-sourced project.
 	
 \subsection{Matching of CPE Tokens in Service Banners} \label{ssec:matchcpe}
+\subsectionhu{Szerverek CPE-alapú Beazonosítása} \subsectionro{Identificare Software pe Bază de CPE}
 
 	As discussed in \ref{ssec:vulndbs}, the \textit{National Institute of Standards and Technology} runs a \textit{National Vulnerability Database}. The \mintinline{cpp}{CpeDictionaryMatcher} component presented within this section makes use of the publicly distributed, freely available and daily updated \textit{Common Platform Enumeration Dictionary}.
 	
@@ -1099,6 +1204,7 @@
 	Unfortunately the CPE names are not advertised in the service banners, nor is there a direct standard to map CPE names to service banners, or any other straight-forward solution on mapping them. In paper \cite{shovat15}, the authors have tackled with the same issue of processing and mapping the entries to service banners. The method presented within the paper was the basis for the implementation of the CPE matcher component in the application developed within the scope of this thesis.
 	
 \subsubsection{Implementation Overview}
+\subsubsectionhu{Kivitelezés Áttekintése} \subsubsectionro{Prezentarea Generală}
 	
 	The current implementation of the CPE matcher component loads a preprocessed version of the CPE dictionary into its memory, where the CPE names are tokenized and irrelevant data (such as product links) are stripped for memory efficiency. Listing \ref{ciscotokens} presents the tokens loaded into memory for an example CPE name. For the exact implementation, see the structures within the header file of the \mintinline{cpp}{CpeDictionaryMatcher} class.
 	
@@ -1141,6 +1247,7 @@
 	For product names however, if multiple products (including their complete version numbers with tokens) match, all of the matches will be returned. The reason for this decision is because a service banner may name multiple software in use, but not multiple versions of the same software to be in use. In listing \ref{httpsvcbnr}, the service banner reveals the existence of three products, namely ``nginx 1.9.12,'' ``PHP 5.6.19'' and ``Ubuntu.''
 	
 \subsubsection{Handling of Edge Cases} \label{ssec:cpeedges}
+\subsubsectionhu{Élesetek Kezelése} \subsubsectionro{Soluționarea Cazurilor de Margine}
 
 	The now-defunct \textit{Sun Microsystems}'s vendor identifier is ``sun'', resulting in CPE names such as \mintinline{matlab}{cpe:/a:sun:jre}, \mintinline{matlab}{cpe:/a:sun:jdk} and \mintinline{matlab}{cpe:/o:sun:solaris:10.0}. The problematic part with this token is that most protocols, such as SMTP and HTTP, return the current date in the RFC 1123 format\cite{rfc2616}, which looks like this: ``Sun, 14 Mar 2016 16:33:02 GMT''.
 	
@@ -1207,6 +1314,7 @@
 
 \newpage
 \section{Bibliography}
+\sectionhu{Bibliográfia} \sectionro{Bibliografie}
 
 	\begingroup
 	\renewcommand{\section}[2]{}
