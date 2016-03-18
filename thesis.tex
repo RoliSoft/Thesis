@@ -212,7 +212,7 @@
 	Our increasing reliance on digital services and data are not without its drawbacks, however. With more and more sensitive information and transactions being done over the Internet, one must question the security of it all. As one idiom states, ``\textit{a chain is as strong as its weakest link},'' and in the context of Internet-enabled applications, there are a lot of these aforementioned figurative ``\textit{links}.'' Starting from the possibility of there being an attack vector on any layer of the \textit{OSI} between the two communicating devices, down to the vulnerabilities which are specific to the application being executed over the network.
 	
 \subsection{Security Awareness of IT Professionals}
-\subsectionhu{Biztonsági Tudatosság az IT Szakértőkben} \subsectionro{Conștiința de Securitate al Profesioniștilor IT}
+\subsectionhu{Biztonsági Tudatosság az IT Szakértőkben} \subsectionro{Conștientizarea Importanței Securității -- Profesioniștilor IT}
 	
 	As one study done by \textit{BSIMM-V} (\textit{Building Security In Maturity Model}) which included 51 top-tier firms (mostly fortune 500) has concluded\cite{gmcgraw12}, a large percentage of product managers, software developers and system administrators have never received security awareness training nor been instructed to lay an emphasis on security, and as a result they do not prioritize it. One of the reasons why one might \textit{not} consider security awareness to be a priority is due to bogusly thinking that security aware application development and deployment is too costly. A study done by the \textit{Aberdeen Group} has shown that companies who invest in security end up with up-to a four-fold \textit{ROI} (``\textit{Return on Investments}'').\cite{aberdeen11}
 	
@@ -227,7 +227,7 @@
 	Another special case would be IoT device ideas that have been funded through the use of crowdfunding platforms. These platforms, such as Kickstarter or IndieGoGo, are the hotbed of young entrepreneurial spirits with fresh ideas wanting to procure enough money in order to have a chance at executing them. Early prototypes of these projects are generally crafted using existing prototyping boards, such as Arduinos and Raspberry PIs. Later, when the proof of concept has proven to be viable and the first batch is moved to manufacturing, a similar architecture is built so as to allow re-use of existing code. This generally means that experimental code written in an environment in which the developer might not be comfortable enough in, is now being shipped as production code. This practice has spawned in the past lots of devices that are vulnerable and might present a huge security risk.\cite{mstan14}
 	
 \subsection{Security Awareness of Home Users}
-\subsectionhu{Biztonsági Tudatosság az Otthoni Felhasználókban} \subsectionro{Conștiința de Securitate al Utilizatorilor Casnici}
+\subsectionhu{Biztonsági Tudatosság az Otthoni Felhasználókban} \subsectionro{Conștientizarea Importanței Securității -- Utilizatorilor Casnici}
 	
 	As Internet-connected devices are becoming more and more affordable and easier to use, home users have started adopting more and more of these devices. Unfortunately home users never receive any sort of formal security awareness training, and as such are very easily persuaded to fall for any type of attack which could have been easily prevented had they received a minimal amount of training. Even though, best-practices are usually laid out in the manual of the software being used, users tend to apply ignorance\cite{jnielsen12} even in cases when important notices and warnings are being displayed on the interface of the software and automatically click the ``OK''/``Next'' buttons, whatever gets them to what they wanted to be doing in the first place.
 	
@@ -238,7 +238,7 @@
 	When it comes to devices designed for, and services provided to home users, the balance of ease of use and security always comes into play. Users would like an easy-to-use device or application and would rather sacrifice security in order for experiencing a mild discomfort. In one study, in the context of online banking, a user mentioned that two-factor authentication was ``\textit{not} worth spending 5 minutes for \$1.99 purchases''\cite{ecrist14}. In the same study, it is shown that only 27\% of the users have \textit{voluntarily} opted to use multi-factor authentication, when available.
 	
 \subsection{Security Assurance in Enterprise Environments}
-\subsectionhu{Biztonsági Tudatosság a Vállalati Környezetekben} \subsectionro{Conștiința de Securitate în Mediile de Întreprindere}
+\subsectionhu{Biztonság Biztosítása a Vállalati Környezetekben} \subsectionro{Asigurarea Securității în Mediile de Întreprindere}
 
 	Security is of paramount importance in enterprise environments. In such an environment, hundreds if not thousands of users (employees) depend on the IT infrastructure, and it is business-critical for these services to be functioning and data to be accessible 24/7, otherwise minor to major losses might be incurred. These hundreds or thousands of employees will all have different levels of access, controlled by strict security policies on what they can and cannot do or access.
 	
@@ -258,7 +258,7 @@
 	One ``celebrity'' example for the aforementioned second point would be the \textit{Heartbleed} vulnerability in \textit{OpenSSL}. The project being a universal, highly platform-agnostic and trustworthy cryptography and PKI toolkit was the basis of the majority of daemon software which were using SSL/TLS sockets in the *NIX userland, and was also embedded in IoT devices that had any sort of web interface or have done cryptography in any way, shape or form. Every embedded device deployed with a vulnerable version of OpenSSL is now live and vulnerable, with no easy fix that can be applied by the vendor remotely, in most cases. This has been acknowledged by multiple leading networking gear vendors in statements saying ``Cisco and Juniper cannot just press a button and immediately replace the vulnerable software running on the machines.''\cite{jpaglier14}
 	
 \subsection{Security Assurance in the Financial Sector} \label{ssec:secassfinsec}
-\subsectionhu{Biztonsági Tudatosság a Pénzügyi Ágazatban} \subsectionro{Conștiința de Securitate în Sectorul Financiar}
+\subsectionhu{Biztonság Biztosítása a Pénzügyi Ágazatban} \subsectionro{Asigurarea Securității în Sectorul Financiar}
 
 	\begin{wrapfigure}{r}{0.35\textwidth}
 		\vspace{-10pt}
@@ -296,7 +296,7 @@
 	There is, however, at least one sector in which there is prominent government mandated security. In the USA, the field of public health is regulated by \textit{HIPAA} (\textit{Health Insurance Portability and Accountability Act}), which was signed into law\cite{hipaa96} in 1996, and amongst others, sets forth rules and requirements about confidential handling of protected health information.
 
 \section{Software Vulnerabilities}
-\sectionhu{Szoftver Sebezhetőségek} \sectionro{Vulnerabilități de Software}
+\sectionhu{Szoftver Sebezhetőségek} \sectionro{Vulnerabilități Software}
 	
 	The \textit{RFC 2828} and many \textit{NIST} publications define ``vulnerability'' as ``a flaw or weakness in system security procedures, design, implementation, or internal controls that could be exercised (accidentally triggered or intentionally exploited) and result in a security breach or a violation of the system's security policy.''\cite{rfc2828,nist80030} What this means in simplified terms is, that a vulnerability is essentially a bug in the software's or web service's code, which when \textit{exploited}, (e.g. specifying an input which was specifically crafted to be bogus and known to trigger the bug) allows users to perform actions they would otherwise not be allowed to, or access data they would otherwise not be privy to.
 	
@@ -340,7 +340,7 @@
 	Similarly, a response team is available on the European Union level. \textit{CERT-EU} (\textit{Computer Emergency Response Team European Union Task Force}) was established on the November of 2012\cite{certeu13}, via mandated EU Commission decision. This body acts as a separate response team, meaning it does not exist solely to amalgamate reports of member countries' response teams.
 	
 \subsection{Vulnerability Databases} \label{ssec:vulndbs}
-\subsectionhu{Sebezhetőségi Adatbázisok} \subsectionro{Bază de Date al Vulnerabilităților}
+\subsectionhu{Sebezhetőség Adatbázisok} \subsectionro{Baze de Date ale Vulnerabilităților}
 	
 	One of the projects sponsored by CERT/CC is \textit{CVE} (\textit{Common Vulnerabilities and Exposures}), which provides a reference method for publicly know and tracked vulnerabilities. \textit{NIST} (\textit{National Institute of Standards and Technology}) runs a website called \textit{NVD} (\textit{National Vulnerability Database}) which is a repository of public vulnerabilities represented in such a way as to allow for automatic consumption by vulnerability management software\cite{nvd15}.
 	
@@ -551,7 +551,7 @@
 	\end{itemize}
 	
 \subsubsection{Intrusion Detection/Prevention Systems}
-\subsubsectionhu{Behatolást Megelőző Rendszerek} \subsubsectionro{Sistem de Prevenire a Penetrației}
+\subsubsectionhu{Behatolást Megelőző Rendszerek} \subsubsectionro{Sisteme de Detecție ale Intruziunilor}
 	
 	Penetration testing is an \textit{active} vulnerability scanning technique which simulates real-life attacks on the infrastructure, however a \textit{passive} version of this technique exists under the name of \textit{IDS}/\textit{IPS}. (\textit{Intrusion Detection/Prevention System})
 	
@@ -685,7 +685,7 @@
 	Similarly to ICMP, this functionality is only useful for discovering the hosts connected to a specific network, and not to determine the port states on the hosts themselves.
 	
 \subsubsubsection{Cross-Platform Implementation Challenges}
-\subsubsubsectionhu{Platform-Független Kivitelezés Kihívásai} \subsubsubsectionro{Provocări al Implementației Platform Independente}
+\subsubsubsectionhu{Platform-Független Kivitelezés Kihívásai} \subsubsubsectionro{Provocări ale Implementării Independente de Platformă}
 
 	The implementation of the \mintinline{cpp}{ArpPinger} component was one of the most challenging and time-consuming components of the application developed within the scope of this thesis. None of the targeted operating systems provides out-of-the-box support for crafting, sending and receiving ARP packets. Documentation is also scarce on the subject, and the ones that do exist are generally too platform-specific.
 	
@@ -694,7 +694,7 @@
 	After the packet is sent through the opened socket, the component will invoke the \mintinline{cpp}{ArpPinger::sniffReplies(Interfaces* ifaces, Hosts* hosts)} function in a new thread, which will listen for any incoming ARP responses and checks if any of them is a response to any of the specified sent requests in argument \mintinline{cpp}{hosts}. The implementation of this phase greatly varies on every operating system, and will be discussed in the following sections.
 
 \subsubsubsection{Linux-Specific Implementation}
-\subsubsubsectionhu{Linux Implementáció} \subsubsubsectionro{Implementația pentru Linux}
+\subsubsubsectionhu{Linux Implementáció} \subsubsubsectionro{Implementarea pentru Linux}
 
 	The Linux-specific implementation was the easiest, as the kernel does not try to impose various senseless limitations upon the developers.
 	
@@ -705,7 +705,7 @@
 	Similarly, the same socket can be used to listen for incoming link-layer packets. In order to speed up the process, the Linux kernel has support for Berkeley Packet Filter byte-codes, which allow filtering of the received packets on the socket in kernel-space. This will be further discussed in the BSD-specific implementation, as the BSD kernel is where it is originating from.
 
 \subsubsubsection{BSD/Darwin-Specific Implementation}
-\subsubsubsectionhu{BSD/Darwin Implementáció} \subsubsubsectionro{Implementația pentru BSD/Darwin}
+\subsubsubsectionhu{BSD/Darwin Implementáció} \subsubsubsectionro{Implementarea pentru BSD/Darwin}
 
 	The BSD/Darwin-specific implementation was largely based on the Linux-specific implementation, as most function calls shared the same behavior, however some subtle parametering and structure differences have crept up here and there, creating the need for a different implementation.
 
@@ -747,7 +747,7 @@
 	The Darwin kernel and Mac OS X distributions inherit the BPF device, as such this implementation of the scanner is fully supported on these platforms.
 
 \subsubsubsection{Windows-Specific Implementation}
-\subsubsubsectionhu{Windows Implementáció} \subsubsubsectionro{Implementația pentru Windows}
+\subsubsubsectionhu{Windows Implementáció} \subsubsubsectionro{Implementarea pentru Windows}
 
 	The Windows-specific implementation was a complete rewrite of the algorithm. Even though the Windows networking stack is based on BSD sockets, various senseless limitations were introduced, which make it impossible to send and receive link-layer packets, without resorting to extreme measures.
 
@@ -1030,7 +1030,7 @@
 	Currently there are two protocol tokenizers implemented, and these are run in order of protocol popularity when a service banner needs to be cleaned. An API is exposed which does this, \mintinline{cpp}{ProtocolTokenizer::AutoTokenize(const std::string& banner)}.
 	
 \subsubsection{Hyper-Text Transfer Protocol Tokenizer}
-\subsubsectionhu{HTTP Értelmező} \subsubsectionro{Interpretor de HTTP}
+\subsubsectionhu{HTTP Értelmező} \subsubsectionro{Interpretor HTTP}
 	
 	The first tokenizer is \mintinline{cpp}{HttpTokenizer}, which decides whether the specified service banner contains a valid HTTP header, and if so, proceeds to tokenize it. During tokenization, it will try to extract product names and version numbers from the appropriate places.
 	
@@ -1199,7 +1199,7 @@
 	Unfortunately the CPE names are not advertised in the service banners, nor is there a direct standard to map CPE names to service banners, or any other straight-forward solution on mapping them. In paper \cite{shovat15}, the authors have tackled with the same issue of processing and mapping the entries to service banners. The method presented within the paper was the basis for the implementation of the CPE matcher component in the application developed within the scope of this thesis.
 	
 \subsubsection{Implementation Overview}
-\subsubsectionhu{Kivitelezés Áttekintése} \subsubsectionro{Prezentarea Generală}
+\subsubsectionhu{Kivitelezés Áttekintése} \subsubsectionro{Prezentare Generală}
 	
 	The current implementation of the CPE matcher component loads a preprocessed version of the CPE dictionary into its memory, where the CPE names are tokenized and irrelevant data (such as product links) are stripped for memory efficiency. Listing \ref{ciscotokens} presents the tokens loaded into memory for an example CPE name. For the exact implementation, see the structures within the header file of the \mintinline{cpp}{CpeDictionaryMatcher} class.
 	
