@@ -41,7 +41,7 @@
 \usepackage{lmodern}
 \usepackage{fontawesome}
 
-\newcommand{\urlprefix}{Retrieved from \urlstyle{rm}}
+\newcommand{\urlprefix}{Forrás: \urlstyle{rm}}
 
 \newcommand{\refspace}{\vspace{-2mm}}
 \newcommand{\redarrow}{\textcolor{darkred}{$\mathbf{\to}$}}
@@ -141,23 +141,63 @@
 \pagestyle{fancy}
 \section{Bevezető}
 	
+\subsection{Biztonság a Vállalati Környezetekben}
+
+	Vállalati környezetekben pár száz vagy akár ezer felhasználó függ az informatikai infrastruktúra folytonos és sértetlen működésén. A szakítatlan üzemmód kritikus az üzleti szempontból nézve, éppen ezért a biztonság egy nagyon fontos szerepet tölt be a vállalati környezetekben. Az említett felhasználók csoportonként és személyeként külön hozzáférési jogokkal rendelkeznek amelyek megmondják, hogy a felhasználó mihez férhet hozzá az osztott rendszeren belül.
 	
+	Kis és nagy szervezetek adminisztrátorai az előzőleg említett szükséges üzemmód fenntartása és a káosz elkerülése végett sok bürokráciába ütköznek amennyiben valamilyen módosítást akarnak végezni, ugyanis ezek valamilyen előreláthatatlan módon utólag bezavarhatnak.
+	
+	Az előző paragrafusba befoglalódik a szoftverek frissítése is, ugyanis amennyiben a frissítendő szoftver olyan változást vezet be amely inkompatibilissé teszi az előző verziókkal vagy a jenlegi infrastruktúrával, abban az esetben a rendszergazda nem teheti meg ezt a lépést.
+	
+	A probléma ott lép fel, amikor a szoftverek az infrastruktúrában kezdenek elavulni, és ezzel egy-időben arányosan nő az infrastruktúrában az ismert biztonsági rések száma is, a biztonsági frissítések hiányában. Ilyen esetekben a kis és nagy vállalatok rendszergazdái \textit{LTS} (``\textit{Long-Term Support}'') vagy \textit{LTSB} (``\textit{Long-Term Servicing Branch}'') típusú szoftverekhez/operációs rendszerekhez/könyvtárcsomagokhoz fordulnak.
+	
+	Ezen speciális verziók különlegessége, hogy úgy nevezett ``feature-frozen'' állapotban vannak, azaz nem készül számukra olyan frissítés amely funkcionalitást ad, elvesz vagy változtat. Az ilyen verziók csak biztonsági frissítéseket kapnak, és ezen támogatásnak örvendenek öt évtől akár tíz évig is.
+	
+\subsection{Biztonság a Pénzügyi Ágazatban}
+
+	\begin{wrapfigure}{r}{0.35\textwidth}
+		\vspace{-10pt}
+		\centering
+		\includegraphics[scale=0.5]{pci.png}
+		\caption{PCI Logó}
+	\end{wrapfigure}
+	
+	A pénzügyi ágazatban a jelentősebb bankkártya-alapú szolgáltatásokat nyújó cégek (mint például Visa és MasterCard) közösen alapítottak egy tanácsot a \textit{Payment Card Industry Security Standards Council} név alatt.
+	
+	A \textit{PCI} fő feladata, hogy egy listát állítson össze azokról a szabályokról, amelyeket be kell tartaniuk azok az entitások amelyek szenzitív információkkal szándékoznak foglalkozni -- mint például bankkártyaszámok tárolása, vagy akár csak feldolgozása. Ezen szabályok egy \textit{PCI DSS} (\textit{Payment Card Industry Data Security Standard}) nevű dokumentumban vannak összefoglalva.
+	
+	Bármilyen entitás amely szenzitív információkat tárol vagy akár csak feldolgoz, meg kell feleljen a dokumentumban leírt szabályoknak. A megfelelésről a cég egy ``\textit{PCI Compliant}'' tanúsítványt kap, amelyet megszerezhet egy külső kivizsgáló által, akinek fő feladata, hogy ellenőrizze az infrastruktúra megfelelését a PCI DSS dokumentumban leírt szabályokhoz.
+	
+	A megfelelés évente ellenőrizve van, és a kihágásokat havonta akár több ezer dollárral is büntethetik a kártyarendszer szolgáltatók\cite{wfargo15}.
+	
+	Az előzőleg említett dokumentum 12 fő követelményt\cite{pcidss31} ír elő, ahol mindegyik követelmény saját al-listával jön a teljes megfelelés bebiztosítása céljából. A dolgozat a következő két követelményt célozza teljesíteni:
+	
+	\begin{itemize}
+		\item 6. követelmény: ``Biztonságos rendszereket és alkalmazásokat kell fejleszteni és üzemeltetni''
+		\item 11. követelmény: ``Biztonsági rendszereket és folyamatokat rendszeresen tesztelni kell''
+	\end{itemize}
+	
+	E két követelmény teljesítéséhez a PCI kéri a rendszerek behatolástesztelését a fejlesztési fázis alatt, az infrastruktúra változásakor, illetve az előző kettőtől függetlenül legalább évente.
+	
+	A behatolástesztelés a \textit{külső} és \textit{belső} perspektívákat is le kell fednie. A külső perspektíva alatt a publikus IP címek tesztelése értetődik, míg a belső perspektíva a magas biztonságú belső hálózatok tesztelése vonatkozik.
+	
+	A hármas verzió előtti dokumentumok nem kötelezték a behatolástesztelést, ugyanis megelégedtek azzal, hogyha a fejlesztés alatt a kód legalább statikus kódelemzőkkel validálva volt. Ez viszont át lett fogalmazva a 3.0-as verziótól kezdődően és a rendszeres behatolástesztelés már kötelező, nem kerülhető ki kódelemzéssel.
 	
 \section{Szoftver Sebezhetőségek}
 	
-	Az \textit{RFC 2828} és számos \textit{NIST} publikáció úgy definiálja a ``sebezhetőséget,'' mint ``egy hiba vagy gyengeség a rendszer biztonsági procedúráiban, tervezésében, implementálásában, vagy belső ellenőrzései között amelyet ki lehet játszani (véletlenül kiváltva vagy szándékosan kihasználva) és így az eredmény egy biztonsági rés vagy a rendszer biztonságpolitikájának megsértése.''\cite{rfc2828,nist80030} Egyszerűen átfogalmazva ez annyit jelent, hogy a sebezhetőség egy hiba a szoftver vagy webszolgáltatás kódjában, amely kihasználáskor (például a felhasználó egy olyan bemenentet ad meg amely szándékosan úgy lett formázva, hogy kiváltsa az ismert hibát) megengedi a felhasználó számára, hogy olyan tevékenységet hajtson végre amelyt különben nem szabadna, vagy olyan információhoz férjen hozzá, amelyhez nem kéne.
+	Az \textit{RFC 2828} és számos \textit{NIST} publikáció úgy definiálja a ``sebezhetőséget,'' mint ``egy hiba vagy gyengeség a rendszer biztonsági procedúráiban, tervezésében, implementálásában, vagy belső ellenőrzései között amelyet ki lehet játszani (véletlenül kiváltva vagy szándékosan kihasználva) és így az eredmény egy biztonsági rés vagy a rendszer biztonságpolitikájának megsértése.''\cite{rfc2828,nist80030} Egyszerűen átfogalmazva ez annyit jelent, hogy a sebezhetőség egy hiba a szoftver vagy webszolgáltatás kódjában, amely kihasználáskor (például a felhasználó egy olyan bemenetet ad meg amely szándékosan úgy lett formázva, hogy kiváltsa az ismert hibát) megengedi a felhasználó számára, hogy olyan tevékenységet hajtson végre, amelyet különben nem szabadna, vagy olyan információhoz férjen hozzá, amelyhez különben nem kéne.
 	
 \subsection{Közzétételi Eljárások és Politikák}
 	
-	Harmadik féltől származó szoftverekben talált hibák helyes jelentése és korrigálása egy komplikált téma, ugyanis a legtöbb szoftverfejlesztőcégnek nincs jól előre meghatározott és publikált eljárása biztonsági hibajelentés célokra. Egy standard, felelősségteljes közzétételi eljárás, hogy a hiba megtalálója kapcsolatba lép a szoftverfejlesztő céggel, és ezt követően egy bizonyos számú napot vár mielőtt a hibát publikusan is közzéteszi, a cég reakciójától függően.
+	Harmadik féltől származó szoftverekben talált hibák helyes jelentése és korrigálása egy komplikált téma, ugyanis a legtöbb szoftverfejlesztőcégnek nincs jól előre meghatározott és publikált eljárása biztonsági hibajelentés célokra. Egy standard, felelősségteljes közzétételi eljárás, hogy a hiba megtalálója kapcsolatba lép a szoftverfejlesztő céggel, és ezt követően egy bizonyos számú napot vár mielőtt a hibát publikusan is közzéteszi, ahol a várt napok száma változhat a cég reakciójától függően.
 	
-	Egy másik probléma is felléphet abban az esetben ha a hiba több cég termékét is érinti, amely esetében előnyös egy koordonált közzétételt szervezni, ugyanis ellentkezőképpen az a cég amely a leghamarabb publikálja a biztonsági frissítést beleértve a rés információját, az veszélybe helyezi a többi cég klienseit amelyek számára még nem készült el a biztonsági frissítés.
+	Egy másik probléma is felléphet abban az esetben ha a hiba több cég termékét is érinti, amely esetében előnyös egy koordinált közzétételt szervezni, ugyanis ellenkezőképpen az a cég amely a leghamarabb publikálja a biztonsági frissítést, beleértve a rés információját, az veszélybe helyezi a többi cég klienseit amelyek számára még nem készült el a biztonsági frissítés.
 	
-	A biztonsági rést felfedező személy etikáitól és a rés veszélyességétől függően választani lehet az illegális utat is, amely során a biztonsági rést egy illegális marketen el lehet adni. A ``deep web''-en számos ilyen piactér van ahol úgynevezett ``nulladik napi'' sebezhetőségekkel kereskednek. Ezeknek az árai párszáz dollártól akár félmillió dollárig is filmehetnek egy New York Times-ban megjelent cikk szerint\cite{nperlroth13}.
+	A biztonsági rést felfedező személy etikáitól és a rés veszélyességétől függően választani lehet az illegális utat is, amely során a biztonsági rést egy illegális virtuális piacon el lehet adni. A ``deep web''-en számos ilyen piactér van ahol úgynevezett ``nulladik napi'' sebezhetőségekkel kereskednek. Ezeknek az árai pár száz dollártól akár félmillió dollárig is felmehetnek, egy New York Times-ban megjelent cikk szerint\cite{nperlroth13}.
 	
 	Ahhoz, hogy a magas profilú cégek ösztönözzék a biztonsági szakértőket, hogy a felelősségteljes közzétételi utat válasszák, sok esetben ``bug bounty'' programokat indítanak. Ezen programok célja, hogy publikáljanak egy közzétételi procedúrát a szakértők számára, illetve hogy jutalmazzák a bejelentéseket.
 	
-	Egy híres példa a Google \textit{Vulnerability Reward Program}\cite{googlevrp15} programja, amely akár többezer dollárt is fizet sebezhetőségekért a saját szolgáltatásukban, de később kibővítették a program által lefedett alkalmazások listáját pár nagy-kockázatú népszerű nyílt-forrású szerverre is, amelyek sebezhetőségeikért \$500-tól \$3,133.7-ig terjedő pénzjutalmat is felajánlanak. Ezenkívül a Google futtat egy \textit{Patch Reward Program} programot is, amelyen keresztül olyan önkénteseket jutalmaznak akik biztonsági réseket tömnek be nyílt-forrású alkalmazásokban. A jutalmak \$500-tól kezdődnek ``egy-soros javításokért'' és elérnek \$10,000-ig ``komplikált, nagy-hatású javítások'' esetén.
+	Egy híres példa a Google \textit{Vulnerability Reward Program}\cite{googlevrp15} iniciatíva, amely akár több ezer dollárt is fizet sebezhetőségekért a saját szolgáltatásukban, de később kibővítették a program által lefedett alkalmazások listáját pár nagy kockázatú népszerű nyílt forrású szerverre is, amelyek sebezhetőségeikért \$500-tól \$3,133.7-ig terjedő pénzjutalmat is felajánlanak. Ezenkívül a Google futtat egy \textit{Patch Reward Program} programot is, amelyen keresztül olyan önkénteseket jutalmaznak akik biztonsági réseket tömnek be nyílt forrású alkalmazásokban. A jutalmak \$500-tól kezdődnek ``egysoros javításokért'' és elérnek \$10,000-ig ``komplikált, nagy hatású javítások'' esetén.
 	
 \subsection{Szabályozó Szervek}
 	
@@ -168,17 +208,60 @@
 		\caption{CERT/CC Logó}
 	\end{wrapfigure}
 	
-	Az Egyesült Államokban az egyik szabályozó szerv a \textit{CERT/CC} (\textit{Computer Emergency Response Team Coordination Center}) amely a \textit{DARPA} (\textit{Defense Advanced Research Projects Agency}) által volt alapítva 1988 novemberében. Az alapítás szükségességét az adta, hogy akkor készült el az első számítógépes vírus amely az Internet segítségével tovább tudott terjeszkedni, így megfertőzve egyéb számítógépeket. A vírus a \textit{Morris worm}\cite{cert15} nevet kapta, és nagy figyelemnek örvendett a média által.
+	Az Egyesült Államokban az egyik szabályozó szerv a \textit{CERT/CC}, (\textit{Computer Emergency Response Team Coordination Center}) amely a \textit{DARPA} (\textit{Defense Advanced Research Projects Agency}) által volt alapítva 1988 novemberében. Az alapítás szükségességét az adta, hogy akkor készült el az első számítógépes vírus, amely az Internet segítségével tovább tudott terjeszkedni, így megfertőzve egyéb számítógépeket. A vírus a \textit{Morris worm}\cite{cert15} nevet kapta, és nagy figyelemnek örvendett a média által.
 	
-	A CERT/CC-nek saját közzétételi politikája van: a szoftverfejlesztő céggel felveszik a kapcsolatot amint lehetséges, és ettől függetlenül a biztonsági rés leírása publikálva lesz 45 napon belül, akár a cég készített-e biztonsági frissítést, vagy sem.
+	A CERT/CC-nek saját közzétételi politikája van: a szoftverfejlesztő céggel felveszik a kapcsolatot amint lehetséges, és ettől függetlenül a biztonsági rés leírása publikálva lesz 45 napon belül, akár a cég készített biztonsági frissítést, vagy sem.
 	
-	A szabályozó szerv Romániában a \textit{CERT-RO}, (\textit{Centrul Național de Răspuns la Incidente de Securitate Cibernetică}) amely 2011 májusában lett alapítva\cite{certro12}. Magyarországon ennek megfelelője a \textit{GovCERT-Hungary}, (\textit{Kormányzati Eseménykezelő Központ}) amely 2013 áprilisában lett alapítva\cite{certhu13}. Létezik egy szabályozó szerv az Európai Úniós szinten is: a \textit{CERT-EU} (\textit{Computer Emergency Response Team European Union Task Force}) 2012 novemberében volt alapítva\cite{certeu13}, és saját szabályozó szerepet tölt be, nem csak a tagországok szervei által küldött jelentéseket összesítik.
+	A szabályozó szerv Romániában a \textit{CERT-RO}, (\textit{Centrul Național de Răspuns la Incidente de Securitate Cibernetică}) amely 2011 májusában lett alapítva\cite{certro12}. Magyarországon ennek megfelelője a \textit{GovCERT-Hungary}, (\textit{Kormányzati Eseménykezelő Központ}) amely 2013 áprilisában lett alapítva\cite{certhu13}. Létezik egy szabályozó szerv az Európai Uniós szinten is: a \textit{CERT-EU} (\textit{Computer Emergency Response Team European Union Task Force}) 2012 novemberében volt alapítva\cite{certeu13}, és saját szabályozó szerepet tölt be, nem csak a tagországok szervei által küldött jelentéseket összesítéséjért felelősek.
 	
 \subsection{Sebezhetőség Adatbázisok}
 	
-	A CERT/CC által egyik szponzorált projekt a \textit{CVE} (\textit{Common Vulnerabilities and Exposures}), amely egy módszert biztosít a publikusan ismert sebezhetőségek címkézésére és követésére. A \textit{NIST} (\textit{National Institute of Standards and Technology}) alapítvány futtat egy weboldalt \textit{NVD} (\textit{National Vulnerability Database}) néven, amelyen keresztül karbantartanak egy adatbázist amely a publikusan ismert sebezhetőségeket tartalmazza, illetve információkat ezekről olyan struktúrált formátumban, amelyet számítógépes alkalmazások is önműködően olvashatnak\cite{nvd15}.
+	A CERT/CC által egyik szponzorált projekt a \textit{CVE} (\textit{Common Vulnerabilities and Exposures}), amely egy módszert biztosít a publikusan ismert sebezhetőségek címkézésére és követésére. A \textit{NIST} (\textit{National Institute of Standards and Technology}) alapítvány futtat egy weboldalt \textit{NVD} (\textit{National Vulnerability Database}) néven, amelyen keresztül karbantartanak egy adatbázist, amely a publikusan ismert sebezhetőségeket tartalmazza, illetve információkat ezekről, olyan strukturált formátumban, amelyet számítógépes alkalmazások is önműködően olvashatnak\cite{nvd15}.
 	
-	Az adatbázis, illetve egyéb komponenseinek felhasználása bővebben a sebezhetőségkereső komponens fejezetben van tárgyalva.
+	Az említett adatbázis, illetve egyéb komponenseinek felhasználása bővebben a sebezhetőségkereső komponens implementációjáról szóló fejezetben van tárgyalva.
+	
+\subsection{CVSS Pontozási Rendszer}
+	
+	\begin{wrapfigure}{r}{0.3\textwidth}
+		\vspace{-10pt}
+		\centering
+		\includegraphics[scale=0.4]{cvss.png}
+		\caption{CVSS Logó}
+	\end{wrapfigure}
+	
+	A NIST által karbantartott \textit{CVE} adatbázisban a sebezhetőség bejegyzésekhez \textit{CVSS} pontozások vannak társítva. Ezek megkönnyítik az infrastruktúrában beazonosított sebezhetőségek kockázatelemzését, ugyanis e pontozás definiálja a sebezhetőségeknek különböző tényezőit egy strukturált formátum alapján, így könnyen és gyorsan eldönthető a veszélyességük a vállalkozás számára.
+	
+	A \textit{Common Vulnerability Scoring System}\cite{cvssv2} (\textit{CVSS}) a következő tényezőknek adja meg az értékét egy sebezhetőséget illetően:
+	
+	\begin{multicols}{2}
+		\begin{itemize}
+			\item Alap tényezők
+				\begin{itemize}
+					\item Hozzáférés vektor ($AV$)
+					\item Hozzáférés komplexitás ($AC$)
+					\item Hitelesítési szint ($Au$)
+					\item Titoktartási hatás ($C$)
+					\item Sértetlenségi hatás ($I$)
+					\item Elérhetőségi hatás ($A$)
+				\end{itemize}
+			\item Időbeli tényezők
+				\begin{itemize}
+					\item Kihasználhatóság ($E$)
+					\item Helyreállítási szint ($RL$)
+					\item Jelentés megbízhatósága ($RC$)
+				\end{itemize}
+			\item Környezeti tényezők
+				\begin{itemize}
+					\item Járulékos károk potenciálja ($CDP$)
+					\item Cél szétoszlása ($TD$)
+					\item Titoktartási kötelezettség ($CR$)
+					\item Sértetlenségi kötelezettség ($IR$)
+					\item Elérhetőségi kötelezettség ($AR$)
+				\end{itemize}
+		\end{itemize}
+	\end{multicols}
+	
+	Mivel az dolgozat hatályán belül fejlesztett alkalmazás beszámol a felderített sebezhetőségek CVSS pontozásáról, ezért az alkalmazás hasznos gyors és hatékony kockázatelemzés célokra is, ugyanis az önműködő módon futó sebezhetőségfelderítő által felfedezett új sebezhetőségek hatásról tájékoztatni tudja a vezetőséget a mérnökök bevonása nélkül.
 	
 \section{Sebezhetőségek Felderítése}
 	
@@ -186,32 +269,32 @@
 	
 \subsection{Behatolás Tesztelés}
 	
-	A legoffenzívebb módszere a sebezhetőségek felderítésére a \textit{behatolás tesztelés} (angolul \textit{penetration testing}) amely egy valós támadást szimulál az infrastruktúrán.
+	A legoffenzívabb módszere a sebezhetőségek felderítésének a \textit{behatolás tesztelés}, (angolul \textit{penetration testing}) amely egy valós támadást szimulál az infrastruktúrán.
 	
 	\noindent A behatolástesztelést a következő módokon lehet elvégezni:
 	
 	\begin{itemize}
-		\item port a szerveren -- egy bizonyos szolgáltatás tesztelése biztonsági frissítések megléte és helyes beállítások iránt (például egy SMTP szerver);
-		\item web alkalmazás -- egy teljes webes alkalmazás bejárása és ismert biztonsági rések tesztelése;
-		\item teljes szerver -- az összes port letapogatása és sebezhetőségkeresés indítása a válasz alapján;
-		\item teljes hálózat -- egy teljes hálózat letapogatása és tesztelése, például abból a célból, hogy a hálózaton belül az összes szerver amely titkosított információhoz juthat nem sebezhető.
+		\item port a szerveren -- egy bizonyos szolgáltatás tesztelése biztonsági frissítések megléte és helyes konfiguráció iránt (például egy SMTP szerver);
+		\item web alkalmazás -- egy teljes webes alkalmazás bejárása és tesztelése az ismert biztonsági rések ellen környezettől függően;
+		\item teljes szerver -- az összes port letapogatása és sebezhetőségkeresés indítása a válasz alapján beazonosított szolgáltatások ellen;
+		\item teljes hálózat -- egy teljes hálózat letapogatása és tesztelése, például abból a célból, hogy a hálózaton belül az összes szerver amely titkosított információhoz juthat nem-e sebezhető.
 	\end{itemize}
 	
 	\noindent A behatolástesztelést több megközelítésből is lehet elvégezni:
 	
 	\begin{itemize}
-		\item publikus -- azon támadási vektorok beazomosítására amelyek kihasználhatóak egy kívülálló által (például a publikus IP-címeken lévő szolgáltatások);
-		\item kliens -- azon támadási vektorok beazomosítására amelyek kihasználhatóak egy bejelentkezett de nem emelt jogokkal rendelkező felhasználó által (például egy web-banking felhasználó);
+		\item publikus -- azon támadási vektorok beazonosítására amelyek kihasználhatóak egy kívülálló által (például a publikus IP-címeken lévő szolgáltatások);
+		\item kliens -- azon támadási vektorok beazonosítására amelyek kihasználhatóak egy bejelentkezett, de nem emelt privilégiumokkal rendelkező felhasználó által (például egy web-banking felhasználó);
 		\item belső -- azon károk beazonosítása amelyet egy belső személy képes okozni (például egy rossz-indulatú alkalmazott).
 	\end{itemize}
 
 \subsection{Behatolást Megelőző Rendszerek}
 	
-	A behatolástesztelés egy \textit{aktív} módszere a sebezhetőségek felderítésének, amely egy valós támadást szimulál a hálózaton, viszont ennek a \textit{passzív} megfelelője is létezik \textit{IDS}/\textit{IPS} (\textit{Intrusion Detection/Prevention System}) név alatt.
+	A behatolástesztelés egy \textit{aktív} módszere a sebezhetőségek felderítésének, amely egy valós támadást szimulál a hálózaton, viszont ennek \textit{passzív} megfelelője is létezik \textit{IDS}/\textit{IPS} (\textit{Intrusion Detection/Prevention System}) név alatt.
 	
-	Ezek a rendszerek a felhasználó és az alkalmazás között helyezkednek el, és a hálózati adatforgalmat figyelik bizonyos lehetséges támadási indikátorokért. Ez a módszer eléggé limitált, ugyanis nem tud olyan sebezhetőségeket észlelni a rendszerben amelyekkel a felhasználó még nem nyúlt, ugyanis az egyetlen adatforrása a rendszernek a valósidejű hálózati adatforgalom.
+	Ezek a rendszerek a felhasználó és az alkalmazás között helyezkednek el, és a hálózati adatforgalmat figyelik bizonyos lehetséges támadási indikátorokért. Ez a módszer eléggé korlátozott, ugyanis nem tud olyan sebezhetőségeket észlelni a rendszerben amelyeket a felhasználó még nem próbált kihasználni, ugyanis az egyetlen adatforrása a rendszernek a valósidejű hálózati adatforgalom.
 	
-	Egy másik hátránya az IDS típusú rendszereknek, hogy csak figyelnek és nem nyúlnak az adatforgalomhoz, így értesítést küldenek egy támadásról, de azt nem előzik meg, amely bizonyos esetekben azt is jelentheti, hogy a támadó már le is töltötte a bankkártya számokat az adatbázisból.
+	Egy másik hátránya az IDS típusú rendszereknek, hogy csak figyelnek és nem nyúlnak az adatforgalomhoz. Így értesítést tudnak küldeni egy támadásról, de azt nem előzik meg, amely bizonyos esetekben azt is jelentheti, hogy a támadó már le is töltötte a bankkártya számokat az adatbázisból.
 
 \section{Kivitelezés}
 
@@ -219,7 +302,7 @@
 
 	A főalkalmazás git repója elérhető a \url{https://github.com/RoliSoft/Host-Scanner} cím alatt, amelyet szabadon fel lehet használni, módosítani illetve terjeszteni a GNU General Public License version 3\cite{gplv3} licencszerződés feltételei alatt.
 	
-	A különböző hozzátartozó szkipteket, amelyek főként adatfeldolgozási és kísérletezési célokból voltak fejlesztve, a \url{https://github.com/RoliSoft/Host-Scanner-Scripts} címről lehet elérni. Ezeket szabadon fel lehet használni, módosítani illetve terjeszteni az MIT license\cite{mit} licencszerződés feltételei alatt.
+	A különböző hozzátartozó szkripteket, amelyek főként adatfeldolgozási és kísérletezési célokból voltak fejlesztve, a \url{https://github.com/RoliSoft/Host-Scanner-Scripts} címről lehet elérni. Ezeket szabadon fel lehet használni, módosítani illetve terjeszteni az MIT license\cite{mit} licencszerződés feltételei alatt.
 
 \newpage
 \section{Bibliográfia}
