@@ -119,8 +119,7 @@
 \PrerenderUnicode{áéúóőűíăâîșț}
 
 \begin{document}
-
-\thispagestyle{empty}
+\pagestyle{empty}
 \selectlanguage{english}
 
 	\begin{center}
@@ -202,6 +201,7 @@
 
 \newpage
 \pagestyle{fancy}
+\selectlanguage{english}
 \section{Introduction}
 \sectionhu{Bevezető} \sectionro{Introducere}
 
@@ -237,7 +237,7 @@
 	
 	When it comes to devices designed for, and services provided to home users, the balance of ease of use and security always comes into play. Users would like an easy-to-use device or application and would rather sacrifice security in order for experiencing a mild discomfort. In one study, in the context of online banking, a user mentioned that two-factor authentication was ``\textit{not} worth spending 5 minutes for \$1.99 purchases''\cite{ecrist14}. In the same study, it is shown that only 27\% of the users have \textit{voluntarily} opted to use multi-factor authentication, when available.
 	
-\subsection{Security Assurance in Enterprise Environments}
+\subsection{Security Assurance in Enterprise Environments} \label{ssec:secassentenv}
 \subsectionhu{Biztonság Biztosítása a Vállalati Környezetekben} \subsectionro{Asigurarea Securității în Mediile de Întreprindere}
 
 	Security is of paramount importance in enterprise environments. In such an environment, hundreds if not thousands of users (employees) depend on the IT infrastructure, and it is business-critical for these services to be functioning and data to be accessible 24/7, otherwise minor to major losses might be incurred. These hundreds or thousands of employees will all have different levels of access, controlled by strict security policies on what they can and cannot do or access.
@@ -286,7 +286,7 @@
 	
 	While strict rules are set forth for protecting sensitive data, merchants tend to try and get away with the least amount of strictness they can still get compliance certified for, by skipping rules marked as ``best practice, not requirement'' and rules which they can tick on a \textit{technicality} due to the phrasing of the sentence. One such example would be the fact that for a long period of time, it was possible to \textit{trick} the code review requirement by substituting automated source code analyzers with automated penetration testing, however, since version 3.0 of the security standard, it has been clarified that penetration testing is a mandatory requirement in a different section, and as such they are not a substitute for code reviews.
 	
-\subsection{Government Mandated Security}
+\subsection{Government Mandated Security} \label{ssec:govmansec}
 \subsectionhu{Törvényileg Kötelezett Biztonság} \subsectionro{Securitate Obligat de Lege}
 	
 	The standards discussed in previous sections were all \textit{best practices} where implementing bodies would do their \textit{best effort} on complying, none of it was mandated\footnote{In 2009, Nevada (USA), then a year later, the State of Washington (USA), incorporated \textit{PCI DSS} into state law\cite{wash10}, however, the incorporated standard's sole purpose is to shield compliant parties from liability in case of a data breach.}.
@@ -342,7 +342,7 @@
 \subsection{Vulnerability Databases} \label{ssec:vulndbs}
 \subsectionhu{Sebezhetőség Adatbázisok} \subsectionro{Baze de Date ale Vulnerabilităților}
 	
-	One of the projects sponsored by CERT/CC is \textit{CVE} (\textit{Common Vulnerabilities and Exposures}), which provides a reference method for publicly know and tracked vulnerabilities. \textit{NIST} (\textit{National Institute of Standards and Technology}) runs a website called \textit{NVD} (\textit{National Vulnerability Database}) which is a repository of public vulnerabilities represented in such a way as to allow for automatic consumption by vulnerability management software\cite{nvd15}.
+	One of the projects sponsored by CERT/CC is \textit{CVE} (\textit{Common Vulnerabilities and Exposures}), which provides a reference method for publicly known and tracked vulnerabilities. \textit{NIST} (\textit{National Institute of Standards and Technology}) runs a website called \textit{NVD} (\textit{National Vulnerability Database}) which is a repository of public vulnerabilities represented in such a way as to allow for automatic consumption by vulnerability management software\cite{nvd15}.
 	
 	The feed of public vulnerabilities available for consumption in the aforementioned paragraph is called \textit{SCAP} (\textit{Security Content Automation Protocol}) and contains multiple components for each entry:
 	
@@ -435,7 +435,7 @@
 	Alternatively, a more simplified visual guide can be obtained by taking the value of the ``Probability'' and ``Impact'' factors, and classifying them according to table \ref{scoreclass}. After the severity of both factors are obtained, table \ref{vulnrisksever} allows an easy lookup of the final severity of the risk.
 	
 	In the final step of the process, we make a decision regarding the mitigation of the risk. In general risk management theory, if the costs of mitigating a risk outweighs the costs of incurring the losses caused by its occurrence, the risk is not mitigated.
-		
+	
 \subsection{Common Vulnerability Scoring System} \label{ssec:cvss}
 \subsectionhu{CVSS Pontozási Rendszer} \subsectionro{Sistem de Notare CVSS}
 	
@@ -558,6 +558,51 @@
 	These systems sit between the user and the application, sniffing and analyzing traffic for potential red flags. This method is rather limited, as it cannot detect vulnerabilities in the system, with which a user has not yet interacted with due to its limited data source being only the network traffic.
 	
 	Another downside of this technique is that an exploitation might slip through even in the strictest setting of the IPS, as the analyzed network traffic might simply be identified as false negative. As such, preventive measures were not taken against the traffic, and the exploitation was successful.
+		
+\section{Related Work} \label{relwork}
+\sectionhu{Kapcsolódó Termékek} \sectionro{Soluții Aferente}
+	
+	As discussed in sections \ref{ssec:secassentenv}, \ref{ssec:secassfinsec} and \ref{ssec:govmansec}, vulnerability assessment is a booming business due to the demand being met.
+	
+\section{Project Aim}
+\sectionhu{Projekt Célja} \sectionro{Scopul Proiectului}
+	
+	The aim of this project is to develop an application which can scan a requested network and determine the vulnerable services within it.
+	
+	The application should be completely autonomous in its process, without relying on future updates from the developer in order to add support for new services and associated vulnerabilities.
+	
+	The target audience of the project should be as wide as possible. It should be a useful tool for security researchers, security consultants and system administrators alike, even without requiring much security experience from the former group.
+	
+\subsection{Data Acquisition}
+\subsectionhu{Adatgyűjtés} \subsectionro{Achiziție de Date}
+	
+	In order to be useful for independent security researchers, the application needs to be able to utilize open-source intelligence. The two services presented in sections \ref{ssec:shodan} and \ref{ssec:censys}, namely Shodan\cite{shodan16} and Censys\cite{censys15}, are both candidates for usage within the passive data reconnaissance component.
+	
+	This way, researchers may execute queries and get instantaneous results, without having to have an infrastructure on which to launch the scans from, and then deal with the consequences, such as abuse emails.
+	
+	On the other hand, security consultants generally need to scan an internal infrastructure, one which is not accessible to the aforementioned services. As such, the project needs to implement active data reconnaissance components as well.
+	
+	While the application implements a wide range of protocol scanners with an unified interface for task parallelization, as a measure of redundancy, the users are given the choice of using an external scanner for their reconnaissance purposes. By default, \textit{nmap} is supported out-of-the-box as an alternative scanner, however any $3^{rd}$-party application which generates nmap-compatible XML-based reports can be used, one example of which is \textit{masscan}.
+		
+\subsection{Data Analysis}
+\subsectionhu{Adatelemzés} \subsectionro{Analizarea Datelor}
+	
+	The collected service banners should be analyzed in a completely autonomous manner. That is, as opposed to the software and services discussed in section \ref{relwork}, the application should not rely on separate plugins for identifying the protocols and afterwards identifying the servers speaking those protocols.
+	
+	The databases published by \textit{NIST} (as discussed in section \ref{ssec:vulndbs}) should be consumed in order to identify the newest vulnerabilities. Section \ref{ssec:matchcpe} presents the component consuming the database and autonomously mapping service banners to their equivalent \textit{CPE} names.
+	
+	As a redundancy, section \ref{ssec:patternmatch} presents a different way of mapping service banners to CPE names, however that does not rely on the aforementioned published databases, it instead relies on a database published by the developer or written/extended by the user/community.
+			
+\subsection{Resolution Suggestions}
+\subsectionhu{Megoldási Javaslatok} \subsectionro{Sugestii de Soluționare}
+	
+	Following the CPE associations, discovering the vulnerabilities within the identified services is just a simple look-up away in the \textit{CVE database}.
+	
+	At this point, the application should provide as many information as possible about the found vulnerabilities, including CVSS scoring in order to determine the risk severity within the context of the scanned infrastructure.
+	
+	However, in order to be useful for system administrators without pre-existing security knowledge, the application should provide simple tips -- based on what it could deduce about the scanned environment -- on how to fix the issues in layman's terms.
+	
+	That is, when the operating system is identified and supported, actual command lines which the administrator can run on the target host in order to ameliorate the vulnerabilities.
 	
 \section{Implementation}
 \sectionhu{Kivitelezés} \sectionro{Realizarea}
