@@ -66,6 +66,11 @@
 \makeatletter
 \def\toclevel@subsubsubsection{4}
 \def\l@subsubsubsection{\@dottedtocline{4}{7em}{4em}}
+
+\renewcommand\paragraph{\@startsection{paragraph}{6}{\parindent}%
+  {3.25ex \@plus1ex \@minus .2ex}%
+  {-1em}%
+  {\normalfont\normalsize\bfseries}}
 \makeatother
 
 \setcounter{secnumdepth}{4}
@@ -101,17 +106,10 @@
 \newcommand\subsubsectionro[1]{\addcontentsline{toc.ro}{subsubsection} {\protect\numberline{\thesubsubsection} #1}}
 \newcommand\subsubsubsectionro[1]{\addcontentsline{toc.ro}{subsubsubsection} {\protect\numberline{\thesubsubsubsection} #1}}
 
-%\usepackage{listings}
-%\lstset{basicstyle=\footnotesize,numbers=left,numberstyle=\scriptsize,numbersep=7pt,breaklines=true,breakatwhitespace=true,tabsize=4,backgroundcolor=\color{whitesmoke}}
-% \begin{lstlisting}[language=c++,caption=...]
-% \lstinline[language=c++]{...}
-
 \usepackage{minted}
 \renewcommand{\theFancyVerbLine}{\rmfamily\scriptsize\arabic{FancyVerbLine}}
 \setminted{linenos,autogobble,breaklines,fontsize=\footnotesize,tabsize=4,numbersep=7pt,bgcolor=whitesmoke}
 \AtBeginEnvironment{minted}{\renewcommand{\fcolorbox}[4][]{#4}}
-% \begin{minted}{cpp}
-% \mintinline{cpp}{...}
 
 \author{Roland Bogosi}
 \title{Black-Box Penetration Testing and Vulnerability Management Platform}
@@ -562,7 +560,59 @@
 \section{Related Work} \label{relwork}
 \sectionhu{Kapcsolódó Termékek} \sectionro{Soluții Aferente}
 	
-	As discussed in sections \ref{ssec:secassentenv}, \ref{ssec:secassfinsec} and \ref{ssec:govmansec}, vulnerability assessment is a booming business due to the demand being met.
+	As discussed in sections \ref{ssec:secassentenv}, \ref{ssec:secassfinsec} and \ref{ssec:govmansec}, vulnerability assessment is a booming business due to the huge market demand which has been created by the rapid outbreak of digitalization of various services.
+	
+	Whether organizations care about their security or just want to pass the yearly PCI audits, the manual analysis of the existence of all known vulnerabilities within the infrastructure would be a tedious process.
+	
+	As such, \textit{vulnerability scanners} have been developed by various companies in order to automate this process by checking against all known vulnerabilities and various configurations which are known to be substandard or are requirements on the PCI checklist.
+	
+\subsection{Commercial Solutions} \label{ssec:comtools}
+\subsectionhu{Kerekedelmi Megoldások} \subsectionro{Soluții Comerciale}
+	
+	The \textit{nmap project} has been cataloging various security products, such as vulnerability scanners, and ranking them based on user feedback and their popularity based on usage\cite{sectools}. The three most popular vulnerability scanners will be presented in this section.
+	
+	\paragraph{Nessus} The \textit{Nessus Vulnerability Scanner}\cite{nessus} is developed by Tenable Network Security. Initially it was released as a free and open-source vulnerability scanner with paid registered options available, however this was changed in 2005, when the application went closed-source.
+	
+	SecTools.org lists Nessus as the most popular vulnerability scanner today. Currently, a ``Community'' edition can be obtained for no charge, however it is limited to personal and non-commercial usage. Annual subscriptions otherwise are available starting from \$2,190 per user per year.
+	
+	The internal architecture of the vulnerability scanner works based on plugins. It also implements its own embedded scripting language ``NASL'' to be used when writing plugins.
+	
+	While it boasts about having 70,000+ plugins, the scanner works by running all of the probe scripts on a service banner, and separate plugins are required in order to identify different software products. After identification, separate scripts are run in order to test vulnerabilities on the identified services.
+	
+	This means that the developers of the scanner need to keep up-to-date with all of the existing server software and their newest vulnerabilities. This means releasing a new plugin as soon as possible to the users of the scanner in order to catch them.
+	
+	This generally results in a heavy software with high maintenance fees, as the annual subscription cost shows.
+	
+	\paragraph{OpenVAS} The \textit{Open Vulnerability Assessment System}\cite{openvas} is a fork of the last open-source Nessus edition before that went closed-source. It is currently developed and maintained by Greenbone Networks.
+	
+	The vulnerability scanner, as a result of the shared heritage, has the same architecture as Nessus, and even continues to use the Nessus NASL scripting language for its plugins.
+	
+	SecTools.org lists OpenVAS as the second most popular vulnerability scanner today, and it continues to be free and open-source despite its growing popularity.
+	
+	\paragraph{Nexpose} The \textit{Nexpose Vulnerability Scanner}\cite{nexpose} is developed by Rapid7, who are also famous for developing and maintaining another popular security tool \textit{Metasploit}.
+	
+	As opposed to the previous solutions, Nexpose aims to be much more than just a vulnerability scanner, fulfilling the roles of the entire vulnerability management lifecycle, from detection to risk analysis and mitigation.
+	
+	SecTools.org lists Nexpose as the third most popular vulnerability scanner today. Annual subscriptions start from \$2,000, however, a limited ``Community'' edition is also available to be used for non-commercial purposes.
+	
+	Behind-the-scenes, Nexpose has powerful integration with tools such as Metasploit for exploit scanning and validation purposes.
+	
+\subsection{Scientific Papers}
+\subsectionhu{Tudományos Kutatások} \subsectionro{Lucrări Științifice}
+	
+	There is a wealth of research available on the various topics within the field of network security. On the defensive side of research topics, as every vulnerability scanner with an active reconnaissance component has to contact the target hosts, paper \cite{panjwani05} experiments with evaluating whether port scans can be used as an alert for an impending attack.
+	
+	The component discussed in section \ref{ssec:icmpping} uses the industry-standard ICMP Echo Requests packets presented within in the aforementioned paper, therefore being susceptible to this kind of analysis.
+	
+	A wide range of comparative studies are also available, examining different scanning methods, techniques, and the various commercial tools available to do so, some of which are mentioned in section \ref{ssec:comtools}.
+	
+	The most cited papers doing such comparative studies on black-box web and/or network vulnerability scanners with the inclusion of at least one of the aforementioned commercial tools are \cite{holm11,bau10,doupe10}.
+	
+	These studies generally highlight the strengths and weaknesses of each studied application, all of them ending in the conclusion that no single application can be used as a one-stop shop for detecting the latest vulnerabilities or the most obscure misconfigurations, no matter how much is the application marketed as being ``state-of-the-art'' by its developer.
+	
+	As for creating new vulnerability scanners as part of the research, paper \cite{kals06} presents the implementation challenges faced when writing a web application vulnerability assessor. Similarly, but taking on a new perspective, paper \cite{guo05} focuses on the same goal, but extending the vulnerability assessment to networked devices, as opposed to limiting to just web applications.
+	
+	The paper \textit{ShoVAT}\cite{shovat15} presents a methodology for mapping service banners to CPE names for the purposes of vulnerability assessment. The implementation of the CPE-matcher component discussed in section \ref{ssec:matchcpe} is loosely based on this paper, with some slight implementation differences.
 	
 \section{Project Aim}
 \sectionhu{Projekt Célja} \sectionro{Scopul Proiectului}
@@ -620,7 +670,7 @@
 	
 	It should be noted that the legality of this practice varies by region, and one should generally not aim towards targets for which they previously have not received authorization to do so.
 
-\subsubsection{ICMP Echo Requests}
+\subsubsection{ICMP Echo Requests} \label{ssec:icmpping}
 \subsubsectionhu{ICMP `EchoRequest' Kérések} \subsubsectionro{Scanare cu ICMP `EchoRequest'}
 
 	The \textit{Internet Control Message Protocol} (\textit{ICMP}) has an `EchoRequest' packet type, to which the kernels of the intended destinations, if not explicitly disabled, will reply with an `EchoReply' packet, sending the received payload back, including its sequence number, which can then be used for statistical analysis purposes by the requesting party.
@@ -664,7 +714,7 @@
 
 	Such ``ping'' requests cannot be sent on a per-port basis, as such it cannot be used to discover the available services on a host, and can only be used for host discovery within a network. While this is the most standard way of probing a host for availability state, most firewalls are configured by default to drop such packets, as they are not crucial for the normal operation of a network. They are generally only used for troubleshooting purposes or by outside actors to try and map a given network.
 
-\subsubsection{ARP Solicitation}
+\subsubsection{ARP Solicitation} \label{ssec:arpping}
 \subsubsectionhu{ARP `WhoHas' Kérések} \subsubsectionro{Scanare cu ARP `WhoHas'}
 
 	The \textit{Address Resolution Protocol} (\textit{ARP}) is the mechanism responsible for mapping network-layer IPv4 addresses to link-layer MAC addresses.
@@ -923,7 +973,7 @@
 \subsubsection{Shodan} \label{ssec:shodan}
 \subsubsectionhu{Shodan} \subsubsectionro{Shodan}
 
-	Shodan\cite{shodan16} is a project which scans the entire IPv4 address space continuously and exposes the gathered data on a web interface in the form of a search engine. It also exposes various APIs which allows developers and security researchers to generate reports on queries, or query the database and consume the results themselves. Figure \ref{shodanscr} shows the data readily available on the service for a queried IP address.
+	Shodan\footnote{I would like to thank the creator of Shodan for upgrading my account to an unlimited plan, so that I may continue the development of the application with unrestricted API access and scan credits.}\cite{shodan16} is a project which scans the entire IPv4 address space continuously and exposes the gathered data on a web interface in the form of a search engine. It also exposes various APIs which allows developers and security researchers to generate reports on queries, or query the database and consume the results themselves. Figure \ref{shodanscr} shows the data readily available on the service for a queried IP address.
 
 	\begin{figure}[!htbp]
 		\centering
