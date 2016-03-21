@@ -1157,6 +1157,7 @@
 	
 	In order to use nmap for scanning, the \mintinline{batch}{nmap} executable has to be accessible from within the \mintinline{batch}{%PATH%} environmental variable.
 
+\newpage
 \subsection{Class Hierarchy of Data Reconnaissance Components}
 \subsectionhu{Adatszerző Komponensek Osztályhierarhiája} \subsectionro{Ierarhia de Clasă a Componentelor Colectoare de Date}
 
@@ -1219,7 +1220,80 @@
 
 \subsection{Multiplexing Task Runner} \label{ssec:tasks}
 \subsectionhu{Feladatok Párhuzamosítása} \subsectionro{Paralelizarea Sarcinilor}
-
+	
+	A ``task'' in this context is defined to be the action of scanning a port on an IP address for a specified protocol. Such tasks mostly consist of sending IP packets back and forth followed by waiting for their acknowledgment or lack thereof.
+	
+	As such, the parallelization method of using a thread pool and multiple threads is not efficient, since most threads would spend their time sleeping. Given the costly nature of thread spawning and managing, this is not efficient unless more lightweight threads can be spawned, such as `goroutines' in the Go programming language.
+	
+	The application instead implements a consumer-producer queue for storing and retrieving its tasks during scheduling, as shown in figure \ref{taskqueue}.
+	
+	\begin{figure}[!htbp]
+		\centering
+		\begin{tikzpicture}
+			\draw[color=gray,fill=gray] (0,-0.5) rectangle (-0.5,0);
+			\draw[color=gray,fill=gray] (-1,-0.5) rectangle (-1.5,0);
+			\draw[color=gray,fill=gray] (-2,-0.5) rectangle (-2.5,0);
+			\draw[color=gray,fill=gray] (-3,-0.5) rectangle (-3.5,0);
+			\draw[color=gray,fill=gray] (-4,-0.5) rectangle (-4.5,0);
+			\draw (-5,0.25) -- (0.5,0.25);
+			\draw (-5,-0.75) -- (0.5,-0.75);
+			\node at (-2.25,0.75) {Queue of Tasks};
+			\node (v1) at (0.5,-0.25) {};
+			\draw [es](v1) -- (1.5,-0.25);
+			\node at (-3.75,1.75) {Task Producer};
+			\node at (-0.85,-2) {Enqueue due to I/O Wait};
+			\node at (2.25,-0.25) {\huge \faCogs};
+			\node at (2.25,-1.15) {Run Task};
+			\node at (-5.6,1.75) {\huge \faPlusCircle};
+			\node at (-3.75,-2) {\huge \faHourglassHalf};
+			\node (v5) at (3,-0.25) {};
+			\draw [es](v5) -- (4,0.75);
+			\draw [es] plot[smooth, tension=.7] coordinates {(-4.5,-2) (-5.1,-1.55) (-5.3,-0.85) (-5.15,-0.35)};
+			\draw [es] plot[smooth, tension=.7] coordinates {(-4.75,1.25) (-5.2,0.95) (-5.35,0.4) (-5.15,-0.15)};
+			\node at (2,1.25) {\huge \faCheck};
+			\node at (4.25,1.25) {Finished with Task};
+			\draw [es] plot[smooth, tension=.7] coordinates {(3.15,-0.4) (3.55,-1.2) (3.1,-1.8) (1.75,-2)};
+		\end{tikzpicture}
+		\caption{Consumer-Producer Queue Process for Tasks}
+		\label{taskqueue}
+	\end{figure}
+	
+	\begin{figure}[!htbp]
+		\centering
+		\begin{tikzpicture}
+			\node at (-4.5,1.5) {Send initial payload};
+			\node at (0,1.5) {Check for reply};
+			\node at (4,1.5) {Read reply};
+			\node at (8.25,1.5) {Finish};
+			\draw [es](-2.5,1.5) -- (-1.5,1.5);
+			\draw [es](1.5,1.5) -- (2.75,1.5);
+			\draw [es] plot[smooth, tension=.7] coordinates {(4,2) (3.25,2.5) (0.75,2.5) (0,2)};
+			\draw [es](5.25,1.5) -- (7.25,1.5);
+			\node at (2,3) {\textit{if no reply}};
+			\node[align=center] at (6.25,2.25) {\textit{if wait expired}\\\textit{or got reply}};
+			\node at (-4.5,0.25) {\textit{Phase 1}};
+			\node at (1.75,0.25) {\textit{Phase 2}};
+			\node at (8.25,0.25) {\textit{Phase 3}};
+			\draw (-6,0.75) -- (-3,0.75);
+			\draw (-1.25,0.75) -- (4.75,0.75);
+			\draw (7.5,0.75) -- (9,0.75);
+			\draw[color=gray] (-2.75,0.75) -- (-1.5,0.75);
+			\draw[color=gray] (5,0.75) -- (7.25,0.75);
+			\node[color=gray] at (-2.1,0.25) {I/O Wait};
+			\node[color=gray] at (6.2,0.25) {I/O Wait};
+		\end{tikzpicture}
+		\caption{Phases of an UDP scan as implemented by component in section \ref{ssec:udpscan}}
+		\label{taskudp}
+	\end{figure}
+	
+	In figure \ref{taskudp}, the phases of an UDP scan task are shown. Each `phase' shows up in the queue as a different `task.' As a result of this scheduling and task multiplexing, one thread can handle all the scanning tasks needs.
+	
+	All tasks are implemented to use their sockets in a non-blocking mode, as such, as soon as one task has sent an IP packet and is about to wait for the results of its I/O operation, it instead goes into the back of the queue.
+	
+	Once the whole queue has been looped to collect the results of the previously initiated I/O operations, the aforementioned task will have a chance to collect its own operation results.
+	
+	The multiplexing task runner uses a lock-free thread-safe underlying queue container, namely the concurrent FIFO implementation in Boost, \mintinline{cpp}{boost::lockfree::queue<T>}. As a result, for heavy workloads when excessive resources are available, the task runner can theoretically use multiple consumers on the same queue.
+	
 \subsection{Protocol Tokenization} \label{ssec:tokenizer}
 \subsectionhu{Protokoll Értelmezés} \subsectionro{Interpretor de Protocoale}
 	
