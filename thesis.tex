@@ -137,7 +137,7 @@
 		
 		\vspace{0.5in}
 		
-		{\LARGE Szakdolgozat}
+		{\LARGE Szakdolgozat -- Kivonat}
 		
 	\end{center}
 	
@@ -186,12 +186,12 @@
 		
 		\vspace{2.5in}
 		
-		{\huge Black-Box Penetration Testing and}\\\vspace{0.1in}
-		{\huge Vulnerability Management Platform}
+		{\huge Sistem pentru Teste de Penetrare și}\\\vspace{0.1in}
+		{\huge Descoperirea Vulnerabilităților}
 		
 		\vspace{0.5in}
 		
-		{\LARGE Teză de Licență}
+		{\LARGE Teză de Licență -- Extras}
 		
 	\end{center}
 	
@@ -949,7 +949,7 @@
 	
 	As a result of this library usage due to this scanner, in order to compile the application with the ARP scanner included on Windows, the ``WinPcap Developer's Pack'' has to be installed and its path specified to CMake on the compiling machine, while the hosts running the application will need to have the WinPcap device driver installed.
 
-\subsubsection{TCP Scanning}
+\subsubsection{TCP Scanning} \label{ssec:tcpscan}
 \subsubsectionhu{TCP Letapogatás} \subsubsectionro{Scanare TCP}
 
 	The TCP port scanning functionality is implemented by the \mintinline{cpp}{TcpScanner} component. The current implementation does not require super-user or administrator rights on the host device, as the component uses the operating system's network API to initiate connections.
@@ -1010,7 +1010,7 @@
 	
 	At this point if the server still has not sent a satisfactory reply, the server sends a TLS `ClientHello' packet in the hopes of negotiating a TLS connection. If the secure connection established, the previous plaintext protocol probes are retried in the hopes of getting a satisfactory reply message which can by analyzed by the other components of the application.
 
-\subsubsection{UDP Scanning}
+\subsubsection{UDP Scanning} \label{ssec:udpscan}
 \subsubsectionhu{UDP Letapogatás} \subsubsectionro{Scanare UDP}
 
 	The UDP protocol, as opposed to TCP, is connectionless. This means that it cannot be reliably determined whether a server is listening on the scanned port at all. Even if a server is listening, it might be possible that its implementation drops all packets which are not well-formed, instead of returning an error message which can be used to deduce the protocol.
@@ -1146,19 +1146,32 @@
 
 	In cases where both services return a service banner for a specific port, the longer banner is chosen during the amalgamation phase. One of the reasons for this decision was because ban messages are generally shorter\cite{qualys11} in order to avoid denial of service attacks. The other reason was because a longer banner generally means that the service in question possibly probed the port further (e.g. `STARTTLS' command sent to SMTP servers by Censys, but not by Shodan) which allows the pattern matching component described in \ref{ssec:patternmatch} to have more data available.
 
+\subsection{External Reconnaissance} \label{ssec:nmapscan}
+\subsectionhu{Külső Feltérképezés} \subsectionro{Scanare Externală}
+
+	This section presents the \mintinline{cpp}{NmapScanner} component of the application which executes an external application in order to scan the requested ports, and then parses the results of the $3^{rd}$-party application for further processing within the $1^{st}$-party application.
+	
+	While the application implements a wide range of protocol scanners as discussed in sections \ref{ssec:icmpping} through \ref{ssec:udpscan}, with an unified interface for task parallelization as discussed in section \ref{ssec:tasks}, as a measure of redundancy, the users are given the choice of using an external scanner for their reconnaissance purposes.
+	
+	The component, as its name suggests, supports \textit{nmap} out-of-the-box as an alternative scanner, however any $3^{rd}$-party application which generates nmap-compatible XML-based reports can be used. One such example is the \textit{masscan} scanner.
+	
+	In order to use nmap for scanning, the \mintinline{batch}{nmap} executable has to be accessible from within the \mintinline{batch}{%PATH%} environmental variable.
+
 \subsection{Class Hierarchy of Data Reconnaissance Components}
 \subsectionhu{Adatszerző Komponensek Osztályhierarhiája} \subsectionro{Ierarhia de Clasă a Componentelor Colectoare de Date}
 
+	\begingroup
+	\hypersetup{linkcolor=blue}
 	\begin{figure}[!htbp]
 		\centering
-		\begin{tikzpicture}[scale=0.9,transform shape]
+		\begin{tikzpicture}[scale=0.85,transform shape]
 			\node at (0,0) {HostScanner};
 			\draw  (-1.5,0.5) rectangle (1.5,-0.5);
 			\node at (-2,-3) {InternalScanner};
-			\node at (-6,-3) {ArpPinger};
-			\node at (2,-3) {NmapScanner};
-			\draw  (-3.5,-2.5) rectangle (-0.5,-3.5);
-			\draw  (0.5,-2.5) rectangle (3.5,-3.5);
+			\node at (-6,-3) {ArpPinger$^{\ref{ssec:arpping}}$};
+			\node at (2,-3) {NmapScanner$^{\ref{ssec:nmapscan}}$};
+			\draw  (-3.75,-2.5) rectangle (-0.25,-3.5);
+			\draw  (0.25,-2.5) rectangle (3.75,-3.5);
 			\draw  (-7.5,-2.5) rectangle (-4.5,-3.5);
 			\node (v3) at (-6,-2.5) {};
 			\node (v1) at (0,-0.5) {};
@@ -1171,24 +1184,24 @@
 			\draw  (4.5,-2.5) rectangle (7.5,-3.5);
 			\node (v3_1) at (6,-2.5) {};
 			\draw [es] (v1) edge (v3_1);
-			\node at (4,-6) {ShodanScanner};
-			\draw  (2.5,-5.5) rectangle (5.5,-6.5);
-			\node (v3_2) at (4,-5.5) {};
-			\node at (8,-6) {CensysScanner};
-			\draw  (6.5,-5.5) rectangle (9.5,-6.5);
-			\node (v3_3) at (8,-5.5) {};
+			\node at (3.5,-6) {ShodanScanner$^{\ref{ssec:shodan}}$};
+			\draw  (1.5,-5.5) rectangle (5.5,-6.5);
+			\node (v3_2) at (3.5,-5.5) {};
+			\node at (8.5,-6) {CensysScanner$^{\ref{ssec:censys}}$};
+			\draw  (6.5,-5.5) rectangle (10.5,-6.5);
+			\node (v3_3) at (8.5,-5.5) {};
 			\node (v5) at (6,-3.5) {};
 			\draw [triangle 60-triangle 60] (v5) edge (v3_2);
 			\draw [triangle 60-triangle 60] (v5) edge (v3_3);
 			\node at (-2,-6) {ServiceScanner};
-			\draw  (-3.5,-5.5) rectangle (-0.5,-6.5);
-			\node at (-2,-9) {TcpScanner};
-			\node at (-6,-9) {IcmpScanner};
-			\node at (2,-9) {UdpScanner};
-			\draw  (-3.5,-8.5) rectangle (-0.5,-9.5);
-			\draw  (0.5,-8.5) rectangle (3.5,-9.5);
-			\draw  (-7.5,-8.5) rectangle (-4.5,-9.5);
-			\node (v3_4) at (-6,-8.5) {};
+			\draw  (-3.75,-5.5) rectangle (-0.25,-6.5);
+			\node at (-2,-9) {TcpScanner$^{\ref{ssec:tcpscan}}$};
+			\node at (-6.25,-9) {IcmpScanner$^{\ref{ssec:icmpping}}$};
+			\node at (2,-9) {UdpScanner$^{\ref{ssec:udpscan}}$};
+			\draw  (-3.75,-8.5) rectangle (-0.25,-9.5);
+			\draw  (0.25,-8.5) rectangle (3.75,-9.5);
+			\draw  (-8,-8.5) rectangle (-4.5,-9.5);
+			\node (v3_4) at (-6.25,-8.5) {};
 			\node (v1_1) at (-2,-6.5) {};
 			\node (v2_1) at (-2,-8.5) {};
 			\node (v4_1) at (2,-8.5) {};
@@ -1202,6 +1215,7 @@
 		\caption{Class Hierarchy of Data Reconnaissance Components}
 		\label{classhierdata}
 	\end{figure}
+	\endgroup
 
 \subsection{Multiplexing Task Runner} \label{ssec:tasks}
 \subsectionhu{Feladatok Párhuzamosítása} \subsectionro{Paralelizarea Sarcinilor}
