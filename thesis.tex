@@ -117,6 +117,119 @@
 \PrerenderUnicode{áéúóőűíăâîșț}
 
 \begin{document}
+
+%
+%	Hungarian Section (Summarized Version)
+%
+
+\pagestyle{empty}
+\selectlanguage{hungarian}
+
+	\begin{center}
+		{\Large Sapientia Erdélyi Magyar Tudományegyetem}\\\vspace{0.05in}
+		{\Large Műszaki és Humántudományok Kar, Marosvásárhely}\\\vspace{0.07in}
+		{\Large Számítástechnika}\\
+		
+		\vspace{2.5in}
+		
+		{\huge Behatolástesztelő és Sebezhetőségfelderítő}\\\vspace{0.1in}
+		{\huge Rendszer}
+		
+		\vspace{0.5in}
+		
+		{\LARGE Szakdolgozat}
+		
+	\end{center}
+	
+	\vspace{2.0in}
+	
+	\begin{multicols}{2}
+		\begin{flushleft}
+			{\Large Vezető tanár:}\\\vspace{0.1in}
+			{\LARGE {Dr. Vajda Tamás}}
+		\end{flushleft}
+		\columnbreak
+		\begin{flushright}
+			{\Large Diák:}\\\vspace{0.1in}
+			{\LARGE {Bogosi Roland}}
+		\end{flushright}
+	\end{multicols}
+	
+	\vspace{1.5in}
+		
+	\begin{center}
+		{\LARGE 2016}
+	\end{center}
+
+\newpage
+\section*{Tartalomjegyzék}
+
+	\begingroup
+	\renewcommand{\section}[2]{}
+	\hypersetup{linkcolor=lightblue}
+	\setlength{\parskip}{0em}
+	\hungariantableofcontents
+	\endgroup
+
+%
+%	Romanian Section (Summarized Version)
+%
+
+\newpage
+\pagestyle{empty}
+\selectlanguage{romanian}
+
+	\begin{center}
+		{\Large Universitatea Sapientia, Târgu-Mureș}\\\vspace{0.05in}
+		{\Large Facultatea de Științe Tehnice și Umaniste}\\\vspace{0.07in}
+		{\Large Calculatoare}\\
+		
+		\vspace{2.5in}
+		
+		{\huge Black-Box Penetration Testing and}\\\vspace{0.1in}
+		{\huge Vulnerability Management Platform}
+		
+		\vspace{0.5in}
+		
+		{\LARGE Teză de Licență}
+		
+	\end{center}
+	
+	\vspace{2.0in}
+	
+	\begin{multicols}{2}
+		\begin{flushleft}
+			{\Large Îndrumător Științific:}\\\vspace{0.1in}
+			{\LARGE {Dr. Vajda Tamás}}
+		\end{flushleft}
+		\columnbreak
+		\begin{flushright}
+			{\Large Absolvent:}\\\vspace{0.1in}
+			{\LARGE {Bogosi Roland}}
+		\end{flushright}
+	\end{multicols}
+	
+	\vspace{1.5in}
+		
+	\begin{center}
+		{\LARGE 2016}
+	\end{center}
+
+\newpage
+\section*{Cuprins}
+
+	\begingroup
+	\renewcommand{\section}[2]{}
+	\hypersetup{linkcolor=lightblue}
+	\setlength{\parskip}{0em}
+	\romaniantableofcontents
+	\endgroup
+
+%
+%	English Section (Full Version)
+%
+
+\newpage
 \pagestyle{empty}
 \selectlanguage{english}
 
@@ -173,28 +286,6 @@
 	\listoffigures
 	\listoftables
 	\listoflistings
-	\endgroup
-
-\newpage
-\section*{Tartalomjegyzék}
-\selectlanguage{hungarian}
-
-	\begingroup
-	\renewcommand{\section}[2]{}
-	\hypersetup{linkcolor=lightblue}
-	\setlength{\parskip}{0em}
-	\hungariantableofcontents
-	\endgroup
-
-\newpage
-\section*{Cuprins}
-\selectlanguage{romanian}
-
-	\begingroup
-	\renewcommand{\section}[2]{}
-	\hypersetup{linkcolor=lightblue}
-	\setlength{\parskip}{0em}
-	\romaniantableofcontents
 	\endgroup
 
 \newpage
@@ -571,7 +662,7 @@
 	
 	The \textit{nmap project} has been cataloging various security products, such as vulnerability scanners, and ranking them based on user feedback and their popularity based on usage\cite{sectools}. The three most popular vulnerability scanners will be presented in this section.
 	
-	\paragraph{Nessus} The \textit{Nessus Vulnerability Scanner}\cite{nessus} is developed by Tenable Network Security. Initially it was released as a free and open-source vulnerability scanner with paid registered options available, however this was changed in 2005, when the application went closed-source.
+	\paragraph*{Nessus} The \textit{Nessus Vulnerability Scanner}\cite{nessus} is developed by Tenable Network Security. Initially it was released as a free and open-source vulnerability scanner with paid registered options available, however this was changed in 2005, when the application went closed-source.
 	
 	SecTools.org lists Nessus as the most popular vulnerability scanner today. Currently, a ``Community'' edition can be obtained for no charge, however it is limited to personal and non-commercial usage. Annual subscriptions otherwise are available starting from \$2,190 per user per year.
 	
@@ -583,13 +674,13 @@
 	
 	This generally results in a heavy software with high maintenance fees, as the annual subscription cost shows.
 	
-	\paragraph{OpenVAS} The \textit{Open Vulnerability Assessment System}\cite{openvas} is a fork of the last open-source Nessus edition before that went closed-source. It is currently developed and maintained by Greenbone Networks.
+	\paragraph*{OpenVAS} The \textit{Open Vulnerability Assessment System}\cite{openvas} is a fork of the last open-source Nessus edition before that went closed-source. It is currently developed and maintained by Greenbone Networks.
 	
 	The vulnerability scanner, as a result of the shared heritage, has the same architecture as Nessus, and even continues to use the Nessus NASL scripting language for its plugins.
 	
 	SecTools.org lists OpenVAS as the second most popular vulnerability scanner today, and it continues to be free and open-source despite its growing popularity.
 	
-	\paragraph{Nexpose} The \textit{Nexpose Vulnerability Scanner}\cite{nexpose} is developed by Rapid7, who are also famous for developing and maintaining another popular security tool \textit{Metasploit}.
+	\paragraph*{Nexpose} The \textit{Nexpose Vulnerability Scanner}\cite{nexpose} is developed by Rapid7, who are also famous for developing and maintaining another popular security tool \textit{Metasploit}.
 	
 	As opposed to the previous solutions, Nexpose aims to be much more than just a vulnerability scanner, fulfilling the roles of the entire vulnerability management lifecycle, from detection to risk analysis and mitigation.
 	
