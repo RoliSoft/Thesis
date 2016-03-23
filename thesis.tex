@@ -296,6 +296,42 @@
 	
 	Egy másik hátránya az IDS típusú rendszereknek, hogy csak figyelnek és nem nyúlnak az adatforgalomhoz. Így értesítést tudnak küldeni egy támadásról, de azt nem előzik meg, amely bizonyos esetekben azt is jelentheti, hogy a támadó már le is töltötte a bankkártya számokat az adatbázisból.
 
+\section{Projekt Célja}
+
+	A projekt célja egy olyan alkalmazás fejlesztése amely egy bizonyos hálózatot fel tud térképezni és a rajta található sebezhetőségeket fel tudja deríteni.
+	
+	Az alkalmazásnak teljesen autonómnak kell lennie a felderítési folyamatában, anélkül hogy jövőbeli frissítésektől függjön az új szolgáltatások beazonosítása, illetve ezen lévő sebezhetőségek felderítése.
+
+	A projekt célközönsége a lehető legszélesebbnek kell lennie. Hasznos eszköznek kell lennie biztonsági kutatók, tanácsadók, illetve rendszergazdák számára is, még abban az esetben is ha az utóbbi csoport nem rendelkezik jelentős biztonsági tapasztalattal.
+
+\subsection{Adatgyűjtés}
+
+	Ahhoz, hogy hasznos legyen független biztonsági kutatók számára, az alkalmazásnak alkalmaznia kell ``OSINT'' (``open-source intelligence'') módszereket. Az \ref{ssec:shodan} és \ref{ssec:censys} fejezetekben bemutatott szolgáltatások, név szerint Shodan\cite{shodan16} és Censys\cite{censys15}, tökéletes jelöltek az alkalmazás adatgyűjtési komponenseire passzív feltérképezési célokból.
+	
+	Ezáltal, a kutatók lekérdezéseket futtathatnak azonnali választ kapván rájuk, attól függetlenül, hogy lenne egy infrastruktúrájuk a feltérképezések lefuttatására, és be kelljen vállalják ezeknek a következményeit, mint például az ``abuse'' emaileket.
+	
+	Ezzel ellentétben, a biztonsági tanácsadók általában egy belső infrastruktúrát kell feltérképezzenek, amely nem elérhető az előbb említett szolgáltatások számára. Emiatt az alkalmazás egy aktív adatgyűjtési komponenst is kell tartalmazzon.
+	
+	Attól függetlenül, hogy az alkalmazás implementál egy széleskörű protokoll-letapogatókat egyesített felülettel a feladatok párhuzamosításának céljából, redundanciaként a felhasználók számára fel van ajánlva a külső letapogatók választási lehetősége adatgyűjtés céljából. Alapértelmezetten a legnépszerűbb letapogató szoftver \textit{nmap} van támogatva, viszont bármilyen más alkalmazás felhasználható amely nmap-kompatibilis XML-alapú reportokat generál; egy ilyen példa a \textit{masscan}.
+
+\subsection{Adatelemzés}
+
+	Az összegyűjtött szolgáltatási sávok (``service banner'') teljesen autonóm módon kell legyenek elemezve. Tehát a \ref{relwork} fejezetben bemutatott szoftverekkel ellentétben az alkalmazásnak nem kellene különböző kiterjesztésekre támaszkodnia a protokollok, illetve azután a protokoll mögött lévő szerver szoftverek beazonosítására.
+
+	A \textit{NIST} által publikált adatbázisokat (ahogyan a \ref{ssec:vulndbs} fejezetben van tárgyalva) kellene felhasználni a legújabb sebezhetőségek beazonosítása céljából. A \ref{ssec:matchcpe} fejezet bemutatja azon komponenst amely ezt az adatbázist felhasználva önműködő módon a szolgálati sávokat a nekik megfelelő \textit{CPE} nevükhöz társítja.
+
+	Redundanciaként, a \ref{ssec:patternmatch} fejezet bemutat egy alternatív módszert a szolgáltatási sávok CPE nevükhöz való társítására, viszont ez a módszer nem támaszkodik az előzőleg említett adatbázishoz, ehelyett egy a fejlesztő vagy közösség által készített/kibővített adatbázisra alapul, amely szolgáltatási sávok illeszkedésére tartalmaz reguláris kifejezéseket.
+
+\subsection{Megoldási Javaslatok}
+
+	A CPE-név társításokat követően a sebezhetőségek felderítése a beazonosított szolgáltatásokban már csak egy egyszerű keresési operáció a \textit{CVE} adatbázisban.
+	
+	Ettől a ponttól követően, az alkalmazás minél több információt kell a felhasználó számára bocsájtson a megtalált sebezhetőségeket illetően, beleértve a CVSS pontozást a sebezhetőség kockázatelemzése iránt a feltérképezett infrastruktúrában.
+
+	Ahhoz, hogy a szolgáltatás hasznos legyen olyan rendszergazdák számára, akiknek nincs előző jelentős biztonsági tapasztalatuk, az alkalmazás egyszerű lépéseket kell meghatározzon a sebezhetőségek kijavítására -- az alapján, hogy a feltérképezett környezetről mit tudott származtatni.
+
+	Tehát, azon operációs rendszerek számára amelyek támogatottak a szoftver által és sikeresen be is voltak azonosítva az infrastruktúrában, a szoftver tényleges parancssorokat térít vissza, amelyet a rendszergazdák lefuttatva a cél rendszeren kijavíthatják ezek sebezhetőségeit.
+
 \section{Kivitelezés}
 
 	A dolgozat céljából fejlesztett alkalmazás és hozzátartozó szkriptek ingyenesek és nyílt forráskódúak.
