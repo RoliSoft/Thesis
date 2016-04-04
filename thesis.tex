@@ -66,6 +66,11 @@
 \makeatletter
 \def\toclevel@subsubsubsection{4}
 \def\l@subsubsubsection{\@dottedtocline{4}{7em}{4em}}
+
+\renewcommand\paragraph{\@startsection{paragraph}{6}{\parindent}%
+  {3.25ex \@plus1ex \@minus .2ex}%
+  {-1em}%
+  {\normalfont\normalsize\bfseries}}
 \makeatother
 
 \setcounter{secnumdepth}{4}
@@ -179,7 +184,7 @@
 	
 	Az \textit{RFC 2828} és számos \textit{NIST} publikáció úgy definiálja a ``sebezhetőséget,'' mint ``egy hiba vagy gyengeség a rendszer biztonsági procedúráiban, tervezésében, implementálásában, vagy belső ellenőrzései között amelyet ki lehet játszani (véletlenül kiváltva vagy szándékosan kihasználva) és így az eredmény egy biztonsági rés vagy a rendszer biztonságpolitikájának megsértése.''\cite{rfc2828,nist80030} Egyszerűen átfogalmazva ez annyit jelent, hogy a sebezhetőség egy hiba a szoftver vagy webszolgáltatás kódjában, amely kihasználáskor (például a felhasználó egy olyan bemenetet ad meg amely szándékosan úgy lett formázva, hogy kiváltsa az ismert hibát) megengedi a felhasználó számára, hogy olyan tevékenységet hajtson végre, amelyet különben nem szabadna, vagy olyan információhoz férjen hozzá, amelyhez különben nem kéne.
 	
-\subsection{Sebezhetőség Adatbázisok}
+\subsection{Sebezhetőség Adatbázisok} \label{ssec:vulndbs}
 	
 	A CERT/CC által egyik szponzorált projekt a \textit{CVE} (\textit{Common Vulnerabilities and Exposures}), amely egy módszert biztosít a publikusan ismert sebezhetőségek címkézésére és követésére. A \textit{NIST} (\textit{National Institute of Standards and Technology}) alapítvány futtat egy weboldalt \textit{NVD} (\textit{National Vulnerability Database}) néven, amelyen keresztül karbantartanak egy adatbázist, amely a publikusan ismert sebezhetőségeket tartalmazza, illetve információkat ezekről, olyan strukturált formátumban, amelyet számítógépes alkalmazások is önműködően olvashatnak\cite{nvd15}.
 	
@@ -260,6 +265,42 @@
 	Ezek a rendszerek a felhasználó és az alkalmazás között helyezkednek el, és a hálózati adatforgalmat figyelik bizonyos lehetséges támadási indikátorokért. Ez a módszer eléggé korlátozott, ugyanis nem tud olyan sebezhetőségeket észlelni a rendszerben amelyeket a felhasználó még nem próbált kihasználni, ugyanis az egyetlen adatforrása a rendszernek a valósidejű hálózati adatforgalom.
 	
 	Egy másik hátránya az IDS típusú rendszereknek, hogy csak figyelnek és nem nyúlnak az adatforgalomhoz. Így értesítést tudnak küldeni egy támadásról, de azt nem előzik meg, amely bizonyos esetekben azt is jelentheti, hogy a támadó már le is töltötte a bankkártya számokat az adatbázisból.
+
+\section{Kapcsolódó Termékek} \label{relwork}
+	
+\subsection{Kerekedelmi Megoldások} \label{ssec:comtools}
+	
+	Az \textit{nmap project} karban tart egy listát a biztonsági eszközökről, népszerűségük szerint rendezve őket\cite{sectools}. A három legnépszerűbb sebezhetőségfelderítő termék kerül bemutatásra ebben a fejezetben.
+	
+	\paragraph*{Nessus} A \textit{Nessus Vulnerability Scanner}\cite{nessus} a Tenable Network Security által van fejlesztve. Eredetileg ingyenes és nyílt-forrású volt, fizetős opciókkal, viszont ez 2005-ben megváltozott, amikor az alkalmazás teljesen zárt-forrású lett.
+	
+	A SecTools.org a Nessus-t a legnépszerűbb sebezhetőségfelderítő terméknek véli. Jelenleg egy ``Community'' kiadás ingyenesen kipróbálható, viszont a funkcionalitások korlátozva vannak és csak személyes használatra használható. Éves előfizetések \$2,190-tól kezdődnek felhasználónként, évente.
+	
+	A belső architektúrája a sebezhetőségefelderítőnek kiterjesztéseken alapszik. Saját ``NASL'' programozási nyelvet implementál, amely ezen kiterjesztések fejlesztésére van használva.
+	
+	Habár 70,000+ kiterjesztést reklámoz, a letapogató az összes kiterjesztést le kell futtatnia, és különböző kiterjesztésekre van szükség, hogy különböző szoftverek illetve verzióit azonosítsa, beleértve a sebezhetőségek azonosítását is.
+	
+	Ez azt jelenti, hogy a szoftver folyton friss kiterjesztésekre kell számítson ha lépést akar tartani az új szoftverekkel és azok sebezhetőségeikkel.
+	
+	\paragraph*{OpenVAS} Az \textit{Open Vulnerability Assessment System}\cite{openvas} egy fork-ja az utolsó Nessus verziónak, amely még nyílt-forrású volt, mielőtt zárt-forrású lett volna. Jelenleg a Greenbone Networks fejleszti.
+	
+	Architektúrailag ugyan azt a programozási nyelvet használja, mint a Nessus, és ugyancsak kiterjesztéseken alapszik.
+	
+	A SecTools.org az OpenVAS-t a második legnépszerűbb sebezhetőségfelderítőnek véli, és növekvőben van a népszerűsége a nyílt-forrása miatt.
+	
+	\paragraph*{Nexpose} A \textit{Nexpose Vulnerability Scanner}\cite{nexpose} a Rapid7 által van fejlesztve, akik híresek a biztonsági világban egy másik biztonsági szoftver, a \textit{Metasploit} miatt.
+	
+	Az előző termékekkel ellentétben, a Nexpose sokkal több akar lenni mint csak egy sebezhetőségfelderítő rendszer, és különböző egyéb funkciókkal rendelkezik, mint például kockázatelemzés.
+	
+	A SecTools.org a Nexpose-t a harmadik legnépszerűbb sebezhetőségfelderítő terméknek véli. Az éves előfizetések \$2,000-tól kezdődnek, viszont van egy korlátozott ``Community'' kiadás is, amely ingyenes személyes használatra.
+	
+\subsection{Tudományos Kutatások}
+	
+	Bizonyos cikkek a meglévő termékek hatékonyságát tanulmányozzák, mint például a legidézettebb cikkek ezek közül a \cite{holm11,bau10,doupe10}.
+	
+	Új sebezhetőségfelderítő rendszerek készítéséről is találhatók cikkek, mint például a \cite{kals06} cikkben leírt webes alkalmazások sebezhetőségfelderítője, vagy a \cite{guo05} cikk, amely az előzővel ellentétben egy hálózaton lévő csatlakozott eszközök biztonságát vizsgálja.
+	
+	A \textit{ShoVAT}\cite{shovat15} cikk bemutat egy metodológiát amelyet az ezen dolgozat céljából fejlesztett alkalmazás \ref{ssec:matchcpe}-es fejezetében tárgyalt CPE-alapú azonosító komponense is használ, kisebb változásokkal.
 
 \section{Kivitelezés}
 
@@ -774,8 +815,10 @@
 	\begingroup
 	\renewcommand{\section}[2]{}
 	\renewcommand{\markboth}[2]{}
-		\bibliography{thesis}
-		\bibliographystyle{thesis}
+		\begin{multicols}{2}
+			\bibliography{thesis}
+			\bibliographystyle{thesis}
+		\end{multicols}
 	\endgroup
 
 \end{document}
