@@ -139,80 +139,45 @@
 
 \newpage
 \pagestyle{fancy}
-\section{Bevezető}
-	
-\subsection{Biztonság a Vállalati Környezetekben}
+\section{Projekt Célja}
 
-	Vállalati környezetekben pár száz vagy akár ezer felhasználó függ az informatikai infrastruktúra folytonos és sértetlen működésén. A szakítatlan üzemmód kritikus az üzleti szempontból nézve, éppen ezért a biztonság egy nagyon fontos szerepet tölt be a vállalati környezetekben. Az említett felhasználók csoportonként és személyeként külön hozzáférési jogokkal rendelkeznek amelyek megmondják, hogy a felhasználó mihez férhet hozzá az osztott rendszeren belül.
+	A projekt célja egy olyan alkalmazás fejlesztése amely egy bizonyos hálózatot fel tud térképezni és a rajta található sebezhetőségeket fel tudja deríteni.
 	
-	Kis és nagy szervezetek adminisztrátorai az előzőleg említett szükséges üzemmód fenntartása és a káosz elkerülése végett sok bürokráciába ütköznek amennyiben valamilyen módosítást akarnak végezni, ugyanis ezek valamilyen előreláthatatlan módon utólag bezavarhatnak.
-	
-	Az előző paragrafusba befoglalódik a szoftverek frissítése is, ugyanis amennyiben a frissítendő szoftver olyan változást vezet be amely inkompatibilissé teszi az előző verziókkal vagy a jenlegi infrastruktúrával, abban az esetben a rendszergazda nem teheti meg ezt a lépést.
-	
-	A probléma ott lép fel, amikor a szoftverek az infrastruktúrában kezdenek elavulni, és ezzel egy-időben arányosan nő az infrastruktúrában az ismert biztonsági rések száma is, a biztonsági frissítések hiányában. Ilyen esetekben a kis és nagy vállalatok rendszergazdái \textit{LTS} (``\textit{Long-Term Support}'') vagy \textit{LTSB} (``\textit{Long-Term Servicing Branch}'') típusú szoftverekhez/operációs rendszerekhez/könyvtárcsomagokhoz fordulnak.
-	
-	Ezen speciális verziók különlegessége, hogy úgy nevezett ``feature-frozen'' állapotban vannak, azaz nem készül számukra olyan frissítés amely funkcionalitást ad, elvesz vagy változtat. Az ilyen verziók csak biztonsági frissítéseket kapnak, és ezen támogatásnak örvendenek öt évtől akár tíz évig is.
-	
-\subsection{Biztonság a Pénzügyi Ágazatban}
+	Az alkalmazásnak teljesen autonómnak kell lennie a felderítési folyamatában, anélkül hogy jövőbeli frissítésektől függjön az új szolgáltatások beazonosítása, illetve ezen lévő sebezhetőségek felderítése.
 
-	\begin{wrapfigure}{r}{0.35\textwidth}
-		\vspace{-10pt}
-		\centering
-		\includegraphics[scale=0.5]{pci.png}
-		\caption{PCI Logó}
-	\end{wrapfigure}
+	A projekt célközönsége a lehető legszélesebbnek kell lennie. Hasznos eszköznek kell lennie biztonsági kutatók, tanácsadók, illetve rendszergazdák számára is, még abban az esetben is ha az utóbbi csoport nem rendelkezik jelentős biztonsági tapasztalattal.
+
+\subsection{Adatgyűjtés}
+
+	Ahhoz, hogy hasznos legyen független biztonsági kutatók számára, az alkalmazásnak alkalmaznia kell ``OSINT'' (``open-source intelligence'') módszereket. Az \ref{ssec:shodan} és \ref{ssec:censys} fejezetekben bemutatott szolgáltatások, név szerint Shodan\cite{shodan16} és Censys\cite{censys15}, tökéletes jelöltek az alkalmazás adatgyűjtési komponenseire passzív feltérképezési célokból.
 	
-	A pénzügyi ágazatban a jelentősebb bankkártya-alapú szolgáltatásokat nyújó cégek (mint például Visa és MasterCard) közösen alapítottak egy tanácsot a \textit{Payment Card Industry Security Standards Council} név alatt.
+	Ezáltal, a kutatók lekérdezéseket futtathatnak azonnali választ kapván rájuk, attól függetlenül, hogy lenne egy infrastruktúrájuk a feltérképezések lefuttatására, és be kelljen vállalják ezeknek a következményeit, mint például az ``abuse'' emaileket.
 	
-	A \textit{PCI} fő feladata, hogy egy listát állítson össze azokról a szabályokról, amelyeket be kell tartaniuk azok az entitások amelyek szenzitív információkkal szándékoznak foglalkozni -- mint például bankkártyaszámok tárolása, vagy akár csak feldolgozása. Ezen szabályok egy \textit{PCI DSS} (\textit{Payment Card Industry Data Security Standard}) nevű dokumentumban vannak összefoglalva.
+	Ezzel ellentétben, a biztonsági tanácsadók általában egy belső infrastruktúrát kell feltérképezzenek, amely nem elérhető az előbb említett szolgáltatások számára. Emiatt az alkalmazás egy aktív adatgyűjtési komponenst is kell tartalmazzon.
 	
-	Bármilyen entitás amely szenzitív információkat tárol vagy akár csak feldolgoz, meg kell feleljen a dokumentumban leírt szabályoknak. A megfelelésről a cég egy ``\textit{PCI Compliant}'' tanúsítványt kap, amelyet megszerezhet egy külső kivizsgáló által, akinek fő feladata, hogy ellenőrizze az infrastruktúra megfelelését a PCI DSS dokumentumban leírt szabályokhoz.
+	Attól függetlenül, hogy az alkalmazás implementál egy széleskörű protokoll-letapogatókat egyesített felülettel a feladatok párhuzamosításának céljából, redundanciaként a felhasználók számára fel van ajánlva a külső letapogatók választási lehetősége adatgyűjtés céljából. Alapértelmezetten a legnépszerűbb letapogató szoftver \textit{nmap} van támogatva, viszont bármilyen más alkalmazás felhasználható amely nmap-kompatibilis XML-alapú reportokat generál; egy ilyen példa a \textit{masscan}.
+
+\subsection{Adatelemzés}
+
+	Az összegyűjtött szolgáltatási sávok (``service banner'') teljesen autonóm módon kell legyenek elemezve. Tehát a \ref{relwork} fejezetben bemutatott szoftverekkel ellentétben az alkalmazásnak nem kellene különböző kiterjesztésekre támaszkodnia a protokollok, illetve azután a protokoll mögött lévő szerver szoftverek beazonosítására.
+
+	A \textit{NIST} által publikált adatbázisokat (ahogyan a \ref{ssec:vulndbs} fejezetben van tárgyalva) kellene felhasználni a legújabb sebezhetőségek beazonosítása céljából. A \ref{ssec:matchcpe} fejezet bemutatja azon komponenst amely ezt az adatbázist felhasználva önműködő módon a szolgálati sávokat a nekik megfelelő \textit{CPE} nevükhöz társítja.
+
+	Redundanciaként, a \ref{ssec:patternmatch} fejezet bemutat egy alternatív módszert a szolgáltatási sávok CPE nevükhöz való társítására, viszont ez a módszer nem támaszkodik az előzőleg említett adatbázishoz, ehelyett egy a fejlesztő vagy közösség által készített/kibővített adatbázisra alapul, amely szolgáltatási sávok illeszkedésére tartalmaz reguláris kifejezéseket.
+
+\subsection{Megoldási Javaslatok}
+
+	A CPE-név társításokat követően a sebezhetőségek felderítése a beazonosított szolgáltatásokban már csak egy egyszerű keresési operáció a \textit{CVE} adatbázisban.
 	
-	A megfelelés évente ellenőrizve van, és a kihágásokat havonta akár több ezer dollárral is büntethetik a kártyarendszer szolgáltatók\cite{wfargo15}.
-	
-	Az előzőleg említett dokumentum 12 fő követelményt\cite{pcidss31} ír elő, ahol mindegyik követelmény saját al-listával jön a teljes megfelelés bebiztosítása céljából. A dolgozat a következő két követelményt célozza teljesíteni:
-	
-	\begin{itemize}
-		\item 6. követelmény: ``Biztonságos rendszereket és alkalmazásokat kell fejleszteni és üzemeltetni''
-		\item 11. követelmény: ``Biztonsági rendszereket és folyamatokat rendszeresen tesztelni kell''
-	\end{itemize}
-	
-	E két követelmény teljesítéséhez a PCI kéri a rendszerek behatolástesztelését a fejlesztési fázis alatt, az infrastruktúra változásakor, illetve az előző kettőtől függetlenül legalább évente.
-	
-	A behatolástesztelés a \textit{külső} és \textit{belső} perspektívákat is le kell fednie. A külső perspektíva alatt a publikus IP címek tesztelése értetődik, míg a belső perspektíva a magas biztonságú belső hálózatok tesztelése vonatkozik.
-	
-	A hármas verzió előtti dokumentumok nem kötelezték a behatolástesztelést, ugyanis megelégedtek azzal, hogyha a fejlesztés alatt a kód legalább statikus kódelemzőkkel validálva volt. Ez viszont át lett fogalmazva a 3.0-as verziótól kezdődően és a rendszeres behatolástesztelés már kötelező, nem kerülhető ki kódelemzéssel.
+	Ettől a ponttól követően, az alkalmazás minél több információt kell a felhasználó számára bocsájtson a megtalált sebezhetőségeket illetően, beleértve a CVSS pontozást a sebezhetőség kockázatelemzése iránt a feltérképezett infrastruktúrában.
+
+	Ahhoz, hogy a szolgáltatás hasznos legyen olyan rendszergazdák számára, akiknek nincs előző jelentős biztonsági tapasztalatuk, az alkalmazás egyszerű lépéseket kell meghatározzon a sebezhetőségek kijavítására -- az alapján, hogy a feltérképezett környezetről mit tudott származtatni.
+
+	Tehát, azon operációs rendszerek számára amelyek támogatottak a szoftver által és sikeresen be is voltak azonosítva az infrastruktúrában, a szoftver tényleges parancssorokat térít vissza, amelyet a rendszergazdák lefuttatva a cél rendszeren kijavíthatják ezek sebezhetőségeit.
 	
 \section{Szoftver Sebezhetőségek}
 	
 	Az \textit{RFC 2828} és számos \textit{NIST} publikáció úgy definiálja a ``sebezhetőséget,'' mint ``egy hiba vagy gyengeség a rendszer biztonsági procedúráiban, tervezésében, implementálásában, vagy belső ellenőrzései között amelyet ki lehet játszani (véletlenül kiváltva vagy szándékosan kihasználva) és így az eredmény egy biztonsági rés vagy a rendszer biztonságpolitikájának megsértése.''\cite{rfc2828,nist80030} Egyszerűen átfogalmazva ez annyit jelent, hogy a sebezhetőség egy hiba a szoftver vagy webszolgáltatás kódjában, amely kihasználáskor (például a felhasználó egy olyan bemenetet ad meg amely szándékosan úgy lett formázva, hogy kiváltsa az ismert hibát) megengedi a felhasználó számára, hogy olyan tevékenységet hajtson végre, amelyet különben nem szabadna, vagy olyan információhoz férjen hozzá, amelyhez különben nem kéne.
-	
-\subsection{Közzétételi Eljárások és Politikák}
-	
-	Harmadik féltől származó szoftverekben talált hibák helyes jelentése és korrigálása egy komplikált téma, ugyanis a legtöbb szoftverfejlesztőcégnek nincs jól előre meghatározott és publikált eljárása biztonsági hibajelentés célokra. Egy standard, felelősségteljes közzétételi eljárás, hogy a hiba megtalálója kapcsolatba lép a szoftverfejlesztő céggel, és ezt követően egy bizonyos számú napot vár mielőtt a hibát publikusan is közzéteszi, ahol a várt napok száma változhat a cég reakciójától függően.
-	
-	Egy másik probléma is felléphet abban az esetben ha a hiba több cég termékét is érinti, amely esetében előnyös egy koordinált közzétételt szervezni, ugyanis ellenkezőképpen az a cég amely a leghamarabb publikálja a biztonsági frissítést, beleértve a rés információját, az veszélybe helyezi a többi cég klienseit amelyek számára még nem készült el a biztonsági frissítés.
-	
-	A biztonsági rést felfedező személy etikáitól és a rés veszélyességétől függően választani lehet az illegális utat is, amely során a biztonsági rést egy illegális virtuális piacon el lehet adni. A ``deep web''-en számos ilyen piactér van ahol úgynevezett ``nulladik napi'' sebezhetőségekkel kereskednek. Ezeknek az árai pár száz dollártól akár félmillió dollárig is felmehetnek, egy New York Times-ban megjelent cikk szerint\cite{nperlroth13}.
-	
-	Ahhoz, hogy a magas profilú cégek ösztönözzék a biztonsági szakértőket, hogy a felelősségteljes közzétételi utat válasszák, sok esetben ``bug bounty'' programokat indítanak. Ezen programok célja, hogy publikáljanak egy közzétételi procedúrát a szakértők számára, illetve hogy jutalmazzák a bejelentéseket.
-	
-	Egy híres példa a Google \textit{Vulnerability Reward Program}\cite{googlevrp15} iniciatíva, amely akár több ezer dollárt is fizet sebezhetőségekért a saját szolgáltatásukban, de később kibővítették a program által lefedett alkalmazások listáját pár nagy kockázatú népszerű nyílt forrású szerverre is, amelyek sebezhetőségeikért \$500-tól \$3,133.7-ig terjedő pénzjutalmat is felajánlanak. Ezenkívül a Google futtat egy \textit{Patch Reward Program} programot is, amelyen keresztül olyan önkénteseket jutalmaznak akik biztonsági réseket tömnek be nyílt forrású alkalmazásokban. A jutalmak \$500-tól kezdődnek ``egysoros javításokért'' és elérnek \$10,000-ig ``komplikált, nagy hatású javítások'' esetén.
-	
-\subsection{Szabályozó Szervek}
-	
-	\begin{wrapfigure}{r}{0.35\textwidth}
-		\vspace{-10pt}
-		\centering
-		\includegraphics[scale=0.75]{cert.png}
-		\caption{CERT/CC Logó}
-	\end{wrapfigure}
-	
-	Az Egyesült Államokban az egyik szabályozó szerv a \textit{CERT/CC}, (\textit{Computer Emergency Response Team Coordination Center}) amely a \textit{DARPA} (\textit{Defense Advanced Research Projects Agency}) által volt alapítva 1988 novemberében. Az alapítás szükségességét az adta, hogy akkor készült el az első számítógépes vírus, amely az Internet segítségével tovább tudott terjeszkedni, így megfertőzve egyéb számítógépeket. A vírus a \textit{Morris worm}\cite{cert15} nevet kapta, és nagy figyelemnek örvendett a média által.
-	
-	A CERT/CC-nek saját közzétételi politikája van: a szoftverfejlesztő céggel felveszik a kapcsolatot amint lehetséges, és ettől függetlenül a biztonsági rés leírása publikálva lesz 45 napon belül, akár a cég készített biztonsági frissítést, vagy sem.
-	
-	A szabályozó szerv Romániában a \textit{CERT-RO}, (\textit{Centrul Național de Răspuns la Incidente de Securitate Cibernetică}) amely 2011 májusában lett alapítva\cite{certro12}. Magyarországon ennek megfelelője a \textit{GovCERT-Hungary}, (\textit{Kormányzati Eseménykezelő Központ}) amely 2013 áprilisában lett alapítva\cite{certhu13}. Létezik egy szabályozó szerv az Európai Uniós szinten is: a \textit{CERT-EU} (\textit{Computer Emergency Response Team European Union Task Force}) 2012 novemberében volt alapítva\cite{certeu13}, és saját szabályozó szerepet tölt be, nem csak a tagországok szervei által küldött jelentéseket összesítéséjért felelősek.
 	
 \subsection{Sebezhetőség Adatbázisok}
 	
@@ -295,42 +260,6 @@
 	Ezek a rendszerek a felhasználó és az alkalmazás között helyezkednek el, és a hálózati adatforgalmat figyelik bizonyos lehetséges támadási indikátorokért. Ez a módszer eléggé korlátozott, ugyanis nem tud olyan sebezhetőségeket észlelni a rendszerben amelyeket a felhasználó még nem próbált kihasználni, ugyanis az egyetlen adatforrása a rendszernek a valósidejű hálózati adatforgalom.
 	
 	Egy másik hátránya az IDS típusú rendszereknek, hogy csak figyelnek és nem nyúlnak az adatforgalomhoz. Így értesítést tudnak küldeni egy támadásról, de azt nem előzik meg, amely bizonyos esetekben azt is jelentheti, hogy a támadó már le is töltötte a bankkártya számokat az adatbázisból.
-
-\section{Projekt Célja}
-
-	A projekt célja egy olyan alkalmazás fejlesztése amely egy bizonyos hálózatot fel tud térképezni és a rajta található sebezhetőségeket fel tudja deríteni.
-	
-	Az alkalmazásnak teljesen autonómnak kell lennie a felderítési folyamatában, anélkül hogy jövőbeli frissítésektől függjön az új szolgáltatások beazonosítása, illetve ezen lévő sebezhetőségek felderítése.
-
-	A projekt célközönsége a lehető legszélesebbnek kell lennie. Hasznos eszköznek kell lennie biztonsági kutatók, tanácsadók, illetve rendszergazdák számára is, még abban az esetben is ha az utóbbi csoport nem rendelkezik jelentős biztonsági tapasztalattal.
-
-\subsection{Adatgyűjtés}
-
-	Ahhoz, hogy hasznos legyen független biztonsági kutatók számára, az alkalmazásnak alkalmaznia kell ``OSINT'' (``open-source intelligence'') módszereket. Az \ref{ssec:shodan} és \ref{ssec:censys} fejezetekben bemutatott szolgáltatások, név szerint Shodan\cite{shodan16} és Censys\cite{censys15}, tökéletes jelöltek az alkalmazás adatgyűjtési komponenseire passzív feltérképezési célokból.
-	
-	Ezáltal, a kutatók lekérdezéseket futtathatnak azonnali választ kapván rájuk, attól függetlenül, hogy lenne egy infrastruktúrájuk a feltérképezések lefuttatására, és be kelljen vállalják ezeknek a következményeit, mint például az ``abuse'' emaileket.
-	
-	Ezzel ellentétben, a biztonsági tanácsadók általában egy belső infrastruktúrát kell feltérképezzenek, amely nem elérhető az előbb említett szolgáltatások számára. Emiatt az alkalmazás egy aktív adatgyűjtési komponenst is kell tartalmazzon.
-	
-	Attól függetlenül, hogy az alkalmazás implementál egy széleskörű protokoll-letapogatókat egyesített felülettel a feladatok párhuzamosításának céljából, redundanciaként a felhasználók számára fel van ajánlva a külső letapogatók választási lehetősége adatgyűjtés céljából. Alapértelmezetten a legnépszerűbb letapogató szoftver \textit{nmap} van támogatva, viszont bármilyen más alkalmazás felhasználható amely nmap-kompatibilis XML-alapú reportokat generál; egy ilyen példa a \textit{masscan}.
-
-\subsection{Adatelemzés}
-
-	Az összegyűjtött szolgáltatási sávok (``service banner'') teljesen autonóm módon kell legyenek elemezve. Tehát a \ref{relwork} fejezetben bemutatott szoftverekkel ellentétben az alkalmazásnak nem kellene különböző kiterjesztésekre támaszkodnia a protokollok, illetve azután a protokoll mögött lévő szerver szoftverek beazonosítására.
-
-	A \textit{NIST} által publikált adatbázisokat (ahogyan a \ref{ssec:vulndbs} fejezetben van tárgyalva) kellene felhasználni a legújabb sebezhetőségek beazonosítása céljából. A \ref{ssec:matchcpe} fejezet bemutatja azon komponenst amely ezt az adatbázist felhasználva önműködő módon a szolgálati sávokat a nekik megfelelő \textit{CPE} nevükhöz társítja.
-
-	Redundanciaként, a \ref{ssec:patternmatch} fejezet bemutat egy alternatív módszert a szolgáltatási sávok CPE nevükhöz való társítására, viszont ez a módszer nem támaszkodik az előzőleg említett adatbázishoz, ehelyett egy a fejlesztő vagy közösség által készített/kibővített adatbázisra alapul, amely szolgáltatási sávok illeszkedésére tartalmaz reguláris kifejezéseket.
-
-\subsection{Megoldási Javaslatok}
-
-	A CPE-név társításokat követően a sebezhetőségek felderítése a beazonosított szolgáltatásokban már csak egy egyszerű keresési operáció a \textit{CVE} adatbázisban.
-	
-	Ettől a ponttól követően, az alkalmazás minél több információt kell a felhasználó számára bocsájtson a megtalált sebezhetőségeket illetően, beleértve a CVSS pontozást a sebezhetőség kockázatelemzése iránt a feltérképezett infrastruktúrában.
-
-	Ahhoz, hogy a szolgáltatás hasznos legyen olyan rendszergazdák számára, akiknek nincs előző jelentős biztonsági tapasztalatuk, az alkalmazás egyszerű lépéseket kell meghatározzon a sebezhetőségek kijavítására -- az alapján, hogy a feltérképezett környezetről mit tudott származtatni.
-
-	Tehát, azon operációs rendszerek számára amelyek támogatottak a szoftver által és sikeresen be is voltak azonosítva az infrastruktúrában, a szoftver tényleges parancssorokat térít vissza, amelyet a rendszergazdák lefuttatva a cél rendszeren kijavíthatják ezek sebezhetőségeit.
 
 \section{Kivitelezés}
 
