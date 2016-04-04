@@ -445,12 +445,12 @@
 	Az előző fejezetekben említett Berkeley Packet Filter mechanizmus a WinPcap könyvtárcsomagban is jelen van. A \ref{bpfasm} és \ref{bpfcpp} kódrészletekben felsorolt utasításlistát csatolhatjuk a \mintinline{cpp}{pcap_setfilter(pcap_t *p, bpf_program *fp)} függvényhívással a megnyitott hálózati interfészek csatlakoztatójához.
 	
 	Mivel ezen komponens egy harmadik féltől származó könyvtárcsomagot használ fel, ezért az alkalmazás kompilálása Windows alá kérelmezi a ``WinPcap Developer's Pack'' jelenlétét a kompiláló rendszeren, illetve a WinPcap virtuális meghajtó jelenlétét azon klienseken, amelyek a szoftvert futtatni kívánják az ARP letapogató komponenssel együtt.
-
+	
 \subsubsection{TCP Letapogatás} \label{ssec:tcpscan}
 
 	A TCP port letapogató funkcionalitást a \mintinline{cpp}{TcpScanner} komponens implementálja. A jelenlegi implementáció felhasználásához nem szükséges a felhasználónak adminisztrátori jogokkal rendelkeznie, ugyanis a letapogatás az operációs rendszer által támogatott hálózati API hívásokkal történik.
 	
-	Az összes hálózati művelet nem blokkoló módon van kezdeményezve, amely után a feladat visszakerül a sorba (queue) amíg állapotváltozás nem történik. A feladatok multiplexelése a \ref{ssec:tasks} fejezetben van bővebben tárgyalva.
+	Az összes hálózati művelet nem blokkoló módon van kezdeményezve, amely után a feladat visszakerül a sorba (queue) amíg állapotváltozás nem történik, így a feladatok könnyen és hatékonyan multiplexelhetőek egy szál segítségével.
 
 	\begin{figure}[!htbp]
 		\centering
@@ -630,12 +630,144 @@
 
 	Ez a fejezet bemutatja az alkalmazás \mintinline{cpp}{NmapScanner} komponensét, amely egy külső alkalmazást indít el a kért portok letapogatása érdekében, majd a külső alkalmazás által generált eredményeket beolvassa további elemzési célokból a jelenlegi alkalmazásba.
 	
-	Habár az alkalmazás tág körű letapogató komponenseket implementál, amint ezek tárgyalva vannak az \ref{ssec:icmpping}-es fejezettől az \ref{ssec:udpscan}-es fejezetig, egyesített interfésszel amely engedélyezi a feladatok könnyű és hatékony párhuzamosítását, amely a \ref{ssec:tasks}-s fejezetben van tárgyalva, redundanciaként a felhasználóknak fel van ajánlva az a lehetőség is, hogy egy külső alkalmazást használjanak a letapogatási célokra.
+	Habár az alkalmazás tág körű letapogató komponenseket implementál, amint ezek tárgyalva vannak az \ref{ssec:icmpping}-es fejezettől az \ref{ssec:udpscan}-es fejezetig, egyesített interfésszel amely engedélyezi a feladatok könnyű és hatékony párhuzamosítását, redundanciaként a felhasználóknak fel van ajánlva az a lehetőség is, hogy egy külső alkalmazást használjanak a letapogatási célokra.
 	
 	A komponens, amint a neve is sugallja, az \textit{nmap} alkalmazást támogatja, viszont bármilyen más alkalmazás is használható amely nmap-kompatibilis XML-alapú jelentéseket képes generálni. Egy ilyen alternatív alkalmazásra példa a \textit{masscan} nevű szoftver lenne.
 	
 	Ahhoz, hogy az nmap-et használni lehessen letapogatásra, az \mintinline{batch}{nmap} alkalmazás elérhető kell legyen a \mintinline{batch}{%PATH%} környezeti változón belül.
 	
+\subsection{Szerverek Minta-alapú Beazonosítása} \label{ssec:patternmatch}
+
+	A \mintinline{cpp}{ServiceRegexMatcher} komponens feladata, hogy bemenetként fogadja a teljes szolgáltatási sávot, és futtassa le egy adatbázis ellen, amely reguláris kifejezéseket tartalmaz CPE nevekhez társítva.
+
+	\begin{listing}[H]
+		\begin{minted}{matlab}
+			^HTTP/1\.[01] \d{3}.*\r\nServer: nginx(?:/([\d.]+))?
+		\end{minted}
+		\caption{Példa reguláris kifejezés \mintinline{matlab}{cpe:/a:nginx:nginx} szoftverhez}
+		\label{nginxregex}
+	\end{listing}
+	
+	A \ref{nginxregex}-es kódrészletben található reguláris kifejezés illeszkedik az ``nginx'' HTTP szoftver által generált válaszfejlécekre. Továbbá, a reguláris kifejezés tartalmaz egy opcionális csoportot, amely a verziószámot próbálja megkeresni. Amennyiben a kifejezés illeszkedik, a komponens visszatéríti a \mintinline{matlab}{cpe:/a:nginx:nginx:1.9.12} nevet, míg ha a kifejezés parciálisan illeszkedik, azaz a verziószám csoport nélkül, a \mintinline{matlab}{cpe:/a:nginx:nginx} név lesz visszatérítve.
+	
+	Ez különbözik a \ref{ssec:matchcpe}-s fejezetben leírt módszertől, ugyanis itt az azonosítás sikeres verziószám nélkül is, így a jövőbeli verziószámok is könnyen felismerhetőek a letapogató szoftver frissítése nélkül.
+	
+\subsubsection{Identitás Kikövetkeztetése Névhírdetés Nélkül}
+	
+	Míg a \ref{nginxregex}-es kódrészletben bemutatott kifejezés elég egyszerű, a minta alapú beazonosító komponenssel olyan szervereket is be lehet azonosítani, amelyek nem hirdetik ki a nevüket a szolgáltatási sávban.
+	
+	\begin{listing}[H]
+		\begin{minted}{matlab}
+			^554 SMTP synchronization error\r\n
+		\end{minted}
+		\caption{Példa reguláris kifejezés \mintinline{matlab}{cpe:/a:exim:exim} szoftverhez}
+		\label{eximregex}
+	\end{listing}
+	
+	A \ref{eximregex}-es kódrészletben bemutatott reguláris kifejezés az ``exim'' SMTP szerver szoftvert képes beazonosítani, ugyanis az 554-es hibakód standard, az ``SMTP synchronization error'' üzenet bájtról bájtra implementáció-specifikus, és különbözik más SMTP szoftverekben.
+	
+	Hasonlóan, a verziószámot is ki lehet következtetni bizonyos esetekben, ha tudjuk hogy milyen publikus üzenetek változtak a szerver szoftverben egyik verzióról a másikra, és ennek tesztelésére egy reguláris kifejezést írunk. (Például az `PRDR' támogatás megléte a szolgáltatási sávban, amely arra utal, hogy az exim szerver legalább 4.83-as verziójával van dolgunk, ugyanis ez az első verzió amelyben ez implementálva és kihirdetve van.)
+
+\subsection{Szerverek CPE-alapú Beazonosítása} \label{ssec:matchcpe}
+
+	A \textit{National Institute of Standards and Technology} karban tart egy \textit{National Vulnerability Database} nevű adatbázist, amely tartalmazza a publikusan elismert sebezhetőségek listáját a népszerűbb szoftvereknek. Ebben a fejezetben bemutatott komponens, a \mintinline{cpp}{CpeDictionaryMatcher} felhasználja ezen intézet által szabadon közzétett és naponta frissített \textit{Common Platform Enumeration Dictionary} listáját.
+	
+	A \textit{CPE} egy elnevezési rendszer hardver, szoftver illetve operációs rendszerek számára\cite{cpe22}. A 2.2-es formátumja: \mintinline{matlab}{cpe:/típus:tulajdonos:termék:verzió:frissítés:kiadás:nyelv} ahol a 'típus' komponens lehet \mintinline{matlab}{h} mint `hardver', \mintinline{matlab}{o} mint `operációs rendszer' és \mintinline{matlab}{a} mint `alkalmazás'.
+	
+	Példaként, az ``nginx 1.3.9'' CPE neve \mintinline{matlab}{cpe:/a:igor_sysoev:nginx:1.3.9}.
+	
+	Az előzőleg megemlített \textit{CPE szótár} egy gyűjteménye azon CPE neveknek, amelyekhez publikusan ismert sebezhetőség van csatolva a \textit{CVE adatbázisban}.
+	
+	Sajnos a CPE nevek nincsenek a szolgáltatási sávban feltüntetve, és nem létezik egy jól definiált módszer arra, hogy a szolgáltatási sávok alapján megkeressük a hozzátartozó CPE neveket. A \cite{shovat15} cikkben a szerzők hasonló problémát tárgyaltak, és az általuk bemutatott módszeren alapszik az alkalmazásban implementált CPE-alapú beazonosító komponens is.
+	
+\subsubsection{Kivitelezés Áttekintése}
+	
+	A jelenlegi CPE azonosító komponens memóriába tölti a teljes CPE szótár egy előre feldolgozott változatát, amelyben a CPE nevek tokenizálva vannak és a felesleges információ el van hanyagolva memóriahatékonysági okok miatt. A \ref{ciscotokens}-es kódrészlet bemutatja a memóriába betöltött struktúrát egy példa CPE névnek.
+	
+	\begin{listing}[H]
+		\begin{minted}[style=perldoc]{js}
+			CpeEntry {
+				// cpe:/o:cisco:ios
+				"ProductSpecificTokens": ["cisco", "ios"],
+				"Versions": [
+					CpeVersionEntry {
+						// cpe:/o:cisco:ios:12.2sxi
+						"VersionNumber": "12.2",
+						"VersionSpecificTokens": ["sxi"]
+					},
+					CpeVersionEntry {
+						// cpe:/o:cisco:ios:12.2sxh
+						"VersionNumber": "12.2",
+						"VersionSpecificTokens": ["sxh"]
+					}
+					// [további verziók kivágva]
+				]
+			}
+		\end{minted}
+		\caption{Megközelítő belső reprezentációja a \mintinline{matlab}{cpe:/o:cisco:ios:12.2sxi} bejegyzésnek}
+		\label{ciscotokens}
+	\end{listing}
+	
+	A tokenizációs folyamat során, a CPE név `tulajdonos' és `termék' komponenseit a \mintinline{matlab}{([a-z][a-z0-9]+)} reguláris kifejezés ellen van illesztve azon okból fogva, hogy azokat a szavakat amelyek több mint egy karakter hosszúak és nem számmal kezdődnek, egy külön token listába legyenek helyezve.
+	
+	Így példaként, a \mintinline{matlab}{cpe:/a:apache:tomcat:4.1.36} CPE név alapján készül egy tömb, amely a \mintinline[style=vs]{js}{["apache", "tomcat"]} tokeneket tartalmazza.
+	
+	A CPE verzió komponense bizonyos esetekben tartalmaz elhanyagolható karaktereket vagy non-standard verzió jelölést. Ezen esetek kiküszöbölése végett, a verziószám a \mintinline{matlab}{\d+\.(?:\d+\.)*\d+} reguláris kifejezés ellen van illesztve, amelynek szükséges legalább egy ponttal elválasztott két szám.
+	
+	Amennyiben a verzió komponens tartalmaz ezenkívül szavakat, ezek az első tokenizációs lépésben bemutatott reguláris kifejezés ellen vannak illesztve, és egy verzió-specifikus token tömbbe tárolva. Példaként ilyen esetekben, a \mintinline{matlab}{cpe:/o:cisco:ios:12.2sxi} CPE név esetén, a verzió-specifikus tokenek tömb tartalma \mintinline[style=vs]{js}{["sxi"]} lesz.
+	
+	CPE-alapú azonosítás során, a teljes adatbázis átiterálódik, először a termék-specifikus tokeneket próbálva. Amennyiben az összes token megtalálható a bemeneti szövegben, a termékhez csatolt verziószámok vannak kipróbálva. Amennyiben legalább egy verziószám talált, és van neki egy verzió-specifikus token tömbje is, az összes ilyen további tokennek is találnia kell.
+	
+\subsubsection{Élesetek Kezelése} \label{ssec:cpeedges}
+
+	A \textit{Sun Microsystems} cég azonosító komponense a ``sun'', amely olyan CPE neveket eredményez, mint \mintinline{matlab}{cpe:/a:sun:jre}, \mintinline{matlab}{cpe:/a:sun:jdk} és \mintinline{matlab}{cpe:/o:sun:solaris:10.0}. A problémás része ennek a tokennek, hogy a legtöbb protokoll, mint például az SMTP és HTTP, visszatérítik a dátumot a szolgáltatási sávukban RFC 1123 formátumban\cite{rfc2616}, amely így néz ki: ``Sun, 14 Mar 2016 16:33:02 GMT''.
+	
+	A dátum első szava a nap neve, amely három betűre van rövidítve, és vasárnaponként az értéke ``Sun''. Ez bevezet egy bizonyos `véletlenszerűségi' alkotórészt a szoftverbe, ugyanis a pontozási rendszere a CPE alapú azonosítónak minden vasárnap nagyobb pontszámot fog társítani a \textit{Sun Microsystems} általi termékeknek, ugyanis a ``sun'' token immáron megtalálható az elemzett szolgáltatási sávban.
+	
+	\begin{listing}[H]
+		\begin{minted}{matlab}
+			Cisco IOS Software, s72033_rp Software (s72033_rp-IPSERVICESK9_WAN-M), Version 12.2(33)SXI3, RELEASE SOFTWARE (fc2)
+			Technical Support: http://www.cisco.com/techsupport
+			Copyright (c) 1986-2009 by Cisco Systems, Inc.
+			Compiled Tue 27-Oct-09 11:12 by prod_
+		\end{minted}
+		\caption{Példa telnet szolgáltatási sávja bizonyos Cisco routereknek}
+		\label{ciscosvcbnr}
+	\end{listing}
+
+	Egy másik problémás példa a Cisco verziójelölése lenne a saját telnet szolgáltatásuk sávjában. A \ref{ciscosvcbnr}-es kódrészletben bemutatott szolgáltatási sáv a \mintinline{matlab}{cpe:/o:cisco:ios:12.2sxi3} CPE névhez tartozik. A probléma onnan adódik, hogy Cisco a $12.2$-es verziószámmal és ``sxi'' frissítési szint mellett ``by'' frissítési szintet is publikált: \mintinline{matlab}{cpe:/o:cisco:ios:12.2by}.
+	
+	Ha a két CPE nevet tokenizálnánk, a két különböző token tömb úgy nézne ki, hogy \mintinline[style=vs]{js}{["cisco", "ios", "sxi"]} és \mintinline[style=vs]{js}{["cisco", "ios", "by"]}. A verziószám és az első két token mindkét tömbből találna, viszont a harmadik tokenek ``sxi'' és ``by'', mindkét tömbből ugyancsak találnának. A harmadik és negyedik sorában a \ref{ciscosvcbnr}-es kódrészletnek a ``copyright'' és ``compiled'' sorok mindketten tartalmazzák a ``by'' szavat.
+
+	Az előzőleg említett ShoVAT\cite{shovat15} cikk úgy oldotta meg ezt a problémát, hogy azon tokeneket amelyek közelebb vannak a verziószámhoz nagyobb súllyal látta el, mint azokat, amelyek messzebb vannak. Ezen dolgozat céljából fejlesztett alkalmazás is ezt a módszert alkalmazza a helyes CPE név kiválasztására hasonló helyzetekben.
+	
+	\begin{multicols}{2}
+		\begin{listing}[H]
+			\begin{minted}[style=pastie]{http}
+				HTTP/1.1 200 OK
+				Server: nginx/1.9.12 (Ubuntu)
+				X-Powered-By: PHP/5.6.19
+				Date: Fri, 11 Mar 2016 16:04:07 GMT
+				Connection: close
+			\end{minted}
+			\caption{Példa HTTP válasz}
+			\label{httpsvcbnr}
+		\end{listing}
+		\begin{listing}[H]
+			\begin{minted}[style=perldoc]{js}
+				[
+					"nginx/1.9.12",
+					"Ubuntu",
+					"PHP/5.6.19"
+				]
+			\end{minted}
+			\caption{Kiszűrt tokenek a példából}
+			\label{httpsvcbnrtokens}
+		\end{listing}
+	\end{multicols}
+	
+	Egy alternatív módszer van bemutatva a \ref{httpsvcbnr}-as illetve \ref{httpsvcbnrtokens}-es kódrészletekben, amelyet a szoftver még alkalmaz redundanciaként az az, hogy olyan protokollok esetén ahol ismert a szervernév kihirdetésének helye (mint például 'Server' és `X-Powered-By' mezők HTTP esetén) ott csak ezek a mezők ellen lesz lefuttatva a CPE azonosító, míg azon protokollok esetén ahol nincs standard hely a szervernév kihirdetésére (mint például SMTP) ott megpróbál minél több haszontalan információt (mint például hibaüzenetek, hoszt név vagy dátumok) kivágni az álpozitív találatok kiszűrése érdekében.
+
 \newpage
 \section{Bibliográfia}
 
