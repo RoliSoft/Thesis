@@ -811,12 +811,48 @@
 	
 	Egy alternatív módszer van bemutatva a \ref{httpsvcbnr}-as illetve \ref{httpsvcbnrtokens}-es kódrészletekben, amelyet a szoftver még alkalmaz redundanciaként az az, hogy olyan protokollok esetén ahol ismert a szervernév kihirdetésének helye (mint például 'Server' és `X-Powered-By' mezők HTTP esetén) ott csak ezek a mezők ellen lesz lefuttatva a CPE azonosító, míg azon protokollok esetén ahol nincs standard hely a szervernév kihirdetésére (mint például SMTP) ott megpróbál minél több haszontalan információt (mint például hibaüzenetek, hoszt név vagy dátumok) kivágni az álpozitív találatok kiszűrése érdekében.
 
+\subsection{Operációs Rendszerek Beazonosítása} \label{ssec:opsysmatcher}
+
+	A szolgáltatások mögötti operációs rendszerek beazonosítására nem használhatóak az \ref{ssec:patternmatch}. illetve \ref{ssec:matchcpe}. fejezetben tárgyalt osztályok, ugyanis az esetek nagy részében a szoftverek nem hirdetik ki milyen operációs rendszeren futnak egész pontosan, így nem lehet egy szolgáltatási sávból ezt megállapítani.
+	
+	Az alkalmazás jelenleg a \textbf{Debian}, \textbf{Ubuntu}, \textbf{Red Hat}, \textbf{CentOS} és \textbf{Fedora} disztribúciókat támogatja teljesen, ami alatt az értetendő, hogy képes ezen operációs rendszerek és verzió számuk beazonosítására, illetve a felderített CPE neveket és CVE sebezhetőségeket egy egész pontos csomag nevéhez kötni az operációs rendszeren belül.
+	
+	\textbf{Windows} támogatása jelenleg korlátozott: az operációs rendszer felismerése támogatott, viszont egy központi csomagkezelő rendszer hiánya miatt a további funkciók nem érhetőek el ezen kiszolgálók részére.
+	
+	Mindegyik operációs rendszer felismeréséjért egy külön osztály gondoskodik, amelyek algoritmusai egy nagyszámú szolgáltatási sávok tanulmányozásai folytán lettek kitervelve.
+	
+	A dolgozat terjedelmi korlátai miatt a különböző osztályok és azok tervezés döntési okai nem lesznek tárgyalva, viszont példaként megemlíthető, hogy az SSH protokoll előírja, hogy az SSH szervernek azonosítania kell magát kompatibilitási okok miatt, így ez a funkcionalitás egyik disztribúcióban sem kapcsolható ki.
+	
+	Debian illetve Debian-alapú disztribúciók esetén az azonosítás el van túlozva, és az \mintinline{matlab}{openssh} csomag ki van egészítve egy \mintinline{matlab}{DebianBanner} opcióval, amely alapértelmezetten be van kapcsolva, és kihirdeti a feltelepített csomag egész pontos patch szintjét is.
+	
+	Az ``Enterprise Linux'' alapú rendszerek ugyan ezzel nem rendelkeznek, viszont mivel több év is eltelik a disztribúciók között, ezért amennyiben az osztály biztos abban, hogy Red Hat/CentOS fut a kiszolgálón, a disztribúció verziója kinyerhető az SSH szerver által kihirdetett verzió generációjának illesztésével.
+
+\subsection{Sebezhetőségek Érvényesítése}
+
+	Az \ref{ssec:opsysmatcher}. fejezetben felsorolt támogatott operációs rendszerek esetén, a szoftver képes a CPE nevek illetve CVE sebezhetőségek állapotát kikeresni a bizonyos disztribúció csomagkezelőjében. Ezen disztribúciók mindegyike rendelkezik egy ``security tracker'' csapattal vagy nyílt ``build system''-mel, amelyek nyilvántartják a disztribúcióba csomagolt alkalmazások biztonsági és a bizonyos sebezhetőségek javítási állapotát.
+	
+	A sebezhetőségek lekérdezése során az alkalmazás el tudja vetni azon sebezhetőségeket, amelyek nem érvényesek a beazonosított disztribúcióra (például ``NOT-FOR-US'' címke a Debian Security Tracker-en) vagy a beazonosított szolgáltatásra már fel lett telepítve az a biztonsági frissítés amely kijavítja az adott sebezhetőséget.
+	
+	Továbbá, ezen osztályok gondoskodnak a sebezhető csomagok nevüknek összegyűjtésére és a frissítési parancs összeállítására, amely feltelepíti a megfelelő biztonsági frissítéseket.
+
+\subsection{Utolsó Frissítési Dátum Megbecslése}
+
+	Bizonyos szerverszoftverek a szolgáltatási sávjukban a verziószámuk mellett (például \mintinline{matlab}{PHP/5.5.12}) a biztonsági frissítés szintjét is kihirdetik (például \mintinline{matlab}{PHP/5.5.12-2ubuntu4.4}).
+	
+	Az \ref{ssec:opsysmatcher}. fejezetben tárgyalt komponens képes ebből beazonosítani az operációs rendszert, annak verzióját, illetve annak a verziónak a csomagkezelőjéből letölteni a PHP csomag biztonsági frissítéseinek listáját.
+	
+	A kiszolgáló utolsó teljes rendszerfrissítésének dátuma megbecsülhető kisebb-nagyobb pontossággal úgy, hogy egy csomag beazonosított biztonsági frissítésének kiadási dátumát, illetve ugyanazon csomag következő biztonsági frissítés dátuma közötti intervallum közé helyezzük. Amennyiben több szoftver biztonsági frissítése is beazonosítható, ez leszűkíti az utolsó rendszerfrissítés dátumintervallumát.
+	
+	A példában említett csomag biztonsági frissítése 2015 április 17-én lett publikálva, míg a következő frissítés meg \mintinline{matlab}{5.5.12-2ubuntu4.6} verziószámmal 2015 július 6-án, amint ez a changelog-ból is leolvasható: \url{https://launchpad.net/ubuntu/utopic/+source/php5/+changelog}
+	
+	Az utolsó frissítési dátum megbecslése azért hasznos funkcionalitás, mivel megengedi azon sebezhetőségek elvetését, amelyek ki lettek javítva (azon beazonosított szolgáltatásokban amelyek nem hirdetik ki a feltelepített biztonsági szintjüket) az utolsó rendszerfrissítés óta. Természetesen ez a funkcionalitás csak becslés, és szabadon kikapcsolható.
+
 \subsection{Használati Példák}
 
 	Az \ref{sec:impl}. fejezetben található hivatkozás, amely a dolgozatban tárgyalt alkalmazás forráskódjára mutat, fordítás után a következő célokra használható fel. 
 
 	\vspace{-0.1in}
-	\paragraph{Aktív Letapogatás} Egy hálózaton lévő kiszolgálók automatikus felfedezése, és ezen kiszolgálók 100 legnépszerűbb TCP és UDP portjának letapogatása, majd beazonosítása és sebezhetőségek felderítése:
+	\paragraph*{Aktív Letapogatás} Egy hálózaton lévő kiszolgálók automatikus felfedezése, és ezen kiszolgálók 100 legnépszerűbb TCP és UDP portjának letapogatása, majd beazonosítása és sebezhetőségek felderítése:
 
 	\begin{listing}[H]
 	\begin{minted}[linenos=false]{matlab}
@@ -825,7 +861,7 @@
 	\end{listing}
 
 	\vspace{-0.5in}
-	\paragraph{Passzív Letapogatás} Egy bizonyos IP cím vagy tartomány letapogatása mind \textit{Shodan} illetve \textit{Censys} adatok felhasználásával:
+	\paragraph*{Passzív Letapogatás} Egy bizonyos IP cím vagy tartomány letapogatása mind \textit{Shodan} illetve \textit{Censys} adatok felhasználásával:
 
 	\begin{listing}[H]
 	\begin{minted}[linenos=false]{matlab}
@@ -834,7 +870,7 @@
 	\end{listing}
 
 	\vspace{-0.5in}
-	\paragraph{XML Feldolgozás} Egy előzőleg lefuttatott \textit{nmap} által generált XML állományban lévő szolgáltatások utólagos betöltése, beazonosítása és ezek sebezhetőségeinek felderítése:
+	\paragraph*{XML Feldolgozás} Egy előzőleg lefuttatott \textit{nmap} által generált XML állományban lévő szolgáltatások utólagos betöltése, beazonosítása és ezek sebezhetőségeinek felderítése:
 
 	\begin{listing}[H]
 	\begin{minted}[linenos=false]{matlab}
@@ -843,7 +879,7 @@
 	\end{listing}
 
 	\vspace{-0.5in}
-	\paragraph{Csomagok Beazonosítása} Kiszolgálók letapogatása, ezek operációs rendszereinek és szolgáltatásainak beazonosítása, majd a sebezhető csomagok felderítése:
+	\paragraph*{Csomagok Beazonosítása} Kiszolgálók letapogatása, ezek operációs rendszereinek és szolgáltatásainak beazonosítása, majd a sebezhető csomagok felderítése:
 
 	\begin{listing}[H]
 	\begin{minted}[linenos=false]{matlab}
@@ -865,7 +901,7 @@
 	\end{listing}
 
 	\vspace{-0.5in}
-	\paragraph{\LaTeX\ Jelentés} \LaTeX\ jelentés generálása a letapogatás befejezte után, amely tartalmazza a letapogatás során összegyűjtött összes információt, beleérve a nyitott portokat, beazonosítási eredményeket, felderített sebezhetőségeket, illetve a sebezhetőségek korrigálására generált parancsokat:
+	\paragraph*{\LaTeX\ Jelentés} \LaTeX\ jelentés generálása a letapogatás befejezte után, amely tartalmazza a letapogatás során összegyűjtött összes információt, beleérve a nyitott portokat, beazonosítási eredményeket, felderített sebezhetőségeket, illetve a sebezhetőségek korrigálására generált parancsokat:
 
 	\begin{listing}[H]
 	\begin{minted}[linenos=false]{matlab}
