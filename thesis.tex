@@ -81,6 +81,9 @@
 \setminted{linenos,autogobble,breaklines,fontsize=\footnotesize,tabsize=4,numbersep=7pt,bgcolor=whitesmoke}
 \AtBeginEnvironment{minted}{\renewcommand{\fcolorbox}[4][]{#4}}
 
+\renewcommand{\listoflistingscaption}{Kódrészletek jegyzéke}
+\renewcommand{\listingscaption}{Kódrészlet}
+
 \author{Bogosi Roland}
 \title{Behatolástesztelő és sebezhetőségfelderítő rendszer}
 
@@ -138,7 +141,6 @@
 	\hypersetup{linkcolor=lightblue}
 	\listoffigures
 	%\listoftables
-	\renewcommand*{\listoflistingscaption}{Kódrészletek jegyzéke}
 	\listoflistings
 	\endgroup
 
@@ -302,7 +304,7 @@
 	
 	A \textit{ShoVAT}\cite{shovat15} cikk bemutat egy metodológiát amelyet az ezen dolgozat céljából fejlesztett alkalmazás \ref{ssec:matchcpe}-es fejezetében tárgyalt CPE-alapú azonosító komponense is használ, kisebb változásokkal.
 
-\section{Kivitelezés}
+\section{Kivitelezés} \label{sec:impl}
 
 	A dolgozat céljából fejlesztett alkalmazás és hozzátartozó szkriptek ingyenesek és nyílt forráskódúak.
 
@@ -808,6 +810,76 @@
 	\end{multicols}
 	
 	Egy alternatív módszer van bemutatva a \ref{httpsvcbnr}-as illetve \ref{httpsvcbnrtokens}-es kódrészletekben, amelyet a szoftver még alkalmaz redundanciaként az az, hogy olyan protokollok esetén ahol ismert a szervernév kihirdetésének helye (mint például 'Server' és `X-Powered-By' mezők HTTP esetén) ott csak ezek a mezők ellen lesz lefuttatva a CPE azonosító, míg azon protokollok esetén ahol nincs standard hely a szervernév kihirdetésére (mint például SMTP) ott megpróbál minél több haszontalan információt (mint például hibaüzenetek, hoszt név vagy dátumok) kivágni az álpozitív találatok kiszűrése érdekében.
+
+\subsection{Használati Példák}
+
+	Az \ref{sec:impl}. fejezetben található hivatkozás, amely a dolgozatban tárgyalt alkalmazás forráskódjára mutat, fordítás után a következő célokra használható fel. 
+
+	\vspace{-0.1in}
+	\paragraph{Aktív Letapogatás} Egy hálózaton lévő kiszolgálók automatikus felfedezése, és ezen kiszolgálók 100 legnépszerűbb TCP és UDP portjának letapogatása, majd beazonosítása és sebezhetőségek felderítése:
+
+	\begin{listing}[H]
+	\begin{minted}[linenos=false]{matlab}
+		./HostScanner -p t -u t 192.168.1.0/24
+	\end{minted}
+	\end{listing}
+
+	\vspace{-0.5in}
+	\paragraph{Passzív Letapogatás} Egy bizonyos IP cím vagy tartomány letapogatása mind \textit{Shodan} illetve \textit{Censys} adatok felhasználásával:
+
+	\begin{listing}[H]
+	\begin{minted}[linenos=false]{matlab}
+		./HostScanner -x 178.62.192.0/18
+	\end{minted}
+	\end{listing}
+
+	\vspace{-0.5in}
+	\paragraph{XML Feldolgozás} Egy előzőleg lefuttatott \textit{nmap} által generált XML állományban lévő szolgáltatások utólagos betöltése, beazonosítása és ezek sebezhetőségeinek felderítése:
+
+	\begin{listing}[H]
+	\begin{minted}[linenos=false]{matlab}
+		./HostScanner -s nmap -f report.xml
+	\end{minted}
+	\end{listing}
+
+	\vspace{-0.5in}
+	\paragraph{Csomagok Beazonosítása} Kiszolgálók letapogatása, ezek operációs rendszereinek és szolgáltatásainak beazonosítása, majd a sebezhető csomagok felderítése:
+
+	\begin{listing}[H]
+	\begin{minted}[linenos=false]{matlab}
+		./HostScanner -r 192.168.1.66 192.168.1.71
+	\end{minted}
+	\end{listing}
+
+	\vspace{-0.25in}
+	A fenti paraméterezéssel az alkalmazás letapogatja a felsorolt IP címek TCP portjait, majd megpróbálja a szolgáltatásokat beazonosítani, illetve a kiszolgáló operációs rendszerét is. A sebezhetőségek felderítése után, amennyiben sikerült az operációs rendszert is beazonosítani, az alkalmazás generál egy parancsot, amellyel a kiszolgálón lévő sebezhető csomagok frissíthetőek:
+
+	\begin{listing}[H]
+	\begin{minted}{matlab}
+		[*] 192.168.1.66 is running cpe:/o:debian:debian_linux:8
+		[*] 192.168.1.71 is running cpe:/o:redhat:enterprise_linux:7
+		    ...
+		[*] 192.168.1.66 -> sudo apt-get install --only-upgrade apache2 php5 python2.7
+		[*] 192.168.1.71 -> sudo yum update httpd php python27-python
+	\end{minted}
+	\end{listing}
+
+	\vspace{-0.5in}
+	\paragraph{\LaTeX\ Jelentés} \LaTeX\ jelentés generálása a letapogatás befejezte után, amely tartalmazza a letapogatás során összegyűjtött összes információt, beleérve a nyitott portokat, beazonosítási eredményeket, felderített sebezhetőségeket, illetve a sebezhetőségek korrigálására generált parancsokat:
+
+	\begin{listing}[H]
+	\begin{minted}[linenos=false]{matlab}
+		./HostScanner -o report.tex -r 192.168.1.66 192.168.1.71
+	\end{minted}
+	\end{listing}
+
+	\vspace{-0.5in}
+	\begin{figure}[!htbp]
+		\centering
+		\includegraphics[scale=0.07]{reportcap.png}
+		\caption{Alkalmazás által generált \LaTeX\ jelentés}
+		\label{latexrep}
+	\end{figure}
 
 \section{Eredmények}
 
