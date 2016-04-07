@@ -148,43 +148,43 @@
 \pagestyle{fancy}
 \section{Projekt Célja}
 
-	A projekt célja egy olyan alkalmazás fejlesztése amely egy bizonyos hálózatot fel tud térképezni és a rajta található sebezhetőségeket fel tudja deríteni.
+	A projekt célja egy olyan alkalmazás fejlesztése, amely egy bizonyos hálózatot fel tud térképezni és a rajta található sebezhetőségeket fel tudja deríteni.
 	
 	Az alkalmazásnak teljesen autonómnak kell lennie a felderítési folyamatában, anélkül hogy jövőbeli frissítésektől függjön az új szolgáltatások beazonosítása, illetve ezen lévő sebezhetőségek felderítése.
 
-	A projekt célközönsége a lehető legszélesebbnek kell lennie. Hasznos eszköznek kell lennie biztonsági kutatók, tanácsadók, illetve rendszergazdák számára is, még abban az esetben is ha az utóbbi csoport nem rendelkezik jelentős biztonsági tapasztalattal.
+	A projekt célközönsége a lehető legszélesebbnek kell lennie. Hasznos eszköznek kell lennie biztonsági kutatók, tanácsadók, illetve rendszergazdák számára is, még abban az esetben is, ha az utóbbi csoport nem rendelkezik jelentős biztonsági tapasztalattal.
 
 \subsection{Adatgyűjtés}
 
-	Ahhoz, hogy hasznos legyen független biztonsági kutatók számára, az alkalmazásnak alkalmaznia kell ``OSINT'' (``open-source intelligence'') módszereket. Az \ref{ssec:shodan} és \ref{ssec:censys} fejezetekben bemutatott szolgáltatások, név szerint Shodan\cite{shodan16} és Censys\cite{censys15}, tökéletes jelöltek az alkalmazás adatgyűjtési komponenseire passzív feltérképezési célokból.
+	Ahhoz, hogy hasznos legyen független biztonsági kutatók számára, az alkalmazásnak alkalmaznia kell ``OSINT'' (``open-source intelligence'') módszereket. Az \ref{ssec:shodan} és \ref{ssec:censys} fejezetekben bemutatott szolgáltatások, név szerint Shodan\cite{shodan16} és Censys\cite{censys15}, tökéletes jelöltek az alkalmazás adatgyűjtési komponenseihez passzív feltérképezési célokra.
 	
-	Ezáltal, a kutatók lekérdezéseket futtathatnak azonnali választ kapván rájuk, attól függetlenül, hogy lenne egy infrastruktúrájuk a feltérképezések lefuttatására, és be kelljen vállalják ezeknek a következményeit, mint például az ``abuse'' emaileket.
+	Ezáltal, a kutatók lekérdezéseket futtathatnak azonnali választ kapva rájuk, attól függetlenül, hogy lenne egy infrastruktúrájuk a feltérképezések lefuttatására, és be kelljen vállalják ezeknek a következményeit, mint például az ``abuse'' jelentéseket.
 	
-	Ezzel ellentétben, a biztonsági tanácsadók általában egy belső infrastruktúrát kell feltérképezzenek, amely nem elérhető az előbb említett szolgáltatások számára. Emiatt az alkalmazás egy aktív adatgyűjtési komponenst is kell tartalmazzon.
+	Ezzel ellentétben, a biztonsági tanácsadók általában egy belső infrastruktúrát kell feltérképezniük, amely nem elérhető az előbb említett szolgáltatások számára. Emiatt az alkalmazás egy vagy több aktív adatgyűjtési komponenst is kell tartalmazzon.
 	
-	Attól függetlenül, hogy az alkalmazás implementál egy széleskörű protokoll-letapogatókat egyesített felülettel a feladatok párhuzamosításának céljából, redundanciaként a felhasználók számára fel van ajánlva a külső letapogatók választási lehetősége adatgyűjtés céljából. Alapértelmezetten a legnépszerűbb letapogató szoftver \textit{nmap} van támogatva, viszont bármilyen más alkalmazás felhasználható amely nmap-kompatibilis XML-alapú reportokat generál; egy ilyen példa a \textit{masscan}.
+	Attól függetlenül, hogy az alkalmazás implementál széleskörű protokoll-letapogatókat egyesített felülettel a feladatok párhuzamosításának céljából, redundanciaként a felhasználók számára fel van ajánlva a külső letapogatók választási lehetősége adatgyűjtés céljából. Alapértelmezetten a legnépszerűbb letapogató szoftver \textit{nmap} van támogatva, viszont bármilyen más alkalmazás felhasználható amely nmap-kompatibilis XML-alapú reportokat generál; egy ilyen példa a \textit{masscan} nevű szoftver.
 
 \subsection{Adatelemzés}
 
-	Az összegyűjtött szolgáltatási sávok (``service banner'') teljesen autonóm módon kell legyenek elemezve. Tehát a \ref{relwork} fejezetben bemutatott szoftverekkel ellentétben az alkalmazásnak nem kellene különböző kiterjesztésekre támaszkodnia a protokollok, illetve azután a protokoll mögött lévő szerver szoftverek beazonosítására.
+	Az összegyűjtött szolgáltatási sávok (``service banner'') teljesen autonóm módon kell legyenek elemezve. Tehát a \ref{relwork}. fejezetben bemutatott szoftverekkel ellentétben az alkalmazásnak nem kellene különböző kiterjesztésekre támaszkodnia a protokollok, illetve azután a protokoll mögött lévő szerverszoftverek beazonosítására.
 
-	A \textit{NIST} által publikált adatbázisokat (ahogyan a \ref{ssec:vulndbs} fejezetben van tárgyalva) kellene felhasználni a legújabb sebezhetőségek beazonosítása céljából. A \ref{ssec:matchcpe} fejezet bemutatja azon komponenst amely ezt az adatbázist felhasználva önműködő módon a szolgálati sávokat a nekik megfelelő \textit{CPE} nevükhöz társítja.
+	A \textit{NIST} által közzétett adatbázisokat (ahogyan a \ref{ssec:vulndbs}. fejezetben van tárgyalva) kellene felhasználni a legújabb sebezhetőségek beazonosítása céljából. Az \ref{ssec:matchcpe}. fejezet bemutatja azon komponenst, amely ezt az adatbázist felhasználva önműködő módon a szolgálati sávokat a nekik megfelelő \textit{CPE} nevükhöz társítja.
 
-	Redundanciaként, a \ref{ssec:patternmatch} fejezet bemutat egy alternatív módszert a szolgáltatási sávok CPE nevükhöz való társítására, viszont ez a módszer nem támaszkodik az előzőleg említett adatbázishoz, ehelyett egy a fejlesztő vagy közösség által készített/kibővített adatbázisra alapul, amely szolgáltatási sávok illeszkedésére tartalmaz reguláris kifejezéseket.
+	Redundanciaként, az \ref{ssec:patternmatch}. fejezet bemutat egy alternatív módszert a szolgáltatási sávok CPE nevükhez való társítására, viszont ez a módszer nem támaszkodik az előzőleg említett adatbázisra, ehelyett egy a fejlesztő vagy közösség által készített/kibővített adatbázisra alapul, amely szolgáltatási sávok illeszkedésére tartalmaz reguláris kifejezéseket.
 
 \subsection{Megoldási Javaslatok}
 
 	A CPE-név társításokat követően a sebezhetőségek felderítése a beazonosított szolgáltatásokban már csak egy egyszerű keresési operáció a \textit{CVE} adatbázisban.
 	
-	Ettől a ponttól követően, az alkalmazás minél több információt kell a felhasználó számára bocsájtson a megtalált sebezhetőségeket illetően, beleértve a CVSS pontozást a sebezhetőség kockázatelemzése iránt a feltérképezett infrastruktúrában.
+	Ettől a ponttól követően, az alkalmazás minél több információt kell a felhasználó számára bocsátson a megtalált sebezhetőségeket illetően, beleértve a CVSS pontozást a sebezhetőség kockázatelemzése iránt a feltérképezett infrastruktúrában.
 
 	Ahhoz, hogy a szolgáltatás hasznos legyen olyan rendszergazdák számára, akiknek nincs előző jelentős biztonsági tapasztalatuk, az alkalmazás egyszerű lépéseket kell meghatározzon a sebezhetőségek kijavítására -- az alapján, hogy a feltérképezett környezetről mit tudott származtatni.
 
-	Tehát, azon operációs rendszerek számára amelyek támogatottak a szoftver által és sikeresen be is voltak azonosítva az infrastruktúrában, a szoftver tényleges parancssorokat térít vissza, amelyet a rendszergazdák lefuttatva a cél rendszeren kijavíthatják ezek sebezhetőségeit.
+	Tehát, azon operációs rendszerek számára amelyek, támogatottak a szoftver által és sikeresen be is voltak azonosítva az infrastruktúrában, a szoftver tényleges parancssori utasításokat térít vissza, amelyet a rendszergazdák lefuttatva a cél rendszeren kijavíthatják ezek sebezhetőségeit.
 	
 \section{Szoftver Sebezhetőségek}
 	
-	Az \textit{RFC 2828} és számos \textit{NIST} publikáció úgy definiálja a ``sebezhetőséget,'' mint ``egy hiba vagy gyengeség a rendszer biztonsági procedúráiban, tervezésében, implementálásában, vagy belső ellenőrzései között amelyet ki lehet játszani (véletlenül kiváltva vagy szándékosan kihasználva) és így az eredmény egy biztonsági rés vagy a rendszer biztonságpolitikájának megsértése.''\cite{rfc2828,nist80030} Egyszerűen átfogalmazva ez annyit jelent, hogy a sebezhetőség egy hiba a szoftver vagy webszolgáltatás kódjában, amely kihasználáskor (például a felhasználó egy olyan bemenetet ad meg amely szándékosan úgy lett formázva, hogy kiváltsa az ismert hibát) megengedi a felhasználó számára, hogy olyan tevékenységet hajtson végre, amelyet különben nem szabadna, vagy olyan információhoz férjen hozzá, amelyhez különben nem kéne.
+	Az \textit{RFC 2828} és számos \textit{NIST} publikáció úgy definiálja a ``sebezhetőséget,'' mint ``egy hiba vagy gyengeség a rendszer biztonsági procedúráiban, tervezésében, implementálásában, vagy belső ellenőrzései között, amelyet ki lehet játszani (véletlenül kiváltva vagy szándékosan kihasználva) és így az eredmény egy biztonsági rés vagy a rendszer biztonságpolitikájának megsértése.''\cite{rfc2828,nist80030} Egyszerűen átfogalmazva ez annyit jelent, hogy a sebezhetőség egy hiba a szoftver vagy webszolgáltatás kódjában, amely kihasználáskor (például a felhasználó egy olyan bemenetet ad meg, amely szándékosan úgy lett formázva, hogy kiváltsa az ismert hibát) megengedi a felhasználó számára, hogy olyan tevékenységet hajtson végre, amelyet különben nem szabadna, vagy olyan információhoz férjen hozzá, amelyhez különben nem kéne.
 	
 \subsection{Sebezhetőség Adatbázisok} \label{ssec:vulndbs}
 	
@@ -207,7 +207,7 @@
 	
 	\begin{multicols}{2}
 		\begin{itemize}
-			\item Alap tényezők
+			\item Alaptényezők
 				\begin{itemize}
 					\item Hozzáférés vektor ($AV$)
 					\item Hozzáférés komplexitás ($AC$)
@@ -233,11 +233,11 @@
 		\end{itemize}
 	\end{multicols}
 	
-	Mivel az dolgozat hatályán belül fejlesztett alkalmazás beszámol a felderített sebezhetőségek CVSS pontozásáról, ezért az alkalmazás hasznos gyors és hatékony kockázatelemzés célokra is, ugyanis az önműködő módon futó sebezhetőségfelderítő által felfedezett új sebezhetőségek hatásról tájékoztatni tudja a vezetőséget a mérnökök bevonása nélkül.
+	Mivel a dolgozat hatályán belül fejlesztett alkalmazás beszámol a felderített sebezhetőségek CVSS pontozásáról, ezért az alkalmazás hasznos, gyors és hatékony kockázatelemzés célokra is, ugyanis az önműködő módon futó sebezhetőségfelderítő által felfedezett új sebezhetőségek hatásáról tájékoztatni tudja a vezetőséget a mérnökök bevonása nélkül.
 	
 \section{Sebezhetőségek Felderítése}
 	
-	A \textit{sebezhetőségek felderítése} (angolul \textit{vulnerability assessment}) egy olyan folyamat amely során az infrastruktúrában lévő sebezhetőségeket beazonosítjuk és megállapítjuk a súlyosságaikat kockázatelemzés során.
+	A \textit{sebezhetőségek felderítése} (angolul \textit{vulnerability assessment}) egy olyan folyamat, amely során az infrastruktúrában lévő sebezhetőségeket beazonosítjuk és megállapítjuk a súlyosságaikat kockázatelemzés során.
 	
 \subsection{Behatolás Tesztelés}
 	
@@ -249,22 +249,22 @@
 		\item port a szerveren -- egy bizonyos szolgáltatás tesztelése biztonsági frissítések megléte és helyes konfiguráció iránt (például egy SMTP szerver);
 		\item web alkalmazás -- egy teljes webes alkalmazás bejárása és tesztelése az ismert biztonsági rések ellen környezettől függően;
 		\item teljes szerver -- az összes port letapogatása és sebezhetőségkeresés indítása a válasz alapján beazonosított szolgáltatások ellen;
-		\item teljes hálózat -- egy teljes hálózat letapogatása és tesztelése, például abból a célból, hogy a hálózaton belül az összes szerver amely titkosított információhoz juthat nem-e sebezhető.
+		\item teljes hálózat -- egy teljes hálózat letapogatása és tesztelése, például abból a célból, hogy a hálózaton belül az összes szerver, amely titkosított információhoz juthat nem-e sebezhető.
 	\end{itemize}
 	
 	\noindent A behatolástesztelést több megközelítésből is lehet elvégezni:
 	
 	\begin{itemize}
-		\item publikus -- azon támadási vektorok beazonosítására amelyek kihasználhatóak egy kívülálló által (például a publikus IP-címeken lévő szolgáltatások);
-		\item kliens -- azon támadási vektorok beazonosítására amelyek kihasználhatóak egy bejelentkezett, de nem emelt privilégiumokkal rendelkező felhasználó által (például egy web-banking felhasználó);
-		\item belső -- azon károk beazonosítása amelyet egy belső személy képes okozni (például egy rossz-indulatú alkalmazott).
+		\item publikus -- azon támadási vektorok beazonosítására, amelyek kihasználhatóak egy kívülálló által (például a publikus IP-címeken lévő szolgáltatások);
+		\item kliens -- azon támadási vektorok beazonosítására, amelyek kihasználhatóak egy bejelentkezett, de nem emelt privilégiumokkal rendelkező felhasználó által (például egy web-banking felhasználó);
+		\item belső -- azon károk beazonosítása, amelyet egy belső személy képes okozni (például egy rossz-indulatú alkalmazott).
 	\end{itemize}
 
 \subsection{Behatolást Megelőző Rendszerek}
 	
 	A behatolástesztelés egy \textit{aktív} módszere a sebezhetőségek felderítésének, amely egy valós támadást szimulál a hálózaton, viszont ennek \textit{passzív} megfelelője is létezik \textit{IDS}/\textit{IPS} (\textit{Intrusion Detection/Prevention System}) név alatt.
 	
-	Ezek a rendszerek a felhasználó és az alkalmazás között helyezkednek el, és a hálózati adatforgalmat figyelik bizonyos lehetséges támadási indikátorokért. Ez a módszer eléggé korlátozott, ugyanis nem tud olyan sebezhetőségeket észlelni a rendszerben amelyeket a felhasználó még nem próbált kihasználni, ugyanis az egyetlen adatforrása a rendszernek a valósidejű hálózati adatforgalom.
+	Ezek a rendszerek a felhasználó és az alkalmazás között helyezkednek el, és a hálózati adatforgalmat figyelik bizonyos lehetséges támadási indikátorokért. Ez a módszer eléggé korlátozott, ugyanis nem tud olyan sebezhetőségeket észlelni a rendszerben, amelyeket a felhasználó még nem próbált kihasználni, ugyanis az egyetlen adatforrása a rendszernek a valósidejű hálózati adatforgalom.
 	
 	Egy másik hátránya az IDS típusú rendszereknek, hogy csak figyelnek és nem nyúlnak az adatforgalomhoz. Így értesítést tudnak küldeni egy támadásról, de azt nem előzik meg, amely bizonyos esetekben azt is jelentheti, hogy a támadó már le is töltötte a bankkártya számokat az adatbázisból.
 
@@ -276,13 +276,13 @@
 	
 	\paragraph*{Nessus} A \textit{Nessus Vulnerability Scanner}\cite{nessus} a Tenable Network Security által van fejlesztve. Eredetileg ingyenes és nyílt-forrású volt, fizetős opciókkal, viszont ez 2005-ben megváltozott, amikor az alkalmazás teljesen zárt-forrású lett.
 	
-	A SecTools.org a Nessus-t a legnépszerűbb sebezhetőségfelderítő terméknek véli. Jelenleg egy ``Community'' kiadás ingyenesen kipróbálható, viszont a funkcionalitások korlátozva vannak és csak személyes használatra használható. Éves előfizetések \$2,190-tól kezdődnek felhasználónként, évente.
+	A SecTools.org a Nessus-t a legnépszerűbb sebezhetőségfelderítő terméknek véli. Jelenleg egy ``Community'' kiadás ingyenesen kipróbálható, viszont a funkcionalitások korlátozva vannak, és csak személyes használatra használható. Éves előfizetések \$2,190-tól kezdődnek felhasználónként.
 	
 	A belső architektúrája a sebezhetőségefelderítőnek kiterjesztéseken alapszik. Saját ``NASL'' programozási nyelvet implementál, amely ezen kiterjesztések fejlesztésére van használva.
 	
-	Habár 70,000+ kiterjesztést reklámoz, a letapogató az összes kiterjesztést le kell futtatnia, és különböző kiterjesztésekre van szükség, hogy különböző szoftverek illetve verzióit azonosítsa, beleértve a sebezhetőségek azonosítását is.
+	Habár 70,000+ kiterjesztést hirdet, a letapogató az összes kiterjesztést le kell futtatnia, és különböző kiterjesztésekre van szükség, hogy különböző szoftverek illetve azok verzióit azonosítsa, beleértve a sebezhetőségek azonosítását is.
 	
-	Ez azt jelenti, hogy a szoftver folyton friss kiterjesztésekre kell számítson ha lépést akar tartani az új szoftverekkel és azok sebezhetőségeikkel.
+	Ez azt jelenti, hogy a szoftver folyton friss kiterjesztésekre kell számítson, ha lépést akar tartani az új szoftverekkel és azok sebezhetőségeikkel.
 	
 	\paragraph*{OpenVAS} Az \textit{Open Vulnerability Assessment System}\cite{openvas} egy fork-ja az utolsó Nessus verziónak, amely még nyílt-forrású volt, mielőtt zárt-forrású lett volna. Jelenleg a Greenbone Networks fejleszti.
 	
@@ -292,21 +292,21 @@
 	
 	\paragraph*{Nexpose} A \textit{Nexpose Vulnerability Scanner}\cite{nexpose} a Rapid7 által van fejlesztve, akik híresek a biztonsági világban egy másik biztonsági szoftver, a \textit{Metasploit} miatt.
 	
-	Az előző termékekkel ellentétben, a Nexpose sokkal több akar lenni mint csak egy sebezhetőségfelderítő rendszer, és különböző egyéb funkciókkal rendelkezik, mint például kockázatelemzés.
+	Az előző termékekkel ellentétben, a Nexpose sokkal több akar lenni, mint csak egy sebezhetőségfelderítő rendszer, és különböző egyéb funkciókkal rendelkezik, mint például kockázatelemzés.
 	
 	A SecTools.org a Nexpose-t a harmadik legnépszerűbb sebezhetőségfelderítő terméknek véli. Az éves előfizetések \$2,000-tól kezdődnek, viszont van egy korlátozott ``Community'' kiadás is, amely ingyenes személyes használatra.
 	
 \subsection{Tudományos Kutatások}
 	
-	Bizonyos cikkek a meglévő termékek hatékonyságát tanulmányozzák, mint például a legidézettebb cikkek ezek közül a \cite{holm11,bau10,doupe10}.
+	Bizonyos cikkek a meglévő termékek hatékonyságát tanulmányozzák. A legidézettebb cikkek ezek közül a \cite{holm11,bau10,doupe10}.
 	
 	Új sebezhetőségfelderítő rendszerek készítéséről is találhatók cikkek, mint például a \cite{kals06} cikkben leírt webes alkalmazások sebezhetőségfelderítője, vagy a \cite{guo05} cikk, amely az előzővel ellentétben egy hálózaton lévő csatlakozott eszközök biztonságát vizsgálja.
 	
-	A \textit{ShoVAT}\cite{shovat15} cikk bemutat egy metodológiát amelyet az ezen dolgozat céljából fejlesztett alkalmazás \ref{ssec:matchcpe}-es fejezetében tárgyalt CPE-alapú azonosító komponense is használ, kisebb változásokkal.
+	A \textit{ShoVAT}\cite{shovat15} cikk bemutat egy metodológiát, amelyet az ezen dolgozat céljából fejlesztett alkalmazás \ref{ssec:matchcpe}. fejezetében tárgyalt CPE-alapú azonosító komponense is használ, kisebb változásokkal.
 
 \section{Kivitelezés} \label{sec:impl}
 
-	A dolgozat céljából fejlesztett alkalmazás és hozzátartozó szkriptek ingyenesek és nyílt forráskódúak.
+	A dolgozat céljából fejlesztett alkalmazás és a hozzátartozó szkriptek ingyenesek és nyílt forráskódúak.
 
 	A főalkalmazás git repója elérhető a \url{https://github.com/RoliSoft/Host-Scanner} cím alatt, amelyet szabadon fel lehet használni, módosítani illetve terjeszteni a GNU General Public License version 3\cite{gplv3} licencszerződés feltételei alatt.
 	
@@ -322,7 +322,7 @@
 
 	A \mintinline{bash}{ping} parancssori program e ICMP `EchoRequest' típusú csomagokat küld a megcímzett kiszolgáló felé a kommunikációs körút (round-trip time) meghatározása érdekében.
 	
-	Amint az \ref{icmpdatawindows} és \ref{icmpdatalinux} kódrészletekben látható, a \mintinline{bash}{ping} implementáció amely Windows és különböző Linux\footnote{Csak azon disztribúciók esetén amelyek a GNU userland eszközökkel vannak csomagolva.} disztribúciókkal jön, statikus bájt sorozatot küld a kiszolgálók felé. Emiatt, a feltérképező fél is letapogatható a feltérképezett fél által, illetve a letapogatott fél tűzfalai egyszerűen beállíthatóak e statikus bájt sorozatok szűrésére.
+	Amint az \ref{icmpdatawindows}. és \ref{icmpdatalinux}. kódrészletekben látható, a \mintinline{bash}{ping} implementáció, amely Windows és különböző Linux\footnote{Csak azon disztribúciók esetén, amelyek a GNU userland eszközökkel vannak csomagolva.} disztribúciókkal jön, statikus bájt sorozatot küld a kiszolgálók felé. Emiatt, a feltérképező fél is letapogatható a feltérképezett fél által, illetve a letapogatott fél tűzfalai egyszerűen beállíthatóak e statikus bájt sorozatok szűrésére.
 	
 	\begin{listing}[H]
 		\begin{minted}{py}
@@ -346,15 +346,15 @@
 	
 	A letapogatás kikerülése végett, az \mintinline{cpp}{IcmpPinger} komponens egy 32-bájtos véletlenszerű csomagot generál minden letapogatási alkalommal.
 	
-	A feltérképező megvalósítás ``raw socket''-eket használ az `EchoRequest' csomagok küldése végett. Ez a funkcionalitás bizonyos operációs rendszereken, mint például Linux, Windows és különböző BSD-ken csak adminisztrátori joggal rendelkező felhasználók által érhetőek el.
+	A feltérképező megvalósítás nyers csatlakozókat (``raw sockets'') használ az `EchoRequest' csomagok küldése végett. Ez a funkcionalitás bizonyos operációs rendszereken, mint például Linux, Windows és különböző BSD-ken csak adminisztrátori joggal rendelkező felhasználók által érhetőek el.
 
-	Mivel az ilyen típusú ``ping'' csomagokat nem lehet egy bizonyos port-nak megcímezni, csak egy bizonyos kiszolgálónak, ezért ezt a komponenst nem lehet használni a kiszolgálón lévő szolgáltatások feltérképezésére, csak egy hálózaton belül lévő online kiszolgálók felderítésére használható. Mivel az ilyen csomagok nem létfontosságúak egy bizonyos hálózat működéséhez, bizonyos tűzfalak bekonfigurálhatóak azezen típusú csomagok szűrésére.
+	Mivel az ilyen típusú ``ping'' csomagokat nem lehet egy bizonyos portnak megcímezni, csak egy bizonyos kiszolgálónak, ezért ezt a komponenst nem lehet használni a kiszolgálón lévő szolgáltatások feltérképezésére, csak egy hálózaton belül lévő online kiszolgálók felderítésére. Mivel az ilyen csomagok nem létfontosságúak egy bizonyos hálózat működéséhez, különböző tűzfalak bekonfigurálhatóak az ezen típusú csomagok szűrésére.
 
 \subsubsection{ARP `WhoHas' Kérések} \label{ssec:arpping}
 
 	Az \textit{Address Resolution Protocol} (\textit{ARP}) mechanizmus feladata a hálózati réteg által használt IPv4 címek lefordítása az adatkapcsolati rétegben használt MAC címekre.
 	
-	Amikor egy kliens meg szeretné szerezni a MAC címét egy bizonyos IP címnek a hálózatban, amint a \ref{arpreq}-es ábrán látható, készít egy ARP csomagot amelyben kitölti a saját (ismert) adatait, illetve azokat a mezőket amelyeket meg szeretne szerezni nullára állítja.
+	Amikor egy kliens meg szeretné szerezni a MAC címét egy bizonyos IP címnek a hálózatban, amint a \ref{arpreq}. ábrán látható, készít egy ARP csomagot, amelyben kitölti a saját (ismert) adatait, illetve azokat a mezőket, amelyeket meg szeretne szerezni nullára állítja.
 	
 	\begin{figure}[!htbp]
 		\centering
@@ -383,7 +383,7 @@
 		\label{arpreq}
 	\end{figure}
 	
-	Az előzőleg említett ARP csomag a hálózat összes csatlakozott tagjának továbbítva van, és az a kliens amely számára szól a kérés válaszol a küldőnek olyan módon, hogy a forrás/cél mezőket felcseréli, illetve a kinullázott mezőket behelyettesíti a saját információjával, amint ezt a \ref{arpresp}-ös ábra is mutatja. 
+	Az előzőleg említett ARP csomag a hálózat összes csatlakozott tagjának továbbítva van, és az a kliens, amely számára szól a kérés válaszol a küldőnek olyan módon, hogy a forrás/cél mezőket felcseréli, illetve a kinullázott mezőket behelyettesíti a saját információjával, amint ezt a \ref{arpresp}. ábra is mutatja. 
 	
 	\begin{figure}[!htbp]
 		\centering
@@ -410,9 +410,9 @@
 		\label{arpresp}
 	\end{figure}
 
-	Mivel ez a mechanizmus létfontosságú egy IPv4 alapú hálózat működéséhez, ezért a tűzfalak nem avatkozhatnak be megakadályozva ezen csomagok továbbítását a hálózaton\footnote{Kivéve olyan esetekben, ahol a kliensek el vannak szigetelve egymástól a hálózaton, azért, hogy egy vagy több kijelölt szerver kivételével ne tudjanak egymással kommunikálni.}.
+	Mivel ez a mechanizmus létfontosságú egy IPv4 alapú hálózat működéséhez, ezért a tűzfalak nem avatkozhatnak be megakadályozni ezen csomagok továbbítását a hálózaton\footnote{Kivéve olyan esetekben, ahol a kliensek el vannak szigetelve egymástól a hálózaton, azért, hogy egy vagy több kijelölt szerver kivételével ne tudjanak egymással kommunikálni.}.
 	
-	Az ICMP-hez hasonlóan, ez a funkcionalitás nem használható szolgáltatások letapogatására, csak egy hálózaton lévő kiszolgálók és kliensek feltérképezése céljából.
+	Az ICMP-hez hasonlóan, ez a funkcionalitás nem használható szolgáltatások letapogatására, csak egy hálózaton lévő kiszolgálók és kliensek feltérképezésére.
 	
 \subsubsubsection{Platform-Független Kivitelezés Kihívásai}
 
@@ -420,31 +420,31 @@
 	
 	Felülnézetből, a kivitelezés az előző fejezetekben említett nyers csatlakozót használ adatkapcsolati közeg-szinti kommunikáció végett, a hálózati közegi szinttel ellentétben, amely általában az alapértelmezett módja a ``raw socket''-eknek. Ezt követően az \mintinline{cpp}{ArpPinger::sendRequest(Host* host)} függvény manuálisan felépít egy Ethernet keretet és a beburkolandó ARP `WhoHas' kérést, amelyet feltölt az ismert információkkal, illetve a kért információk mezőit kinullázza.
 	
-	Miután a csomag el lett küldve a kinyított csatlakozón, a komponens meghívja az \mintinline{cpp}{ArpPinger::sniffReplies(Interfaces* ifaces, Hosts* hosts)} függvényt egy új szálon, amely a bejövő ARP válaszokat fogadja és ellenőrzi, hogy valamelyik válasz tartalmazza-e a letapogató által kért információt. Ezen fázis kivitelezése nagy mértékben függ az operációs rendszertől, és a támogatott rendszerek kivitelezése a következő fejezetekben van tárgyalva.
+	Miután a csomag el lett küldve a kinyitott csatlakozón, a komponens meghívja az \mintinline{cpp}{ArpPinger::sniffReplies(Interfaces* ifaces, Hosts* hosts)} függvényt egy új szálon, amely a bejövő ARP válaszokat fogadja és ellenőrzi, hogy valamelyik válasz tartalmazza-e a letapogató által kért információt. Ezen fázis kivitelezése nagymértékben függ az operációs rendszertől, és a támogatott rendszerek kivitelezése a következő fejezetekben van tárgyalva.
 
 \subsubsubsection{Linux Implementáció}
 
-	A Linux-specifikus kivitelez;s volt a legkönnyebb, ugyanis a Linux kernel nem ró különböző értelem nélküli korlátozásokat a fejlesztőre.
+	A Linux-specifikus kivitelezés volt a legkönnyebb, ugyanis a Linux kernel nem ró különböző értelem nélküli korlátozásokat a fejlesztőre.
 	
 	A \mintinline{cpp}{getifaddrs(struct ifaddrs **ifap)} függvény visszatéríti a rendszer összes csatlakozott állapotban lévő hálózati interfészét, amelyekből az \mintinline{cpp}{AF_PACKET} típusúak vannak elmentve későbbi használat céljából.
 
-	Az előkészített ARP csomag elküldéséhez a \mintinline{cpp}{socket(PF_PACKET, SOCK_RAW, ETH_P_ALL)} függvényhívás visszatérít egy nyers csatlakozót amelyen adatkapcsolati közeg-szinti kommunikáció mehet végbe.
+	Az előkészített ARP csomag elküldéséhez a \mintinline{cpp}{socket(PF_PACKET, SOCK_RAW, ETH_P_ALL)} függvényhívás visszatérít egy nyers csatlakozót, amelyen adatkapcsolati közeg-szinti kommunikáció mehet végbe.
 	
 	Hasonlóan, ugyan az a csatlakozó használható a bejövő ARP csomagok fogadására is. A folyamat felgyorsítása végett a Linux kernel támogatja a Berkeley Packet Filter bájtkódokat, amelyek engedélyezik a csatlakozón fogadott csomagok kernel-szinti szűrését. Ez a funkcionalitás bővebben a BSD-specifikus kivitelezésről szóló fejezetben van tárgyalva.
 
 \subsubsubsection{BSD/Darwin Implementáció}
 
-	A BSD/Darwin-specifikus kivitelezés nagy mértékben a Linux-specifikus kivitelezés alapjaiból indul ki, ugyanis a legtöbb függvényhívás hasonló viselkedéssel bír, viszont vannak bizonyos kisebb különbségek a struktúrákban illetve a függvények paraméterezéseiben amelyek egy külön, saját implementáció szükségét kérték.
+	A BSD/Darwin-specifikus kivitelezés nagymértékben a Linux-specifikus kivitelezés alapjaiból indul ki, ugyanis a legtöbb függvényhívás hasonló viselkedéssel bír, viszont vannak bizonyos kisebb különbségek a struktúrákban illetve a függvények paraméterezéseiben, amelyek egy külön, saját implementáció szükségét kérték.
 
 	Akár csak Linux-al, a \mintinline{cpp}{getifaddrs(struct ifaddrs **ifap)}függvény visszatéríti a rendszer összes csatlakozott állapotban lévő hálózati interfészét, amelyekből az \mintinline{cpp}{AF_LINK} típusúak vannak elmentve későbbi használat céljából. Habár az \mintinline{cpp}{AF_PACKET} és \mintinline{cpp}{AF_LINK} ugyan azt az interfészt reprezentálják, az interfészről adott információ struktúrája különbözik és emiatt nem használható a Linux-nak szánt kivitelezés BSD alatt is.
 	
 	Sajnos a Linux-al ellentétben, a BSD nem engedélyezi az adatkapcsolati közeg szinti kommunikációt egy sima  \mintinline{cpp}{socket()} függvényhívással, viszont támogat egy különböző mechanizmust Berkeley Packet Filter néven, amely erre a célra is felhasználható, többek között.
 	
-	Egy új BPF eszköz megnyitása végett, a feltérképező komponens megpróbálja megnyitni az első elérhető állományleírót a \mintinline{bash}{/dev/bpf0} illetve \mintinline{bash}{/dev/bpf1000} speciális állományok között. Amint egy állományleíró sikeresen megnyílt, hozzá lesz rendelve egy hálózati interfészhez az \mintinline{cpp}{ioctl(bpf, BIOCSETIF, &inf)} függvényhívással. Ettől a pontból, adatkapcsolati közeg-szinti kommunikáció megvalósulhat úgy, hogy Ethernet kereteket írunk az előzőleg megnyitott \mintinline{cpp}{bpf} állományleírón keresztül.
+	Egy új BPF eszköz megnyitása végett, a feltérképező komponens megpróbálja megnyitni az első elérhető állományleírót a \mintinline{bash}{/dev/bpf0} illetve \mintinline{bash}{/dev/bpf1000} speciális állományok között. Amint egy állományleíró sikeresen megnyílt, hozzá lesz rendelve egy hálózati interfészhez az \mintinline{cpp}{ioctl(bpf, BIOCSETIF, &inf)} függvényhívással. Ettől a ponttól, adatkapcsolati közeg-szinti kommunikáció megvalósulhat úgy, hogy Ethernet kereteket írunk az előzőleg megnyitott \mintinline{cpp}{bpf} állományleírón keresztül.
 	
 	Hasonlóan, ugyan ez a megnyitott fájlleíró használható bejövő adatkapcsolati közeg-szinti csomagok fogadására is. A fogadási folyamat felgyorsításának céljából, a BSD kernel támogat egy Berkeley Packet Filter nevezetű mechanizmust, amely engedélyezi a csomagok kernel-szintű szűrését speciális BPF bájtkódok futtatásának segítségével, így a nem kívánt csomagok sosem érnek el az alkalmazáshoz, ezzel meghatékonyítva a folyamatot.
 	
-	Egy assembly-hez hasonló BPF utasításlista látható a \ref{bpfasm}-as kódrészletben, amelyet a Wireshark szoftver generál minden ARP-tól különböző csomag szűrésére.
+	Egy assembly-hez hasonló BPF utasításlista látható a \ref{bpfasm}. kódrészletben, amelyet a Wireshark nevű szoftver generál minden ARP-tól különböző csomag szűrésére.
 	
 	\begin{listing}[H]
 		\begin{minted}{nasm}
@@ -457,7 +457,7 @@
 		\label{bpfasm}
 	\end{listing}
 	
-	Ahhoz, hogy az előzőleg említett utasításlistát hozzácsatolhassuk a BPF eszközhöz, a kód először le kell legyen fordítva egy \mintinline{cpp}{bpf_insn} típusú utasításokat tartalmazó tömbbe, amint ezt a \ref{bpfcpp}-es kódrészlet is mutatja. Ezután ezen tömb egy \mintinline{cpp}{bpf_program} típusú struktúrába van csomagolva, amely készen van az eszközhöz való hozzácsatolsához egy \mintinline{cpp}{ioctl(bpf, BIOCSETF, &bfprog)} függvényhívás során.
+	Ahhoz, hogy az előzőleg említett utasításlistát hozzácsatolhassuk a BPF eszközhöz, a kód először le kell legyen fordítva egy \mintinline{cpp}{bpf_insn} típusú utasításokat tartalmazó tömbbe, amint ezt a \ref{bpfcpp}. kódrészlet is mutatja. Ezután ezen tömb egy \mintinline{cpp}{bpf_program} típusú struktúrába van csomagolva, amely készen van az eszközhöz való hozzácsatoláshoz egy \mintinline{cpp}{ioctl(bpf, BIOCSETF, &bfprog)} függvényhívás során.
 	
 	\begin{listing}[H]
 		\begin{minted}{cpp}
@@ -467,25 +467,25 @@
 			bfcode[2] = BPF_STMT(BPF_RET + BPF_K, sizeof(struct EthHeader) + sizeof(struct ArpHeader)); // csomag visszatérítése [ARP esetén]
 			bfcode[3] = BPF_STMT(BPF_RET + BPF_K, 0); // null visszatérítése
 		\end{minted}
-		\caption{A \ref{bpfasm}-as Berkeley Packet Filter utasításlista lefordítása}
+		\caption{A \ref{bpfasm}. Berkeley Packet Filter utasításlista lefordítása}
 		\label{bpfcpp}
 	\end{listing}
 	
-	A Darwin kernel és az összes Mac OS X disztribúció örökli a BPF eszközöket, így ez a kivitelezés teljesen támogatott ezen felsorolt platformokon is.
+	A Darwin kernel és az összes Mac OS X disztribúció örököli a BPF eszközöket, így ez a kivitelezés teljesen támogatott ezen felsorolt platformokon is.
 
 \subsubsubsection{Windows Implementáció}
 
-	A Windows-specifikus kivitelezés egy teljes újraírása az előzőleg leírt algoritmusoknak. Habár a Windows hálózati protokollkészlete a BSD kivitelezésre alapul, bizonyos értelmetlen korlátozások rá lettek róva a fejlesztőkre, amelyek ellehetetlenítik az adatkapcsolati közeg-szinti kommunikációt anélkül, hogy a fejlesztők szélsőséges intézkedéseket tegyenek.
+	A Windows-specifikus kivitelezés egy teljes újra írása az előzőleg leírt algoritmusoknak. Habár a Windows hálózati protokollkészlete a BSD kivitelezésre alapul, bizonyos értelmetlen korlátozások rá lettek róva a fejlesztőkre, amelyek ellehetetlenítik az adatkapcsolati közeg-szinti kommunikációt anélkül, hogy a fejlesztők szélsőséges intézkedéseket tegyenek.
 	
-	A rendszeren található hálózat interfészek Windows-on egy API hívással lekérhetőek, név szerint a \mintinline{cpp}{GetAdaptersInfo(PIP_ADAPTER_INFO pAdapterInfo, PULONG pOutBufLen)} függvénnyel. Az ezt követő szűrés az \mintinline{cpp}{MIB_IF_TYPE_ETHERNET} típus alapján történik a virtuális és fizikai Ethernet interfészektől különböző interfészek eltávolítása végett.
+	A rendszeren található hálózati interfészek Windows-on egy API hívással lekérdezhetőek, név szerint a \mintinline{cpp}{GetAdaptersInfo(PIP_ADAPTER_INFO pAdapterInfo, PULONG pOutBufLen)} függvénnyel. Az ezt követő szűrés az \mintinline{cpp}{MIB_IF_TYPE_ETHERNET} típus alapján történik a virtuális és fizikai Ethernet interfészektől különböző interfészek eltávolítása végett.
 	
 	Sajnos a publikus API hívásokkal kivitelezhető funkcionalitások listája itt megáll, ugyanis a Windows nem támogatja az adatkapcsolati közeg-szinti csomagok küldését vagy fogadását felhasználói-szintű alkalmazások által.
 	
 	Ahhoz, hogy ezen típusú csomagokat küldeni illetve fogadni lehessen Windows alatt, amint a \cite{xing10} is tárgyalja, a WinPcap könyvtárcsomag használható, amely egy harmadik fél által készített port-ja a libpcap könyvtárcsomagnak a Windows operációs rendszer alá. A WinPcap saját virtuális meghajtóval rendelkezik, amely révén alsó-szintű hálózati hozzáférést nyerhetnek az ezen könyvtárcsomagot használó alkalmazások.
 	
-	A hálózati interfészek megnyitása a \mintinline{cpp}{pcap_open(...)} függvényhívás során, egy olyan csatlakozót térít vissza, amelyet használhatunk adatkapcsolati közeg-szinti csomagok küldésére illetve fogadására az előzőleg említett virtuális meghajtón keresztül. Küldés végett a \mintinline{cpp}{pcap_sendpacket(pcap_t *p, u_char *buf, int size)} függvény használható, illetve a \mintinline{cpp}{pcap_next_ex(pcap_t *p, pcap_pkthdr **pkt_header, u_char **pkt_data)} függvény folytonos hívásával fogadhatunk csomagokat míg egy bizonyos megállási feltétel nem teljesül.
+	A hálózati interfészek megnyitása a \mintinline{cpp}{pcap_open(...)} függvényhívás során, egy olyan csatlakozót térít vissza, amelyet használhatunk adatkapcsolati közeg-szinti csomagok küldésére illetve fogadására az előzőleg említett virtuális meghajtón keresztül. Küldés végett a \mintinline{cpp}{pcap_sendpacket(pcap_t *p, u_char *buf, int size)} függvény használható, illetve a \mintinline{cpp}{pcap_next_ex(pcap_t *p, pcap_pkthdr **pkt_header, u_char **pkt_data)} függvény folytonos hívásával fogadhatunk csomagokat, míg egy bizonyos megállási feltétel nem teljesül.
 	
-	Az előző fejezetekben említett Berkeley Packet Filter mechanizmus a WinPcap könyvtárcsomagban is jelen van. A \ref{bpfasm} és \ref{bpfcpp} kódrészletekben felsorolt utasításlistát csatolhatjuk a \mintinline{cpp}{pcap_setfilter(pcap_t *p, bpf_program *fp)} függvényhívással a megnyitott hálózati interfészek csatlakoztatójához.
+	Az előző fejezetekben említett Berkeley Packet Filter mechanizmus a WinPcap könyvtárcsomagban is jelen van. A \ref{bpfasm}. és \ref{bpfcpp}. kódrészletekben felsorolt utasításlistát csatolhatjuk a \mintinline{cpp}{pcap_setfilter(pcap_t *p, bpf_program *fp)} függvényhívással a megnyitott hálózati interfészek csatlakoztatójához.
 	
 	Mivel ezen komponens egy harmadik féltől származó könyvtárcsomagot használ fel, ezért az alkalmazás kompilálása Windows alá kérelmezi a ``WinPcap Developer's Pack'' jelenlétét a kompiláló rendszeren, illetve a WinPcap virtuális meghajtó jelenlétét azon klienseken, amelyek a szoftvert futtatni kívánják az ARP letapogató komponenssel együtt.
 	
@@ -493,7 +493,7 @@
 
 	A TCP port letapogató funkcionalitást a \mintinline{cpp}{TcpScanner} komponens implementálja. A jelenlegi implementáció felhasználásához nem szükséges a felhasználónak adminisztrátori jogokkal rendelkeznie, ugyanis a letapogatás az operációs rendszer által támogatott hálózati API hívásokkal történik.
 	
-	Az összes hálózati művelet nem blokkoló módon van kezdeményezve, amely után a feladat visszakerül a sorba (queue) amíg állapotváltozás nem történik, így a feladatok könnyen és hatékonyan multiplexelhetőek egy szál segítségével.
+	Az összes hálózati művelet nem blokkoló módon van kezdeményezve, amely után a feladat visszakerül a sorba (queue) amíg állapotváltozás nem történik, így a feladatok könnyen és hatékonyan multiplexelhetőek egyetlen szál segítségével.
 
 	\begin{figure}[!htbp]
 		\centering
@@ -526,15 +526,15 @@
 		\label{tcp3way}
 	\end{figure}
 	
-	Ahogy a \ref{tcp3way}-os ábrán is látható, a TCP feltérképező komponens új kapcsolatot próbál nyitni a \mintinline{cpp}{connect()} függvényhívással, amely során az operációs rendszer hálózati kivitelezése egy háromutas kézfogást próbál kezdeményezni a címzettel, és visszatéríti a megnyitott csatlakozót.
+	Ahogy a \ref{tcp3way}. ábrán is látható, a TCP feltérképező komponens új kapcsolatot próbál nyitni a \mintinline{cpp}{connect()} függvényhívással, amely során az operációs rendszer hálózati kivitelezése egy háromutas kézfogást próbál kezdeményezni a címzettel, és visszatéríti a megnyitott csatlakozót.
 	
-	Sikeres csatlakozás utána a feltérképező komponens meghívja a \mintinline{cpp}{close()} függvényt, amely elkezdi a protokoll által előírt kapcsolatbontási folyamatot, ugyanis ellenkezőképpen a feltérképező és a feltérképezett fél is sebezhetővé válhat szolgáltatásmegtagadási támadások iránt az erőforrások kimerülése miatt\cite{erickson08}.
+	Sikeres csatlakozás után a feltérképező komponens meghívja a \mintinline{cpp}{close()} függvényt, amely elkezdi a protokoll által előírt kapcsolatbontási folyamatot, ugyanis ellenkezőképpen a feltérképező és a feltérképezett fél is sebezhetővé válhat szolgáltatásmegtagadási támadások iránt az erőforrások kimerülése miatt\cite{erickson08}.
 	
-	Vannak alternatív módszerek a TCP portok letapogatására, mint például 'SYN', `ACK' és `FIN' alapú letapogatás\cite{kris07}, amelyek esetén ahelyett, hogy az operációs rendszer hálózati kivitelezését használják a kapcsolatok létrehozására, a szoftver maga készít egy TCP csomagot és nyers csatlakoztatókon keresztül küldi illetve fogadja a válaszokat. A nyers csatlakozók használata adminisztrátori jogokat kér a felhasználó számára Linux, Windows illetve különböző BSD disztribúciók esetén, beleértve a Mac OS X-et is.
+	Vannak alternatív módszerek a TCP portok letapogatására, mint például 'SYN', `ACK' és `FIN' alapú letapogatás\cite{kris07}, amelyek esetén ahelyett, hogy az operációs rendszer hálózati kivitelezését használják a kapcsolatok létrehozására, a szoftver maga készít egy TCP csomagot és nyers csatlakoztatókon keresztül küldi, illetve fogadja a válaszokat. A nyers csatlakozók használata adminisztrátori jogokat kér a felhasználó számára Linux, Windows illetve különböző BSD disztribúciók esetén, beleértve a Mac OS X-et is.
 	
 	Az ilyen alternatív letapogatási módszerek általában arra vannak használva, hogy kikerüljék a naplózást vagy átjárjanak egy tűzfalon, ugyanis amennyiben a kiszolgáló által használt tűzfal nem implementálja helyesen az állapotok nyilvántartását, megengedheti a nem-'SYN' csomagok fogadását illetve az `RST'/`FIN' típusú csomagok küldését a védendő kiszolgáló által. Hasonlóan, amennyiben a kapcsolat nem jött létre teljesen a háromutas kézfogás során, megeshet, hogy a támadó letapogatási kísérlete nem ért olyan fázisba, ahol naplózva lenne, viszont már elég információ kiszivárgott ebben a pontban ahhoz, hogy hasznos legyen a támadó számára.
 	
-	Mivel a dolgozat keretén belül kivitelezett alkalmazásnak teljes szolgálati sávokra van szüksége (a port állapotok listája egymagában nem elég) illetve felhatalmazott felhasználók számára volt szánva (mint például hálózati adminisztrátorok vagy biztonsági kutatók), ezért a tűzfalak átjárása illetve naplózás elkerülése nem célja az alkalmazásnak.
+	Mivel a dolgozat keretén belül kivitelezett alkalmazásnak teljes szolgáltatási sávokra van szüksége (a port állapotok listája egymagában nem elég) illetve felhatalmazott felhasználók számára volt szánva (mint például hálózati adminisztrátorok vagy biztonsági kutatók), ezért a tűzfalak átjárása illetve naplózás elkerülése nem célja az alkalmazásnak.
 
 \subsubsubsection{Protokoll Beazonosítása}
 
@@ -544,17 +544,17 @@
 	
 	Egy lehetséges módszer az lenne, hogy vizsgáljuk meg a ``jól ismert'' portok\cite{iana16} listáját, amelyet a \textit{IANA} (\textit{Internet Assigned Numbers Authority}) tart karban. Habár a legtöbb port száma megegyezne a valójában használt protokollal, ez nem egy megbízható módszer a szolgáltatás protokolljának beazonosítására, ugyanis egy rendszergazda bármilyen okból is eldöntheti, hogy egy bizonyos szolgáltatást egy más porton futtasson, akár egyszerűen csak azért is, mert több példány fut az adott szerverből. Ezen okokon kívül, a lista nem tartalmaz információt a 49152 és 65535 közötti portok számára, ugyanis ezek a portok dinamikus illetve rövid-idejű portoknak vannak szánva, amelyek ezen típusú beazonosítása lehetetlen lenne.
 	
-	Ezen okok miatt, az előleg említett lista nincs felhasználva semmilyen módon, és inkább aktív protokoll letapogatás van végrehajtva. Amennyiben a kapcsolat sikeresen megnyílt és nem jött semmilyen szolgáltatási sáv egy bizonyos időintervallumon belül, a letapogató komponens küld egy \mintinline[style=pastie]{http}{GET / HTTP/1.0}\mintinline{matlab}{\r\n\r\n} üzenetet a szervernek. Amennyiben az üzenetre adott válasz nem kielégítő, a letapogató komponens újrapróbálkozik, ezúttal a \mintinline{matlab}{HELP\r\n} üzenetet küldve.
+	Ezen okok miatt, az előzőleg említett lista nincs felhasználva semmilyen módon, és inkább aktív protokoll letapogatás van végrehajtva. Amennyiben a kapcsolat sikeresen megnyílt és nem jött semmilyen szolgáltatási sáv egy bizonyos időintervallumon belül, a letapogató komponens küld egy \mintinline[style=pastie]{http}{GET / HTTP/1.0}\mintinline{matlab}{\r\n\r\n} üzenetet a szervernek. Amennyiben az üzenetre adott válasz nem kielégítő, a letapogató komponens újrapróbálkozik, ezúttal a \mintinline{matlab}{HELP\r\n} üzenetet küldve.
 	
 	Ebben a pontban, ha a szerver még mindig nem küldött egy kielégítő választ, az alkalmazás ezúttal egy TLS 'ClientHello' csomaggal próbálkozik meg, egy sikeres TLS kapcsolat létrehozása reményében. Amennyiben a biztonságos kapcsolat létrejött, az alkalmazás újrapróbálkozik az előző két csomaggal, egy kielégítő válasz fogadása reményében, amelyet eltárolhat és az alkalmazás további komponensei majd később elemezhetnek.
 
 \subsubsection{UDP Letapogatás} \label{ssec:udpscan}
 
-	Az UDP protokoll, a TCP-vel ellentétben, kapcsolat nélküli. Ez azt vonja maga után, hogy a letapogató nem tudja megbízhatóan megállapítani, hogy a letapogatott port mögött van-e valamilyen szolgáltatás. Ha van is egy bizonyos szerver hozzárendelve az adott UDP porthoz, lehetséges, hogy a saját protokollja szerint szűri azon üzeneteket amelyek nem felelnek meg a protokoll által előírt specifikációknak, ahelyett, hogy egy hibaüzenetet küldjön vissza, amelyet fel lehetne használni a protokoll beazonosítása céljából.
+	Az UDP protokoll, a TCP-vel ellentétben, kapcsolat nélküli. Ez azt vonja maga után, hogy a letapogató nem tudja megbízhatóan megállapítani, hogy a letapogatott port mögött van-e valamilyen szolgáltatás. Ha van is egy bizonyos szerver hozzárendelve az adott UDP porthoz, lehetséges, hogy a saját protokollja szerint szűri azon üzeneteket, amelyek nem felelnek meg a protokoll által előírt specifikációknak, ahelyett, hogy egy hibaüzenetet küldjön vissza, amelyet fel lehetne használni a protokoll beazonosítása céljából.
 	
 	Bizonyos rendszerek válaszolnak egy ICMP `PortUnreachable' csomaggal abban az esetben, amelyben a letapogatott port mögött nincs bármilyen szerver. Ezt a csomagot viszont a legtöbb tűzfal szűri kifejezetten a letapogatási kísérletek elhárítása miatt, vagy valahol a letapogató és letapogatott fél közötti úton egy ICMP üzenet korlátozási politika eldobja a port elérhetetlenségi üzenetet.
 	
-	Emiatt a legésszerűbb módszer az ilyen típusú letapogatásra az, hogy a szolgáltatásoknak megpróbálunk olyan üzeneteket küldeni, amelyekre biztosan válaszolni fognak. Az \mintinline{cpp}{UdpScanner} komponense az alkalmazásnak egy adatbázist használ, amelyben bizonyos UDP példacsomagok találhatóak azon portok listájával, amelyek mögött általában ezen szolgáltatások vannak. Például az \ref{dnsverreq}-ös kódrészlet egy olyan UDP csomag hexadecimális reprezentációját mutatja \mintinline{bash}{xxd} által generálva, amely amikor egy 53-as portra van küldve amely mögött egy DNS szerver található, ezen szerver válaszol a saját verziószámával.
+	Emiatt a legésszerűbb módszer az ilyen típusú letapogatásra az, hogy a szolgáltatásoknak megpróbálunk olyan üzeneteket küldeni, amelyekre biztosan válaszolni fognak. Az \mintinline{cpp}{UdpScanner} komponense az alkalmazásnak egy adatbázist használ, amelyben bizonyos UDP példacsomagok találhatóak azon portok listájával, amelyek mögött általában ezen szolgáltatások vannak. Például az \ref{dnsverreq}. kódrészlet egy olyan UDP csomag hexadecimális reprezentációját mutatja \mintinline{bash}{xxd} által generálva, amely, amikor egy 53-as portra van küldve, amely mögött egy DNS szerver található, ezen szerver válaszol a saját verziószámával.
 
 	\begin{listing}[H]
 		\begin{minted}{py}
@@ -565,11 +565,11 @@
 		\label{dnsverreq}
 	\end{listing}
 	
-	Sajnos ez a módszer leszűkíti a letapogatható szolgáltatások számát csak azon szolgáltatásokra, amelyekhez hozzá van rendelve egy ismert csomag amely választ vált ki. Illetve azon esetekben is csak akkor, amikor a szolgáltatás az alapértelmezett portján található. Abban az esetben, amelyben a felhasználó egy olyan UDP port letapogatását kéri amely nem található az adatbázisban, a letapogató komponens generál egy 16 \mintinline{cpp}{NULL} bájtból álló csomagot, viszont annak az esélye, hogy ez a csomag választ fog kiváltani a letapogatott szolgáltatásból nagyon kevés.
+	Sajnos ez a módszer leszűkíti a letapogatható szolgáltatások számát csak azon szolgáltatásokra, amelyekhez hozzá van rendelve egy ismert csomag, amely választ vált ki. Illetve azon esetekben is csak akkor, amikor a szolgáltatás az alapértelmezett portján található. Abban az esetben, amelyben a felhasználó egy olyan UDP port letapogatását kéri, amely nem található az adatbázisban, a letapogató komponens generál egy 16 \mintinline{cpp}{NULL} bájtból álló csomagot, viszont annak az esélye, hogy ez a csomag választ fog kiváltani a letapogatott szolgáltatásból nagyon kevés.
 	
 	Mivel ezen statikus bájt-sorozatú csomagok és olyan csomagok amelyek rendszerinformációt kérnek le általában nem tartoznak a protokoll általános használati menetébe, bizonyos behatolásérzékelő vagy megelőző rendszerek figyelnek ezen csomagokra, és értesítést küldenek jelenlétük esetén.
 	
-	Egy ilyen példa lehet a Microsoft SQL Server UDP protokolljának a ``ping'' funkcionalitása, amelyet úgy lehet kiváltani, hogy egy egy-bájtos \mintinline{matlab}{\x02} csomagot küldünk az 1434-es portra. Ebben az esetben, a Snort\cite{snort49} behatolásérzékelő szoftver értesítést fog küldeni a letapogatási kísérletről. Mivel az említett érzékelő szoftver nyílt-forrású, a \ref{snortrule}-os kódrészlet mutatja azon sort a szoftver szabálykészletéből, amely kiváltja az értesítést.
+	Egy ilyen példa lehet a Microsoft SQL Server UDP protokolljának a ``ping'' funkcionalitása, amelyet úgy lehet kiváltani, hogy egy egy-bájtos \mintinline{matlab}{\x02} csomagot küldünk az 1434-es portra. Ebben az esetben, a Snort\cite{snort49} behatolásérzékelő szoftver értesítést fog küldeni a letapogatási kísérletről. Mivel az említett érzékelő szoftver nyílt-forrású, a \ref{snortrule}. kódrészlet mutatja azon sort a szoftver szabálykészletéből, amely kiváltja az értesítést.
 	
 	\begin{listing}[H]
 		\begin{minted}{perl}
@@ -583,13 +583,13 @@
 
 \subsection{Passzív Feltérképezés}
 
-	Ez a fejezet az alkalmazás azon komponenseit mutatja be amelyek passzív feltérképezést tesznek lehetővé, azaz úgy térképeznek fel egy hálózatot és a kiszolgálókon lévő szolgáltatásokat, hogy nem küldenek aktívan csomagokat a kiszolgálók felé.
+	Ez a fejezet az alkalmazás azon komponenseit mutatja be, amelyek passzív feltérképezést tesznek lehetővé, azaz úgy térképeznek fel egy hálózatot és a kiszolgálókon lévő szolgáltatásokat, hogy nem küldenek aktívan csomagokat a kiszolgálók felé.
 	
-	Ez úgy lehetséges, hogy olyan szolgáltatásokat használnak amelyek biztonsági kutatóknak vannak szánva, és ezek a publikus IPv4 címtartományt rendszeresen letapogatják, majd az eredményt valamilyen automatikusan felhasználható módon elérhetővé teszik, mint például letölthető adatbázis mentéssekként vagy publikusan fogyasztható API-n keresztül.
+	Ez úgy lehetséges, hogy olyan szolgáltatásokat használnak, amelyek biztonsági kutatóknak vannak szánva, és ezek a publikus IPv4 címtartományt rendszeresen letapogatják, majd az eredményt valamilyen automatikusan felhasználható módon elérhetővé teszik, mint például letölthető adatbázis mentéssekként vagy publikusan fogyasztható API-n keresztül.
 
 \subsubsection{Shodan} \label{ssec:shodan}
 
-	A Shodan\footnote{Megszeretném köszönni a Shodan készítőjének, hogy díjmentesen feloldta a hozzáférésemet egy korlátlan csomagra azért, hogy folytathassam a szoftver fejlesztését bármilyen akadályok nélkül.}\cite{shodan16} egy olyan projekt amely folyamatosan letapogatja az IPv4 teljes címtartományát és a letapogatási eredményt egy webes keresőmotor felületen keresztül lehet lekérdezni. Egy API hozzáférés is van biztosítva, amely során a fejlesztők és biztonsági kutatók saját lekérdezéseket indíthatnak, és ezek eredményeit strukturált formátumban olvashatják be. A \ref{shodanscr}-es ábra bemutat egy példa lekérdezést a rendszertől egy bizonyos IP címre.
+	A Shodan\footnote{Megszeretném köszönni a Shodan készítőjének, hogy díjmentesen feloldta a hozzáférésemet egy korlátlan csomagra azért, hogy folytathassam a szoftver fejlesztését bármilyen akadályok nélkül.}\cite{shodan16} egy olyan projekt, amely folyamatosan letapogatja az IPv4 teljes címtartományát és a letapogatási eredményt egy webes keresőmotor felületen keresztül lehet lekérdezni. Egy API hozzáférés is van biztosítva, amely során a fejlesztők és biztonsági kutatók saját lekérdezéseket indíthatnak, és ezek eredményeit strukturált formátumban olvashatják be. Az \ref{shodanscr}. ábra bemutat egy példa lekérdezést a rendszertől egy bizonyos IP címre.
 
 	\begin{figure}[!htbp]
 		\centering
@@ -598,13 +598,13 @@
 		\label{shodanscr}
 	\end{figure}
 	
-	Ahhoz, hogy az alkalmazásban Shodan adatot lehessen szerezni és felhasználni, a felhasználónak regisztrálnia kell egy ingyenes fiókot a \url{https://shodan.io/} címen, és az ott található API kulcsot specifikálnia kell az alkalmazásnak a \mintinline{bash}{--shodan-key} parancssori argumenton keresztül.
+	Ahhoz, hogy az alkalmazásban Shodan adatot lehessen szerezni és felhasználni, a felhasználónak regisztrálnia kell egy ingyenes fiókot a \url{https://shodan.io/} címen, és az ott található API kulcsot specifikálnia kell az alkalmazásnak a \mintinline{bash}{--shodan-key} parancssori argumentumon keresztül.
 	
 	Kivitelezési szempontból, a \mintinline{cpp}{ShodanScanner} komponens kommunikál a Shodan JSON API interfészével, és lekéri a kívánt IP címek adatait. Ezen komponens a \mintinline{cpp}{HostScanner} osztályból származik és emiatt az osztály helyettesíthet bármilyen más letapogató komponenst a szoftveren belül.
 
 \subsubsection{Censys} \label{ssec:censys}
 
-	A Censys\cite{censys15} egy Michigani Egyetem Régensei által készített és karbantartott szolgáltatás. Hasonlóan az előző szolgáltatáshoz, az adatait Internet-szerti letapogatási műveletek során gyűjti. Az adatokhoz fejlesztők és biztonsági kutatók hozzáférhetnek strukturált lekérdezések folyamán a projekt webes felületén vagy a REST API-ján keresztül. A \ref{censysscr}-as ábra bemutat egy példa lekérdezést a rendszertől egy bizonyos IP címre.
+	A Censys\cite{censys15} egy Michigani Egyetem Régensei által készített és karbantartott szolgáltatás. Hasonlóan az előző szolgáltatáshoz, az adatait Internet-szerte letapogatási műveletek során gyűjti. Az adatokhoz fejlesztők és biztonsági kutatók hozzáférhetnek strukturált lekérdezések folyamán a projekt webes felületén vagy a REST API-ján keresztül. A \ref{censysscr}. ábra bemutat egy példa lekérdezést a rendszertől egy bizonyos IP címre.
 	
 	\begin{figure}[!htbp]
 		\centering
@@ -613,19 +613,19 @@
 		\label{censysscr}
 	\end{figure}
 	
-	A projekt által használt letapogató szoftver, név szerint ZMap\cite{zmap13}, és a különböző komponensei nyílt-forrásúak. A letapogató által generált nyers adatok egy Internet-szerti letapogatás során is letölthetőek a Censys weboldalán bárki által és szabadon felhasználhatóak.
+	A projekt által használt letapogató szoftver, név szerint ZMap\cite{zmap13}, és a különböző komponensei nyílt-forrásúak. A letapogató által generált nyers adatok egy Internet-szerte letapogatás során is letölthetőek a Censys weboldalán bárki által és szabadon felhasználhatóak.
 	
-	Ahhoz, hogy az alkalmazásban Censys adatot lehessen szerezni és felhasználni, a felhasználónak regisztrálnia kell egy ingyenes fiókot a \url{https://censys.io/} címen, és az ott található UID és titkos kulcsot specifikálnia kell az alkalmazásnak a \mintinline{bash}{--censys-key} parancssori argumenton keresztül.
+	Ahhoz, hogy az alkalmazásban Censys adatot lehessen szerezni és felhasználni, a felhasználónak regisztrálnia kell egy ingyenes fiókot a \url{https://censys.io/} címen, és az ott található UID és titkos kulcsot specifikálnia kell az alkalmazásnak a \mintinline{bash}{--censys-key} parancssori argumentumon keresztül.
 	
 	Kivitelezési szempontból, a \mintinline{cpp}{CensysScanner} komponens kommunikál a Censys JSON API interfészével, és lekéri a kívánt IP címek adatait. Hasonlóan, ezen komponens is a \mintinline{cpp}{HostScanner} osztályból származik és emiatt az osztály helyettesíthet bármilyen más letapogató komponenst a szoftveren belül.
 
 \subsubsection{Egyesítés}
 
-	A \mintinline{cpp}{PassiveScanner} komponense az alkalmazásnak kérést kezdeményez a Shodan-en[\ref{ssec:shodan}] és a  Censys-en[\ref{ssec:censys}] egyiránt, majd az eredményeket egybevonja a végén.
+	A \mintinline{cpp}{PassiveScanner} komponense az alkalmazásnak kérést kezdeményez a Shodan-en[\ref{ssec:shodan}] és a  Censys-en[\ref{ssec:censys}] egyaránt, majd az eredményeket egybevonja a végén.
 	
 	Az alkalmazás fejlesztési fázisa során az lett felfedezve, hogy általában mindkét szolgáltatásnak volt valamilyen információja egy bizonyos IP címről, viszont egyes esetekben az egyik szolgáltatásnak több információja volt, mint a másiknak, mélyebb elemzést sikerült végeznie, vagy csak egyszerűen hasznosabb volt a tárolt információ, mint a konkurensénél.
 	
-	Egy egész pontos példa az lenne, amikor egy IP cím esetén az egyik szolgáltatás valamilyen módon be lett azonosítva és ki lett tiltva a terheléskiegyenlítő által, mint ahogy ezt a \ref{shodanban}-es kódrészlet is mutatja, viszont a másik szolgáltatás sikeresen átjárt a terheléskiegyenlítőn és hasznos információt sikerült tárolnia a szolgáltatásról, mint ahogy ezt a \ref{censysnoban}-as kódrészlet is mutatja.
+	Egy egész pontos példa az lenne, amikor egy IP cím esetén az egyik szolgáltatás valamilyen módon be lett azonosítva és ki lett tiltva a terheléskiegyenlítő által, mint ahogy ezt a \ref{shodanban}. kódrészlet is mutatja, viszont a másik szolgáltatás sikeresen átjárt a terheléskiegyenlítőn és hasznos információt sikerült tárolnia a szolgáltatásról, mint ahogy ezt a \ref{censysnoban}. kódrészlet is mutatja.
 	
 	\begin{listing}[H]
 		\begin{minted}[style=pastie]{http}
@@ -665,15 +665,15 @@
 		\label{censysnoban}
 	\end{listing}
 	
-	Fontos lenne itt megjegyezni, hogy a tiltott félnek küldött üzenet a \ref{shodanban}-es kódrészletben nem fedi fel a HTTP szerver nevét és verziószámát, míg a tiltatlan fél a \ref{censysnoban}-as kódrészletben a terheléskiegyenlítőn keresztül az élszerverhez kerül, és kiderül a szoftver neve illetve verziószáma, azaz ``nginx 1.8.0,'' amely épp tartalmaz egy \textbf{ismert távolról-kihasználható sebezhetőséget}\cite{nginxcve}.
+	Fontos lenne itt megjegyezni, hogy a tiltott félnek küldött üzenet a \ref{shodanban}. kódrészletben nem fedi fel a HTTP szerver nevét és verziószámát, míg a tiltatlan fél a \ref{censysnoban}. kódrészletben a terheléskiegyenlítőn keresztül az élszerverhez kerül, és kiderül a szoftver neve illetve verziószáma, azaz ``nginx 1.8.0,'' amely épp tartalmaz egy \textbf{ismert távolról-kihasználható sebezhetőséget}\cite{nginxcve}.
 	
-	Azon esetekben, amikor mindkét szolgáltatás visszatérít egy szolgáltatási sávot egy bizonyos portnak, a hosszabb sáv lesz kiválasztva az egybevonási folyamat során. Ez a döntés azért volt meghozva így, mivel a tiltóüzenetek általában rövidebbek\cite{qualys11} a szolgáltatásmegtagadási támadások elkerülése végett, illetve az is lehetséges ilyenkor, hogy a hosszabb szolgáltatási sávon a szolgáltatás mélyebb elemzést is végzett (mint például a 'STARTTLS' parancs SMTP szervereknek a Censys által, de nem a Shodan által) amely azt jelenti, hogy a minta-alapú beazonosító komponensnek (a \ref{ssec:patternmatch}-s fejezetben tárgyalva) több bemeneti adat lesz elérhető.
+	Azon esetekben, amikor mindkét szolgáltatás visszatérít egy szolgáltatási sávot egy bizonyos portnak, a hosszabb sáv lesz kiválasztva az egybevonási folyamat során. Ez a döntés azért volt meghozva így, mivel a tiltóüzenetek általában rövidebbek\cite{qualys11} a szolgáltatásmegtagadási támadások elkerülése végett, illetve az is lehetséges ilyenkor, hogy a hosszabb szolgáltatási sávon a szolgáltatás mélyebb elemzést is végzett (mint például a 'STARTTLS' parancs SMTP szervereknek a Censys által, de nem a Shodan által) amely azt jelenti, hogy a minta-alapú beazonosító komponensnek (az \ref{ssec:patternmatch}. fejezetben tárgyalva) több bemeneti adat lesz elérhető.
 
 \subsection{Külső Feltérképezés}
 
 	Ez a fejezet bemutatja az alkalmazás \mintinline{cpp}{NmapScanner} komponensét, amely egy külső alkalmazást indít el a kért portok letapogatása érdekében, majd a külső alkalmazás által generált eredményeket beolvassa további elemzési célokból a jelenlegi alkalmazásba.
 	
-	Habár az alkalmazás tág körű letapogató komponenseket implementál, amint ezek tárgyalva vannak az \ref{ssec:icmpping}-es fejezettől az \ref{ssec:udpscan}-es fejezetig, egyesített interfésszel amely engedélyezi a feladatok könnyű és hatékony párhuzamosítását, redundanciaként a felhasználóknak fel van ajánlva az a lehetőség is, hogy egy külső alkalmazást használjanak a letapogatási célokra.
+	Habár az alkalmazás tág körű letapogató komponenseket implementál, amint ezek tárgyalva vannak az \ref{ssec:icmpping}. fejezettől az \ref{ssec:udpscan}. fejezetig, egyesített interfésszel amely engedélyezi a feladatok könnyű és hatékony párhuzamosítását, redundanciaként a felhasználóknak fel van ajánlva az a lehetőség is, hogy egy külső alkalmazást használjanak a letapogatási célokra.
 	
 	A komponens, amint a neve is sugallja, az \textit{nmap} alkalmazást támogatja, viszont bármilyen más alkalmazás is használható amely nmap-kompatibilis XML-alapú jelentéseket képes generálni. Egy ilyen alternatív alkalmazásra példa a \textit{masscan} nevű szoftver lenne.
 	
@@ -691,13 +691,13 @@
 		\label{nginxregex}
 	\end{listing}
 	
-	A \ref{nginxregex}-es kódrészletben található reguláris kifejezés illeszkedik az ``nginx'' HTTP szoftver által generált válaszfejlécekre. Továbbá, a reguláris kifejezés tartalmaz egy opcionális csoportot, amely a verziószámot próbálja megkeresni. Amennyiben a kifejezés illeszkedik, a komponens visszatéríti a \mintinline{matlab}{cpe:/a:nginx:nginx:1.9.12} nevet, míg ha a kifejezés parciálisan illeszkedik, azaz a verziószám csoport nélkül, a \mintinline{matlab}{cpe:/a:nginx:nginx} név lesz visszatérítve.
+	A \ref{nginxregex}. kódrészletben található reguláris kifejezés illeszkedik az ``nginx'' HTTP szoftver által generált válaszfejlécekre. Továbbá, a reguláris kifejezés tartalmaz egy opcionális csoportot, amely a verziószámot próbálja megkeresni. Amennyiben a kifejezés illeszkedik, a komponens visszatéríti a \mintinline{matlab}{cpe:/a:nginx:nginx:1.9.12} nevet, míg ha a kifejezés parciálisan illeszkedik, azaz a verziószám csoport nélkül, a \mintinline{matlab}{cpe:/a:nginx:nginx} név lesz visszatérítve.
 	
-	Ez különbözik a \ref{ssec:matchcpe}-s fejezetben leírt módszertől, ugyanis itt az azonosítás sikeres verziószám nélkül is, így a jövőbeli verziószámok is könnyen felismerhetőek a letapogató szoftver frissítése nélkül.
+	Ez különbözik az \ref{ssec:matchcpe}. fejezetben leírt módszertől, ugyanis itt az azonosítás sikeres verziószám nélkül is, így a jövőbeli verziószámok is könnyen felismerhetőek a letapogató szoftver frissítése nélkül.
 	
 \subsubsection{Identitás Kikövetkeztetése Névhírdetés Nélkül}
 	
-	Míg a \ref{nginxregex}-es kódrészletben bemutatott kifejezés elég egyszerű, a minta alapú beazonosító komponenssel olyan szervereket is be lehet azonosítani, amelyek nem hirdetik ki a nevüket a szolgáltatási sávban.
+	Míg a \ref{nginxregex}. kódrészletben bemutatott kifejezés elég egyszerű, a minta alapú beazonosító komponenssel olyan szervereket is be lehet azonosítani, amelyek nem hirdetik ki a nevüket a szolgáltatási sávban.
 	
 	\begin{listing}[H]
 		\begin{minted}{matlab}
@@ -707,9 +707,9 @@
 		\label{eximregex}
 	\end{listing}
 	
-	A \ref{eximregex}-es kódrészletben bemutatott reguláris kifejezés az ``exim'' SMTP szerver szoftvert képes beazonosítani, ugyanis az 554-es hibakód standard, az ``SMTP synchronization error'' üzenet bájtról bájtra implementáció-specifikus, és különbözik más SMTP szoftverekben.
+	A \ref{eximregex}. kódrészletben bemutatott reguláris kifejezés az ``exim'' SMTP szerver szoftvert képes beazonosítani, ugyanis az 554-es hibakód standard, az ``SMTP synchronization error'' üzenet bájtról bájtra implementáció-specifikus, és különbözik más SMTP szoftverekben.
 	
-	Hasonlóan, a verziószámot is ki lehet következtetni bizonyos esetekben, ha tudjuk hogy milyen publikus üzenetek változtak a szerver szoftverben egyik verzióról a másikra, és ennek tesztelésére egy reguláris kifejezést írunk. (Például az `PRDR' támogatás megléte a szolgáltatási sávban, amely arra utal, hogy az exim szerver legalább 4.83-as verziójával van dolgunk, ugyanis ez az első verzió amelyben ez implementálva és kihirdetve van.)
+	Hasonlóan, a verziószámot is ki lehet következtetni bizonyos esetekben, ha tudjuk, hogy milyen publikus üzenetek változtak a szerver szoftverben egyik verzióról a másikra, és ennek tesztelésére egy reguláris kifejezést írunk. (Például az `PRDR' támogatás megléte a szolgáltatási sávban, amely arra utal, hogy az exim szerver legalább 4.83-as verziójával van dolgunk, ugyanis ez az első verzió, amelyben ez implementálva és ki van hirdetve.)
 
 \subsection{Szerverek CPE-alapú Beazonosítása} \label{ssec:matchcpe}
 
@@ -725,7 +725,7 @@
 	
 \subsubsection{Kivitelezés Áttekintése}
 	
-	A jelenlegi CPE azonosító komponens memóriába tölti a teljes CPE szótár egy előre feldolgozott változatát, amelyben a CPE nevek tokenizálva vannak és a felesleges információ el van hanyagolva memóriahatékonysági okok miatt. A \ref{ciscotokens}-es kódrészlet bemutatja a memóriába betöltött struktúrát egy példa CPE névnek.
+	A jelenlegi CPE azonosító komponens memóriába tölti a teljes CPE szótár egy előre feldolgozott változatát, amelyben a CPE nevek tokenizálva vannak és a felesleges információ el van hanyagolva memóriahatékonysági okok miatt. A \ref{ciscotokens}. kódrészlet bemutatja a memóriába betöltött struktúrát egy példa CPE névnek.
 	
 	\begin{listing}[H]
 		\begin{minted}[style=perldoc]{js}
@@ -751,13 +751,13 @@
 		\label{ciscotokens}
 	\end{listing}
 	
-	A tokenizációs folyamat során, a CPE név `tulajdonos' és `termék' komponenseit a \mintinline{matlab}{([a-z][a-z0-9]+)} reguláris kifejezés ellen van illesztve azon okból fogva, hogy azokat a szavakat amelyek több mint egy karakter hosszúak és nem számmal kezdődnek, egy külön token listába legyenek helyezve.
+	A tokenizációs folyamat során, a CPE név 'tulajdonos' és 'termék' komponensei a \mintinline{matlab}{([a-z][a-z0-9]+)} reguláris kifejezés ellen vannak illesztve azon okból fogva, hogy azokat a szavakat, amelyek több mint egy karakter hosszúak és nem számmal kezdődnek, egy külön token listába legyenek helyezve.
 	
 	Így példaként, a \mintinline{matlab}{cpe:/a:apache:tomcat:4.1.36} CPE név alapján készül egy tömb, amely a \mintinline[style=vs]{js}{["apache", "tomcat"]} tokeneket tartalmazza.
 	
 	A CPE verzió komponense bizonyos esetekben tartalmaz elhanyagolható karaktereket vagy non-standard verzió jelölést. Ezen esetek kiküszöbölése végett, a verziószám a \mintinline{matlab}{\d+\.(?:\d+\.)*\d+} reguláris kifejezés ellen van illesztve, amelynek szükséges legalább egy ponttal elválasztott két szám.
 	
-	Amennyiben a verzió komponens tartalmaz ezenkívül szavakat, ezek az első tokenizációs lépésben bemutatott reguláris kifejezés ellen vannak illesztve, és egy verzió-specifikus token tömbbe tárolva. Példaként ilyen esetekben, a \mintinline{matlab}{cpe:/o:cisco:ios:12.2sxi} CPE név esetén, a verzió-specifikus tokenek tömb tartalma \mintinline[style=vs]{js}{["sxi"]} lesz.
+	Amennyiben a verzió komponens tartalmaz ezen kívül szavakat, ezek az első tokenizációs lépésben bemutatott reguláris kifejezés ellen vannak illesztve, és egy verzió-specifikus token tömbbe tárolva. Példaként ilyen esetekben, a \mintinline{matlab}{cpe:/o:cisco:ios:12.2sxi} CPE név esetén, a verzió-specifikus tokenek tömb tartalma \mintinline[style=vs]{js}{["sxi"]} lesz.
 	
 	CPE-alapú azonosítás során, a teljes adatbázis átiterálódik, először a termék-specifikus tokeneket próbálva. Amennyiben az összes token megtalálható a bemeneti szövegben, a termékhez csatolt verziószámok vannak kipróbálva. Amennyiben legalább egy verziószám talált, és van neki egy verzió-specifikus token tömbje is, az összes ilyen további tokennek is találnia kell.
 	
@@ -778,9 +778,9 @@
 		\label{ciscosvcbnr}
 	\end{listing}
 
-	Egy másik problémás példa a Cisco verziójelölése lenne a saját telnet szolgáltatásuk sávjában. A \ref{ciscosvcbnr}-es kódrészletben bemutatott szolgáltatási sáv a \mintinline{matlab}{cpe:/o:cisco:ios:12.2sxi3} CPE névhez tartozik. A probléma onnan adódik, hogy Cisco a $12.2$-es verziószámmal és ``sxi'' frissítési szint mellett ``by'' frissítési szintet is publikált: \mintinline{matlab}{cpe:/o:cisco:ios:12.2by}.
+	Egy másik problémás példa a Cisco verziójelölése lenne a saját telnet szolgáltatásuk sávjában. A \ref{ciscosvcbnr}. kódrészletben bemutatott szolgáltatási sáv a \mintinline{matlab}{cpe:/o:cisco:ios:12.2sxi3} CPE névhez tartozik. A probléma onnan adódik, hogy Cisco a $12.2$-es verziószámmal és ``sxi'' frissítési szint mellett ``by'' frissítési szintet is publikált: \mintinline{matlab}{cpe:/o:cisco:ios:12.2by}.
 	
-	Ha a két CPE nevet tokenizálnánk, a két különböző token tömb úgy nézne ki, hogy \mintinline[style=vs]{js}{["cisco", "ios", "sxi"]} és \mintinline[style=vs]{js}{["cisco", "ios", "by"]}. A verziószám és az első két token mindkét tömbből találna, viszont a harmadik tokenek ``sxi'' és ``by'', mindkét tömbből ugyancsak találnának. A harmadik és negyedik sorában a \ref{ciscosvcbnr}-es kódrészletnek a ``copyright'' és ``compiled'' sorok mindketten tartalmazzák a ``by'' szavat.
+	Ha a két CPE nevet tokenizálnánk, a két különböző token tömb úgy nézne ki, hogy \mintinline[style=vs]{js}{["cisco", "ios", "sxi"]} és \mintinline[style=vs]{js}{["cisco", "ios", "by"]}. A verziószám és az első két token mindkét tömbből találna, viszont a harmadik tokenek ``sxi'' és ``by'', mindkét tömbből ugyancsak találnának. A harmadik és negyedik sorában a \ref{ciscosvcbnr}. kódrészletnek a ``copyright'' és ``compiled'' sorok mindketten tartalmazzák a ``by'' szavat.
 
 	Az előzőleg említett ShoVAT\cite{shovat15} cikk úgy oldotta meg ezt a problémát, hogy azon tokeneket amelyek közelebb vannak a verziószámhoz nagyobb súllyal látta el, mint azokat, amelyek messzebb vannak. Ezen dolgozat céljából fejlesztett alkalmazás is ezt a módszert alkalmazza a helyes CPE név kiválasztására hasonló helyzetekben.
 	
@@ -809,7 +809,7 @@
 		\end{listing}
 	\end{multicols}
 	
-	Egy alternatív módszer van bemutatva a \ref{httpsvcbnr}-as illetve \ref{httpsvcbnrtokens}-es kódrészletekben, amelyet a szoftver még alkalmaz redundanciaként az az, hogy olyan protokollok esetén ahol ismert a szervernév kihirdetésének helye (mint például 'Server' és `X-Powered-By' mezők HTTP esetén) ott csak ezek a mezők ellen lesz lefuttatva a CPE azonosító, míg azon protokollok esetén ahol nincs standard hely a szervernév kihirdetésére (mint például SMTP) ott megpróbál minél több haszontalan információt (mint például hibaüzenetek, hoszt név vagy dátumok) kivágni az álpozitív találatok kiszűrése érdekében.
+	Egy alternatív módszer van bemutatva a \ref{httpsvcbnr}. illetve \ref{httpsvcbnrtokens}. kódrészletekben, amelyet a szoftver még alkalmaz redundanciaként az az, hogy olyan protokollok esetén ahol ismert a szervernév kihirdetésének helye (mint például 'Server' és `X-Powered-By' mezők HTTP esetén) ott csak ezek a mezők ellen lesz lefuttatva a CPE azonosító, míg azon protokollok esetén ahol nincs standard hely a szervernév kihirdetésére (mint például SMTP) ott megpróbál minél több haszontalan információt (mint például hibaüzenetek, hoszt név vagy dátumok) kivágni az álpozitív találatok kiszűrése érdekében.
 
 \subsection{Operációs Rendszerek Beazonosítása} \label{ssec:opsysmatcher}
 
@@ -831,7 +831,7 @@
 
 	Az \ref{ssec:opsysmatcher}. fejezetben felsorolt támogatott operációs rendszerek esetén, a szoftver képes a CPE nevek illetve CVE sebezhetőségek állapotát kikeresni a bizonyos disztribúció csomagkezelőjében. Ezen disztribúciók mindegyike rendelkezik egy ``security tracker'' csapattal vagy nyílt ``build system''-mel, amelyek nyilvántartják a disztribúcióba csomagolt alkalmazások biztonsági és a bizonyos sebezhetőségek javítási állapotát.
 	
-	A sebezhetőségek lekérdezése során az alkalmazás el tudja vetni azon sebezhetőségeket, amelyek nem érvényesek a beazonosított disztribúcióra (például ``NOT-FOR-US'' címke a Debian Security Tracker-en) vagy a beazonosított szolgáltatásra már fel lett telepítve az a biztonsági frissítés amely kijavítja az adott sebezhetőséget.
+	A sebezhetőségek lekérdezése során az alkalmazás el tudja vetni azon sebezhetőségeket, amelyek nem érvényesek a beazonosított disztribúcióra (például ``NOT-FOR-US'' címke a Debian Security Tracker-en) vagy a beazonosított szolgáltatásra már fel lett telepítve az a biztonsági frissítés, amely kijavítja az adott sebezhetőséget.
 	
 	Továbbá, ezen osztályok gondoskodnak a sebezhető csomagok nevüknek összegyűjtésére és a frissítési parancs összeállítására, amely feltelepíti a megfelelő biztonsági frissítéseket.
 
@@ -841,11 +841,11 @@
 	
 	Az \ref{ssec:opsysmatcher}. fejezetben tárgyalt komponens képes ebből beazonosítani az operációs rendszert, annak verzióját, illetve annak a verziónak a csomagkezelőjéből letölteni a PHP csomag biztonsági frissítéseinek listáját.
 	
-	A kiszolgáló utolsó teljes rendszerfrissítésének dátuma megbecsülhető kisebb-nagyobb pontossággal úgy, hogy egy csomag beazonosított biztonsági frissítésének kiadási dátumát, illetve ugyanazon csomag következő biztonsági frissítés dátuma közötti intervallum közé helyezzük. Amennyiben több szoftver biztonsági frissítése is beazonosítható, ez leszűkíti az utolsó rendszerfrissítés dátumintervallumát.
+	A kiszolgáló utolsó teljes rendszerfrissítésének dátuma megbecsülhető kisebb-nagyobb pontossággal úgy, hogy egy csomag beazonosított biztonsági frissítésének kiadási dátumát, illetve ugyanazon csomagkövetkező biztonsági frissítés dátuma közötti intervallum közé helyezzük. Amennyiben több szoftver biztonsági frissítése is beazonosítható, ez leszűkíti az utolsó rendszerfrissítés dátumintervallumát.
 	
 	A példában említett csomag biztonsági frissítése 2015 április 17-én lett publikálva, míg a következő frissítés meg \mintinline{matlab}{5.5.12-2ubuntu4.6} verziószámmal 2015 július 6-án, amint ez a changelog-ból is leolvasható: \url{https://launchpad.net/ubuntu/utopic/+source/php5/+changelog}
 	
-	Az utolsó frissítési dátum megbecslése azért hasznos funkcionalitás, mivel megengedi azon sebezhetőségek elvetését, amelyek ki lettek javítva (azon beazonosított szolgáltatásokban amelyek nem hirdetik ki a feltelepített biztonsági szintjüket) az utolsó rendszerfrissítés óta. Természetesen ez a funkcionalitás csak becslés, és szabadon kikapcsolható.
+	Az utolsó frissítési dátum megbecslése azért hasznos funkcionalitás, mivel megengedi azon sebezhetőségek elvetését, amelyek ki lettek javítva (azon beazonosított szolgáltatásokban, amelyek nem hirdetik ki a feltelepített biztonsági szintjüket) az utolsó rendszerfrissítés óta. Természetesen ez a funkcionalitás csak becslés, és szabadon kikapcsolható.
 
 \subsection{Használati Példák}
 
