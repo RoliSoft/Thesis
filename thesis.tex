@@ -909,7 +909,6 @@
 	\end{minted}
 	\end{listing}
 
-	\vspace{-0.5in}
 	\begin{figure}[!htbp]
 		\centering
 		\includegraphics[scale=0.07]{reportcap.png}
@@ -944,8 +943,8 @@
 		\begin{tabular}{r|ccc|ccc|ccccc|}
 			\cline{2-12}
 			\multicolumn{1}{l|}{}                         & \multicolumn{3}{c|}{\textbf{Aktív L.}} & \multicolumn{8}{c|}{\textbf{Passzív Letapogatás}}                                                             \\ \hline
-			\multicolumn{1}{|r|}{\textbf{Intézmény}}      & \textbf{$u_1$}    & \textbf{$u_2$}    & \textbf{$u_3$}   & \textbf{$u_1$} & \textbf{$u_2$} & \textbf{$u_3$} & \textbf{$b_1$} & \textbf{$b_2$} & \textbf{$b_3$} & \textbf{$b_4$} & \textbf{$b_5$} \\ \hline
-			\multicolumn{1}{|r|}{\textbf{Szolgáltatások}} & 165            & 178            & 455           & 201         & 269         & 623         & 41          & 19          & 69          & 31          & 11          \\
+			\multicolumn{1}{|r|}{\textbf{Intézmény}}      & \textbf{$u_1$}    & \textbf{$u_2$}    & \textbf{$u_3$}   & \textbf{$u_1$} & \textbf{$u_2$} & \textbf{$u_3$} & \textbf{$b_1$} & \textbf{$b_2$} & \textbf{$b_3$} & \textbf{$b_4$} & \textbf{$b_5$} \\
+			\multicolumn{1}{|r|}{\textbf{Szolgáltatások}} & 165            & 178            & 455           & 201         & 269         & 623         & 41          & 19          & 69          & 31          & 11          \\ \hline
 			\multicolumn{1}{|r|}{\textbf{Kritikus}}       & 183            & 121            & 160           & 161         & 131         & 230         & 8           & 0           & 30          & 6           & 6           \\
 			\multicolumn{1}{|r|}{\textbf{Magas}}          & 675            & 414            & 645           & 583         & 446         & 826         & 7           & 0           & 67          & 21          & 5           \\
 			\multicolumn{1}{|r|}{\textbf{Közepes}}        & 2545           & 1441           & 2775          & 2308        & 1589        & 3247        & 19          & 0           & 299         & 133         & 9           \\
@@ -956,18 +955,35 @@
 		\label{cpevulns}
 	\end{table}
 	
-	A \ref{cpevulns}. táblázatban található a helyesen beazonosított szolgáltatások sebezhetőségei. A ``Kritikus'', ``Magas'', ``Közepes'' és ``Alacsony'' sorok a felfedezett sebezhetőségek súlyosságát mutatja, míg az ``AV:N'' sor azon sebezhetőségek számát mutatja, amelyek távolról kihasználhatóak. (A \ref{ssec:cvss}. fejezetben tárgyalt \textit{CVSS} pontozási rendszer alapján, azon sebezhetőségek amelyek ``Access Vector'' mezői ``Network'' szintűek.)
+	A \ref{cpevulns}. táblázatban található a helyesen beazonosított szolgáltatások sebezhetőségei. A ``Kritikus'', ``Magas'', ``Közepes'' és ``Alacsony'' sorok a felfedezett sebezhetőségek súlyosságát mutatják, míg az ``AV:N'' sor azon sebezhetőségek számát mutatja, amelyek távolról kihasználhatóak. (A \ref{ssec:cvss}. fejezetben tárgyalt \textit{CVSS} pontozási rendszer alapján, azon sebezhetőségek amelyek ``Access Vector'' mezői ``Network'' szintűek.)
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{|r|l|}
+			\hline
+			\multicolumn{1}{|c|}{\textbf{Szoftver}} & \multicolumn{1}{c|}{\textbf{CVE\#}} \\ \hline
+			\textit{Host Scanner}                   & 166                                 \\
+			OpenVAS                                 & 107                                 \\
+			Nessus                                  & 68                                  \\
+			Nexpose                                 & 311                                 \\ \hline
+		\end{tabular}
+		\caption{Felderített sebezhetőségek szoftverenként}
+		\label{foundvulns}
+	\end{table}
+	
+	A \ref{foundvulns}. táblázatban a dolgozat körében fejlesztett alkalmazás, illetve a \ref{ssec:comtools}. fejezetben listázott kereskedelmi alkalmazások le lettek futtatva egy CTF (``Capture the Flag'') versenyfelkészítőre használt virtuális hálózaton összehasonlításként.
+	
+	Az ``OpenVAS'' illetve ``Nessus'' gyenge eredményei azzal magyarázhatóak, hogy a kiterjesztés-alapú architektúrájuknak köszönhetően nem sikerült beazonosítaniuk bizonyos szolgáltatásokat, ugyanis nem volt kiterjesztés írva azon kevésbé népszerű szoftverek beazonosítására.
+	
+	Ezzel ellentétben, a ``Nexpose'' kihasználva az egyik felfedezett sebezhetőséget, bejelentkezett a kiszolgálókra és lokálisan enumerálta a feltelepített csomagokat illetve azok verzióját.
 
-\newpage
 \section{Bibliográfia}
 
 	\begingroup
 	\renewcommand{\section}[2]{}
 	\renewcommand{\markboth}[2]{}
-		\begin{multicols}{2}
-			\bibliography{thesis}
-			\bibliographystyle{thesis}
-		\end{multicols}
+		\bibliography{thesis}
+		\bibliographystyle{thesis}
 	\endgroup
 
 \end{document}
