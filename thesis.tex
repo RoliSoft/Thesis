@@ -130,6 +130,7 @@
 	\end{center}
 
 \newpage
+\setcounter{page}{1}
 \section*{Tartalomjegyzék}
 
 	\begingroup
@@ -142,8 +143,8 @@
 	\begingroup
 	\hypersetup{linkcolor=lightblue}
 	\listoffigures
-	%\listoftables
 	\listoflistings
+	\listoftables
 	\endgroup
 
 \newpage
@@ -676,7 +677,7 @@
 	
 	Azon esetekben, amikor mindkét szolgáltatás visszatérít egy szolgáltatási sávot egy bizonyos portnak, a hosszabb sáv lesz kiválasztva az egybevonási folyamat során. Ez a döntés azért volt meghozva így, mivel a tiltóüzenetek általában rövidebbek\cite{qualys11} a szolgáltatásmegtagadási támadások elkerülése végett, illetve az is lehetséges ilyenkor, hogy a hosszabb szolgáltatási sávon a szolgáltatás mélyebb elemzést is végzett (mint például a 'STARTTLS' parancs SMTP szervereknek a Censys által, de nem a Shodan által) amely azt jelenti, hogy a minta-alapú beazonosító komponensnek (\az{\ref{ssec:patternmatch}}. fejezetben tárgyalva) több bemeneti adat lesz elérhető.
 
-\subsection{Külső Feltérképezés}
+\subsection{Külső Feltérképezés} \label{ssec:nmapscan}
 
 	Ez a fejezet bemutatja az alkalmazás \mintinline{cpp}{NmapScanner} komponensét, amely egy külső alkalmazást indít el a kért portok letapogatása érdekében, majd a külső alkalmazás által generált eredményeket beolvassa további elemzési célokból a jelenlegi alkalmazásba.
 	
@@ -685,7 +686,7 @@
 	A komponens, amint a neve is sugallja, az \textit{nmap} alkalmazást támogatja, viszont bármilyen más alkalmazás is használható amely nmap-kompatibilis XML-alapú jelentéseket képes generálni. Egy ilyen alternatív alkalmazásra példa a \textit{masscan} nevű szoftver lenne.
 	
 	Ahhoz, hogy az nmap-et használni lehessen letapogatásra, az \mintinline{batch}{nmap} alkalmazás elérhető kell legyen a \mintinline{batch}{%PATH%} környezeti változón belül.
-	
+
 \subsection{Szerverek Minta-alapú Beazonosítása} \label{ssec:patternmatch}
 
 	A \mintinline{cpp}{ServiceRegexMatcher} komponens feladata, hogy bemenetként fogadja a teljes szolgáltatási sávot, és futtassa le egy adatbázis ellen, amely reguláris kifejezéseket tartalmaz CPE nevekhez társítva.
@@ -834,7 +835,7 @@
 	
 	Az ``Enterprise Linux'' alapú rendszerek ugyan ezzel nem rendelkeznek, viszont mivel több év is eltelik a disztribúciók között, ezért amennyiben az osztály biztos abban, hogy Red Hat/CentOS fut a kiszolgálón, a disztribúció verziója kinyerhető az SSH szerver által kihirdetett verzió generációjának illesztésével.
 
-\subsection{Sebezhetőségek Érvényesítése}
+\subsection{Sebezhetőségek Érvényesítése} \label{ssec:vulnvalid}
 
 	\Az{\ref{ssec:opsysmatcher}}. fejezetben felsorolt támogatott operációs rendszerek esetén, a szoftver képes a CPE nevek illetve CVE sebezhetőségek állapotát kikeresni a bizonyos disztribúció csomagkezelőjében. Ezen disztribúciók mindegyike rendelkezik egy ``security tracker'' csapattal vagy nyílt ``build system''-mel, amelyek nyilvántartják a disztribúcióba csomagolt alkalmazások biztonsági és a bizonyos sebezhetőségek javítási állapotát.
 	
@@ -854,6 +855,67 @@
 	
 	Az utolsó frissítési dátum megbecslése azért hasznos funkcionalitás, mivel megengedi azon sebezhetőségek elvetését, amelyek ki lettek javítva (azon beazonosított szolgáltatásokban, amelyek nem hirdetik ki a feltelepített biztonsági szintjüket) az utolsó rendszerfrissítés óta. Természetesen ez a funkcionalitás csak becslés, és szabadon kikapcsolható.
 
+\subsection{Adatszerző Komponensek Osztályhierarchiája}
+
+	\Az{\ref{classhierdata}}. ábra bemutatja az előzőleg tárgyalt adatszerző komponensek kivitelezésének osztályhierarchiáját, illetve a közöttük levő kapcsolatokat.
+
+	\begingroup
+	\hypersetup{linkcolor=blue}
+	\begin{figure}[!htbp]
+		\centering
+		\begin{tikzpicture}[scale=0.85,transform shape]
+			\node at (0,0) {HostScanner};
+			\draw  (-1.5,0.5) rectangle (1.5,-0.5);
+			\node at (-2,-3) {InternalScanner};
+			\node at (-6,-3) {ArpPinger$^{\ref{ssec:arpping}}$};
+			\node at (2,-3) {NmapScanner$^{\ref{ssec:nmapscan}}$};
+			\draw  (-3.75,-2.5) rectangle (-0.25,-3.5);
+			\draw  (0.25,-2.5) rectangle (3.75,-3.5);
+			\draw  (-7.5,-2.5) rectangle (-4.5,-3.5);
+			\node (v3) at (-6,-2.5) {};
+			\node (v1) at (0,-0.5) {};
+			\node (v2) at (-2,-2.5) {};
+			\node (v4) at (2,-2.5) {};
+			\draw [es] (v1) edge (v2);
+			\draw [es] (v1) edge (v3);
+			\draw [es] (v1) edge (v4);
+			\node at (6,-3) {PassiveScanner};
+			\draw  (4.5,-2.5) rectangle (7.5,-3.5);
+			\node (v3_1) at (6,-2.5) {};
+			\draw [es] (v1) edge (v3_1);
+			\node at (3.5,-6) {ShodanScanner$^{\ref{ssec:shodan}}$};
+			\draw  (1.5,-5.5) rectangle (5.5,-6.5);
+			\node (v3_2) at (3.5,-5.5) {};
+			\node at (8.5,-6) {CensysScanner$^{\ref{ssec:censys}}$};
+			\draw  (6.5,-5.5) rectangle (10.5,-6.5);
+			\node (v3_3) at (8.5,-5.5) {};
+			\node (v5) at (6,-3.5) {};
+			\draw [triangle 60-triangle 60] (v5) edge (v3_2);
+			\draw [triangle 60-triangle 60] (v5) edge (v3_3);
+			\node at (-2,-6) {ServiceScanner};
+			\draw  (-3.75,-5.5) rectangle (-0.25,-6.5);
+			\node at (-2,-9) {TcpScanner$^{\ref{ssec:tcpscan}}$};
+			\node at (-6.25,-9) {IcmpScanner$^{\ref{ssec:icmpping}}$};
+			\node at (2,-9) {UdpScanner$^{\ref{ssec:udpscan}}$};
+			\draw  (-3.75,-8.5) rectangle (-0.25,-9.5);
+			\draw  (0.25,-8.5) rectangle (3.75,-9.5);
+			\draw  (-8,-8.5) rectangle (-4.5,-9.5);
+			\node (v3_4) at (-6.25,-8.5) {};
+			\node (v1_1) at (-2,-6.5) {};
+			\node (v2_1) at (-2,-8.5) {};
+			\node (v4_1) at (2,-8.5) {};
+			\node (v6) at (-2,-3.5) {};
+			\node (v7) at (-2,-5.5) {};
+			\draw [dashed,-diamond]  (v6) edge (v7);
+			\draw [es] (v1_1) edge (v2_1);
+			\draw [es] (v1_1) edge (v3_4);
+			\draw [es] (v1_1) edge (v4_1);
+		\end{tikzpicture}
+		\caption{Adatszerző komponensek osztályhierarchiája}
+		\label{classhierdata}
+	\end{figure}
+	\endgroup
+
 \subsection{Használati Példák}
 
 	\Az{\ref{sec:impl}}. fejezetben található hivatkozás, amely a dolgozatban tárgyalt alkalmazás forráskódjára mutat, fordítás után a következő célokra használható fel. 
@@ -867,7 +929,7 @@
 	\end{minted}
 	\end{listing}
 
-	\vspace{-0.5in}
+	\vspace{-0.4in}
 	\paragraph*{Passzív Letapogatás} Egy bizonyos IP cím vagy tartomány letapogatása mind \textit{Shodan} illetve \textit{Censys} adatok felhasználásával:
 
 	\begin{listing}[H]
@@ -876,7 +938,7 @@
 	\end{minted}
 	\end{listing}
 
-	\vspace{-0.5in}
+	\vspace{-0.4in}
 	\paragraph*{XML Feldolgozás} Egy előzőleg lefuttatott \textit{nmap} által generált XML állományban lévő szolgáltatások utólagos betöltése, beazonosítása és ezek sebezhetőségeinek felderítése:
 
 	\begin{listing}[H]
@@ -885,29 +947,7 @@
 	\end{minted}
 	\end{listing}
 
-	\vspace{-0.5in}
-	\paragraph*{Csomagok Beazonosítása} Kiszolgálók letapogatása, ezek operációs rendszereinek és szolgáltatásainak beazonosítása, majd a sebezhető csomagok felderítése:
-
-	\begin{listing}[H]
-	\begin{minted}[linenos=false]{matlab}
-		./HostScanner -r 192.168.1.66 192.168.1.71
-	\end{minted}
-	\end{listing}
-
-	\vspace{-0.25in}
-	A fenti paraméterezéssel az alkalmazás letapogatja a felsorolt IP címek TCP portjait, majd megpróbálja a szolgáltatásokat beazonosítani, illetve a kiszolgáló operációs rendszerét is. A sebezhetőségek felderítése után, amennyiben sikerült az operációs rendszert is beazonosítani, az alkalmazás generál egy parancsot, amellyel a kiszolgálón lévő sebezhető csomagok frissíthetőek:
-
-	\begin{listing}[H]
-	\begin{minted}{matlab}
-		[*] 192.168.1.66 is running cpe:/o:debian:debian_linux:8
-		[*] 192.168.1.71 is running cpe:/o:redhat:enterprise_linux:7
-		    ...
-		[*] 192.168.1.66 -> sudo apt-get install --only-upgrade apache2 php5 python2.7
-		[*] 192.168.1.71 -> sudo yum update httpd php python27-python
-	\end{minted}
-	\end{listing}
-
-	\vspace{-0.5in}
+	\vspace{-0.4in}
 	\paragraph*{\LaTeX\ Jelentés} \LaTeX\ jelentés generálása a letapogatás befejezte után, amely tartalmazza a letapogatás során összegyűjtött összes információt, beleérve a nyitott portokat, beazonosítási eredményeket, felderített sebezhetőségeket, illetve a sebezhetőségek korrigálására generált parancsokat:
 
 	\begin{listing}[H]
@@ -923,6 +963,29 @@
 		\label{latexrep}
 	\end{figure}
 
+	\paragraph*{Csomagok Beazonosítása} Kiszolgálók letapogatása, ezek operációs rendszereinek és szolgáltatásainak beazonosítása, majd a sebezhető csomagok felderítése:
+
+	\begin{listing}[H]
+	\begin{minted}[linenos=false]{matlab}
+		./HostScanner -r 192.168.1.66 192.168.1.71
+	\end{minted}
+	\end{listing}
+
+	\vspace{-0.25in}
+	A fenti paraméterezéssel az alkalmazás letapogatja a felsorolt IP címek TCP portjait, majd megpróbálja a szolgáltatásokat beazonosítani, illetve a kiszolgáló operációs rendszerét is. A sebezhetőségek felderítése után, amennyiben sikerült az operációs rendszert is beazonosítani, az alkalmazás generál parancssori utasításokat, amelyekkel a kiszolgálókon lévő sebezhető csomagok frissíthetőek. Egy ilyen futásidejű kimenet példa látható \az{\ref{pkgupdt}}. kódrészletben.
+
+	\begin{listing}[H]
+		\begin{minted}{matlab}
+		[*] 192.168.1.66 is running cpe:/o:debian:debian_linux:8
+		[*] 192.168.1.71 is running cpe:/o:redhat:enterprise_linux:7
+		  ...
+		[*] 192.168.1.66 -> sudo apt-get install --only-upgrade apache2 php5 python2.7
+		[*] 192.168.1.71 -> sudo yum update httpd php python27-python
+		\end{minted}
+		\caption{Beazonosított csomagok frissítésére generált parancssori utasítások}
+		\label{pkgupdt}
+	\end{listing}
+
 \section{Eredmények}
 
 	A szoftver teszteléséhez három felsőoktatási intézményt teszteltem aktív letapogatással, majd ugyan azokat passzívval is összehasonlításként. Továbbá öt egyéb pénzügyi intézményt is, amelyektől elvártam volna, hogy ezek képviseljék a ``gold standard''-et a tesztben.
@@ -937,13 +1000,13 @@
 			\multicolumn{1}{|r|}{\textbf{Beazonosítható}} & 143            & 145            & 402           & 112         & 148         & 352         & 24          & 8           & 58          & 9           & 9           \\
 			\multicolumn{1}{|r|}{\textbf{Beazonosítva}}   & 140            & 137            & 394           & 109         & 139         & 348         & 24          & 8           & 58          & 9           & 9           \\ \hline
 		\end{tabular}
-		\caption{Beazonosítható és beazonosított CPE nevek}
+		\caption{Beazonosítható illetve a megvalósított rendszer által beazonosított CPE nevek}
 		\label{cpeids}
 	\end{table}
 	
 	\Az{\ref{cpeids}}. táblázatban látható a letapogatás által felfedezett szolgáltatások száma intézményenként. ``Szolgáltatás'' alatt egy nyitott port értetendő. A ``Beazonosítható'' sor azon szolgáltatások számát képviseli a felfedezett szolgáltatások közül, amelyek tartalmaznak olyan információt a szolgáltatási sávjukban, amely során be lehet azonosítani a szolgáltatás mögötti szoftvert, mint például szoftver neve és verziószáma. Végül a ``Beazonosítva'' sor mutatja meg a beazonosítható szolgáltatások azonosítási sikerarányát.
 	
-	Az \textbf{1,410} beazonosítható szolgáltatási sávból \textbf{1,374} lett helyesen beazonosítva, amely egy \textbf{97.45\%} sikerességet reprezentál.
+	Az \textbf{1,410} beazonosítható szolgáltatási sávból a dolgozat körében fejlesztett alkalmazás \textbf{1,374} szolgáltatási sávot azonosított be helyesen, amely egy \textbf{97.45\%} sikerességet reprezentál.
 	
 	\begin{table}[H]
 		\centering
@@ -958,31 +1021,36 @@
 			\multicolumn{1}{|r|}{\textbf{Alacsony}}       & 231            & 151            & 275           & 195         & 170         & 335         & 7           & 0           & 26          & 13          & 4           \\
 			\multicolumn{1}{|r|}{\textbf{AV:N}}           & 3296           & 1970           & 3493          & 2961        & 2173        & 4248        & 40          & 0           & 393         & 153         & 22          \\ \hline
 		\end{tabular}
-		\caption{Beazonosított szolgáltatások sebezhetőségei}
+		\caption{Megvalósított rendszer által beazonosított szolgáltatások sebezhetőségei}
 		\label{cpevulns}
 	\end{table}
 	
-	\Az{\ref{cpevulns}}. táblázatban található a helyesen beazonosított szolgáltatások sebezhetőségei. A ``Kritikus'', ``Magas'', ``Közepes'' és ``Alacsony'' sorok a felfedezett sebezhetőségek súlyosságát mutatják, míg az ``AV:N'' sor azon sebezhetőségek számát mutatja, amelyek távolról kihasználhatóak. (\Az{\ref{ssec:cvss}}. fejezetben tárgyalt \textit{CVSS} pontozási rendszer alapján, azon sebezhetőségek amelyek ``Access Vector'' mezői ``Network'' szintűek.)
+	\Az{\ref{cpevulns}}. táblázatban található a helyesen beazonosított szolgáltatásoknak a megvalósított alkalmazás által felderített sebezhetőségei. A ``Kritikus'', ``Magas'', ``Közepes'' és ``Alacsony'' sorok a felfedezett sebezhetőségek súlyosságát mutatják, míg az ``AV:N'' sor azon sebezhetőségek számát mutatja, amelyek távolról kihasználhatóak. (\Az{\ref{ssec:cvss}}. fejezetben tárgyalt \textit{CVSS} pontozási rendszer alapján, azon sebezhetőségek amelyek ``Access Vector'' mezői ``Network'' szintűek.)
+	
+	A pénzügyi intézmények IP tartományában felfedezett sebezhetőségek nem meglepőek, ugyanis egy kapcsolódó projektem\footnote{\url{https://github.com/RoliSoft/Bank-Security-Audit}} során mérem bizonyos intézmények válaszidejét frissen felfedezett biztonsági sebezhetőségek kijavítására, és sajnos azt sikerült levonni, hogy egyes bankok esetén a biztonsági frissítések telepítése kritikus hibákra betelhet akár 3 hónapba is.
 	
 	\begin{table}[H]
 		\centering
 		\begin{tabular}{|r|l|}
 			\hline
 			\multicolumn{1}{|c|}{\textbf{Szoftver}} & \multicolumn{1}{c|}{\textbf{CVE\#}} \\ \hline
-			\textit{Host Scanner}                   & 166                                 \\
+			\textit{Host Scanner\footnotemark{}}                   & 166                                 \\
 			OpenVAS                                 & 107                                 \\
 			Nessus                                  & 68                                  \\
 			Nexpose                                 & 311                                 \\ \hline
 		\end{tabular}
-		\caption{Felderített sebezhetőségek szoftverenként}
+		\caption{Felderített sebezhetőségek szoftverenkénti összehasonlítása}
 		\label{foundvulns}
 	\end{table}
+	\footnotetext{A dolgozat körében megvalósított rendszer megnevezése.}
 	
 	\Az{\ref{foundvulns}}. táblázatban a dolgozat körében fejlesztett alkalmazás, illetve \az{\ref{ssec:comtools}}. fejezetben listázott kereskedelmi alkalmazások le lettek futtatva egy CTF (``Capture the Flag'') versenyfelkészítőre használt virtuális hálózaton összehasonlításként.
 	
 	Az ``OpenVAS'' illetve ``Nessus'' gyenge eredményei azzal magyarázhatóak, hogy a kiterjesztés-alapú architektúrájuknak köszönhetően nem sikerült beazonosítaniuk bizonyos szolgáltatásokat, ugyanis nem volt kiterjesztés írva azon kevésbé népszerű szoftverek beazonosítására.
 	
-	Ezzel ellentétben, a ``Nexpose'' kihasználva az egyik felfedezett sebezhetőséget, bejelentkezett a kiszolgálókra és lokálisan enumerálta a feltelepített csomagokat illetve azok verzióját.
+	Ezzel ellentétben, a ``Nexpose'' kihasználva az egyik felfedezett sebezhetőséget, bejelentkezett a tesztelt kiszolgálókra, és a kiszolgálón található csomagkezelő rendszertől lekérte a feltelepített csomagokat illetve azok verziószámát. Így elérte, hogy olyan sebezhetőségeket is sikerült felderíteni, amelyek nem szerverszoftverekhez kapcsolódnak és hálózaton keresztül nem érhetőek el.
+	
+	A megvalósított rendszer hatálya alá nem esik a sebezhetőségek kihasználása, ugyanis ez nem kívánatos éles rendszerek esetén, illetve törvénytelen felhatalmazás nélküli biztonsági kutatók számára. A sebezhetőségek érvényesítését \az{\ref{ssec:vulnvalid}}. fejezetben leírt módszer alapján végzi az alkalmazás, a beazonosított operációs rendszer csomagkezelőjén keresztül, behatolás nélkül.
 
 \section{Bibliográfia}
 
