@@ -13,8 +13,9 @@
 \definecolor{lightblue}{rgb}{0.22,0.45,0.70}
 \definecolor{darkred}{rgb}{0.9,0.0,0.0}
 
-\usepackage[backref=false,pagebackref=true]{hyperref}
+\usepackage[unicode,backref=false,pagebackref=true]{hyperref}
 \hypersetup{colorlinks=true,urlcolor=lightblue,citecolor=green!75!black,linkcolor=orange!98!black,pdfborder={0 0 0}}
+\usepackage[all]{hypcap}
 \usepackage{multirow}
 
 \usepackage{graphicx}
@@ -1008,7 +1009,7 @@
 	
 	As such, this list is not utilized at all and active protocol probing is done instead. If the connection succeeds and no service banner was sent within a specified timeframe, the scanner sends a \mintinline[style=pastie]{http}{GET / HTTP/1.0}\mintinline{matlab}{\r\n\r\n} message to the server. If the reply is not satisfactory, the scanner will re-try the connection and send the \mintinline{matlab}{HELP\r\n} message.
 	
-	At this point if the server still has not sent a satisfactory reply, the server sends a TLS `ClientHello' packet in the hopes of negotiating a TLS connection. If the secure connection established, the previous plaintext protocol probes are retried in the hopes of getting a satisfactory reply message which can by analyzed by the other components of the application.
+	At this point if the server still has not sent a satisfactory reply, the scanner sends a TLS `ClientHello' packet in the hopes of negotiating a TLS connection. If the secure connection established, the previous plaintext protocol probes are retried in the hopes of getting a satisfactory reply message which can by analyzed by the other components of the application.
 
 \subsubsection{UDP Scanning} \label{ssec:udpscan}
 \subsubsectionhu{UDP Letapogatás} \subsubsectionro{Scanare UDP}
@@ -1489,7 +1490,7 @@
 						"VersionSpecificTokens": ["sxi"]
 					},
 					CpeVersionEntry {
-						// cpe:/o:cisco:ios:12.2:sxh
+						// cpe:/o:cisco:ios:12.2sxh
 						"VersionNumber": "12.2",
 						"VersionSpecificTokens": ["sxh"]
 					}
