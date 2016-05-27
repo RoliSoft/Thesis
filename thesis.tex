@@ -120,19 +120,63 @@
 
 \PrerenderUnicode{áéúóőűíăâîșț}
 
+\usepackage{xpatch}
+
+\newcounter{lofcntr}
+\newcounter{lotcntr}
+
+
+\newcommand{\clearcontents}{%
+  \stepcounter{lofcntr}%
+  \stepcounter{lotcntr}%
+  \setcounter{figure}{0}
+  \setcounter{table}{0}
+}
+
+\AtBeginDocument{%
+  \stepcounter{lofcntr}%
+  \stepcounter{lotcntr}%
+}
+
+
+\makeatletter
+
+\xpretocmd{\caption}{%
+  \def\ext@figure{\number\value{lofcntr}lof}
+  \def\ext@table{\number\value{lotcntr}lot}
+}{\typeout{Worked!}}{}
+
+
+
+\xpatchcmd{\listoffigures}{%
+  \@starttoc{lof}%
+}{%
+  \@starttoc{\number\value{lofcntr}lof}%
+}{\typeout{Patch success}}{\typeout{Patch failure}}
+
+\xpatchcmd{\listoftables}{%
+  \@starttoc{lot}%
+}{%
+  \@starttoc{\number\value{lotcntr}lot}%
+}{\typeout{Patch success}}{\typeout{Patch failure}}
+
+\makeatother
+
 \begin{document}
 
 %
 %	Romanian Section (Summarized Version)
 %
 
-%\include{thesis_ro}
+\include{thesis_ro}
+\clearcontents
 
 %
 %	Hungarian Section (Summarized Version)
 %
 
-%\include{thesis_hu}
+\include{thesis_hu}
+\clearcontents
 
 %
 %	English Section (Full Version)
