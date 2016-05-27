@@ -20,6 +20,7 @@
 
 \usepackage{graphicx}
 \usepackage{wrapfig}
+\usepackage{pdfpages}
 
 \usepackage{booktabs}
 \usepackage{multicol}
@@ -215,6 +216,10 @@
 	\begin{center}
 		{\LARGE 2016}
 	\end{center}
+
+\newpage
+
+	\includepdf[pages=1]{declaration.pdf}
 
 \newpage
 \section*{Cuprins}
@@ -1592,5 +1597,9 @@
 		\bibliography{thesis}
 		\bibliographystyle{thesis}
 	\endgroup
+
+\newpage
+
+	\includepdf[pages={2,3}]{declaration.pdf}
 
 \end{document}
