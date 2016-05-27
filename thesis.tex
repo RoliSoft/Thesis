@@ -1,3 +1,5 @@
+% !TeX spellcheck = en_US
+
 \documentclass[a4paper,12pt]{article}
 
 \usepackage[utf8x]{inputenc}
@@ -121,115 +123,16 @@
 \begin{document}
 
 %
-%	Hungarian Section (Summarized Version)
-%
-
-\pagestyle{empty}
-\selectlanguage{hungarian}
-
-	\begin{center}
-		{\Large Sapientia Erdélyi Magyar Tudományegyetem}\\\vspace{0.05in}
-		{\Large Műszaki és Humántudományok Kar, Marosvásárhely}\\\vspace{0.07in}
-		{\Large Számítástechnika}\\
-		
-		\vspace{2.5in}
-		
-		{\huge Behatolástesztelő és Sebezhetőségfelderítő}\\\vspace{0.1in}
-		{\huge Rendszer}
-		
-		\vspace{0.5in}
-		
-		{\LARGE Szakdolgozat -- Kivonat}
-		
-	\end{center}
-	
-	\vspace{2.0in}
-	
-	\begin{multicols}{2}
-		\begin{flushleft}
-			{\Large Vezető tanár:}\\\vspace{0.1in}
-			{\LARGE {Dr. Vajda Tamás}}
-		\end{flushleft}
-		\columnbreak
-		\begin{flushright}
-			{\Large Diák:}\\\vspace{0.1in}
-			{\LARGE {Bogosi Roland}}
-		\end{flushright}
-	\end{multicols}
-	
-	\vspace{1.5in}
-		
-	\begin{center}
-		{\LARGE 2016}
-	\end{center}
-
-\newpage
-\section*{Tartalomjegyzék}
-
-	\begingroup
-	\renewcommand{\section}[2]{}
-	\hypersetup{linkcolor=lightblue}
-	\setlength{\parskip}{0em}
-	\hungariantableofcontents
-	\endgroup
-
-%
 %	Romanian Section (Summarized Version)
 %
 
-\newpage
-\pagestyle{empty}
-\selectlanguage{romanian}
+\include{thesis_ro}
 
-	\begin{center}
-		{\Large Universitatea Sapientia, Târgu-Mureș}\\\vspace{0.05in}
-		{\Large Facultatea de Științe Tehnice și Umaniste}\\\vspace{0.07in}
-		{\Large Calculatoare}\\
-		
-		\vspace{2.5in}
-		
-		{\huge Sistem pentru Testarea Penetrabilității și}\\\vspace{0.1in}
-		{\huge Descoperirea Vulnerabilităților}
-		
-		\vspace{0.5in}
-		
-		{\LARGE Teză de Licență -- Extras}
-		
-	\end{center}
-	
-	\vspace{2.0in}
-	
-	\begin{multicols}{2}
-		\begin{flushleft}
-			{\Large Îndrumător Științific:}\\\vspace{0.1in}
-			{\LARGE {Dr. Vajda Tamás}}
-		\end{flushleft}
-		\columnbreak
-		\begin{flushright}
-			{\Large Absolvent:}\\\vspace{0.1in}
-			{\LARGE {Bogosi Roland}}
-		\end{flushright}
-	\end{multicols}
-	
-	\vspace{1.5in}
-		
-	\begin{center}
-		{\LARGE 2016}
-	\end{center}
+%
+%	Hungarian Section (Summarized Version)
+%
 
-\newpage
-
-	\includepdf[pages=1]{declaration.pdf}
-
-\newpage
-\section*{Cuprins}
-
-	\begingroup
-	\renewcommand{\section}[2]{}
-	\hypersetup{linkcolor=lightblue}
-	\setlength{\parskip}{0em}
-	\romaniantableofcontents
-	\endgroup
+\include{thesis_hu}
 
 %
 %	English Section (Full Version)
