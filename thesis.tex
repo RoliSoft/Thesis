@@ -110,6 +110,12 @@
 \newcommand\subsubsectionro[1]{\addcontentsline{toc.ro}{subsubsection} {\protect\numberline{\thesubsubsection} #1}}
 \newcommand\subsubsubsectionro[1]{\addcontentsline{toc.ro}{subsubsubsection} {\protect\numberline{\thesubsubsubsection} #1}}
 
+\newcommand{\clearlist}{
+\begingroup
+\renewcommand\addvspace[1]{}
+\renewcommand\contentsline[4]{}}
+\newcommand{\resetlist}{\endgroup}
+
 \usepackage{minted}
 \renewcommand{\theFancyVerbLine}{\rmfamily\scriptsize\arabic{FancyVerbLine}}
 \setminted{linenos,autogobble,breaklines,fontsize=\footnotesize,tabsize=4,numbersep=7pt,bgcolor=whitesmoke}
@@ -120,67 +126,51 @@
 
 \PrerenderUnicode{áéúóőűíăâîșț}
 
-\usepackage{xpatch}
-
-\newcounter{lofcntr}
-\newcounter{lotcntr}
-
-
-\newcommand{\clearcontents}{%
-  \stepcounter{lofcntr}%
-  \stepcounter{lotcntr}%
-  \setcounter{figure}{0}
-  \setcounter{table}{0}
-}
-
-\AtBeginDocument{%
-  \stepcounter{lofcntr}%
-  \stepcounter{lotcntr}%
-}
-
-
-\makeatletter
-
-\xpretocmd{\caption}{%
-  \def\ext@figure{\number\value{lofcntr}lof}
-  \def\ext@table{\number\value{lotcntr}lot}
-}{\typeout{Worked!}}{}
-
-
-
-\xpatchcmd{\listoffigures}{%
-  \@starttoc{lof}%
-}{%
-  \@starttoc{\number\value{lofcntr}lof}%
-}{\typeout{Patch success}}{\typeout{Patch failure}}
-
-\xpatchcmd{\listoftables}{%
-  \@starttoc{lot}%
-}{%
-  \@starttoc{\number\value{lotcntr}lot}%
-}{\typeout{Patch success}}{\typeout{Patch failure}}
-
-\makeatother
-
 \begin{document}
+
+\addtocontents{lof}{\protect\clearlist}
+\addtocontents{lot}{\protect\clearlist}
+\addtocontents{lol}{\protect\clearlist}
 
 %
 %	Romanian Section (Summarized Version)
 %
 
-\include{thesis_ro}
-\clearcontents
+\setcounter{figure}{99}
+\setcounter{table}{99}
+\setcounter{listing}{99}
+
+\begingroup
+	\renewcommand{\listoflistingscaption}{Lista fragmente de coduri}
+	\renewcommand{\listingscaption}{Fragment de cod}
+	\include{thesis_ro}
+\endgroup
 
 %
 %	Hungarian Section (Summarized Version)
 %
 
-\include{thesis_hu}
-\clearcontents
+\setcounter{figure}{199}
+\setcounter{table}{199}
+\setcounter{listing}{199}
+
+\begingroup
+	\renewcommand{\listoflistingscaption}{Kódrészletek jegyzéke}
+	\renewcommand{\listingscaption}{Kódrészlet}
+	\include{thesis_hu}
+\endgroup
 
 %
 %	English Section (Full Version)
 %
+
+\setcounter{figure}{0}
+\setcounter{table}{0}
+\setcounter{listing}{0}
+
+\addtocontents{lof}{\protect\resetlist}
+\addtocontents{lot}{\protect\resetlist}
+\addtocontents{lol}{\protect\resetlist}
 
 \newpage
 \pagestyle{empty}
