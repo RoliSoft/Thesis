@@ -1,0 +1,182 @@
+% !TeX spellcheck = en_US
+
+\usepackage[utf8x]{inputenc}
+\usepackage[english,romanian,hungarian]{babel}
+\usepackage[margin=1in]{geometry}
+
+\usepackage{indentfirst}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+
+\usepackage[table,xcdraw,dvipsnames]{xcolor}
+\definecolor{whitesmoke}{rgb}{0.96,0.96,0.96}
+\definecolor{lightblue}{rgb}{0.22,0.45,0.70}
+\definecolor{darkred}{rgb}{0.9,0.0,0.0}
+
+\usepackage[unicode,backref=false,pagebackref=true]{hyperref}
+\hypersetup{colorlinks=true,urlcolor=lightblue,citecolor=green!75!black,linkcolor=orange!98!black,pdfborder={0 0 0}}
+\usepackage[all]{hypcap}
+\usepackage{multirow}
+
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{pdfpages}
+
+\usepackage{booktabs}
+\usepackage{multicol}
+\usepackage{amsmath}
+
+\usepackage{tikz}
+\usetikzlibrary{arrows}
+\tikzstyle{es} = [-triangle 60]
+
+\usepackage{enumitem}
+\setlist[itemize]{itemsep=0pt}
+\setlist[enumerate]{itemsep=0pt}
+
+\setlength{\parindent}{2em}
+\setlength{\parskip}{0.25em}
+
+\renewcommand{\arraystretch}{2}
+
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{fontawesome}
+
+\usepackage{minted}
+\renewcommand{\theFancyVerbLine}{\rmfamily\scriptsize\arabic{FancyVerbLine}}
+\setminted{linenos,autogobble,breaklines,fontsize=\footnotesize,tabsize=4,numbersep=7pt,bgcolor=whitesmoke}
+\AtBeginEnvironment{minted}{\renewcommand{\fcolorbox}[4][]{#4}}
+
+%
+%	Add "Retrieved from" and backlinks stylized by red arrows to the bibliography.
+%
+
+\newcommand{\urlprefix}{Retrieved from \urlstyle{rm}}
+
+\newcommand{\refspace}{\vspace{-2mm}}
+\newcommand{\redarrow}{\textcolor{darkred}{$\mathbf{\to}$}}
+
+\makeatletter
+\def\BR@@bibitem#1#2\par{
+	\let\backrefprint\BR@backrefprint
+	\def\@linkcolor{black}
+	\BRorg@bibitem{#1}#2\redarrow \thinspace \BR@backref{#1}
+}
+\makeatother
+
+%
+%	Implement \subsubsubsection.
+%
+
+\usepackage{titlesec}
+
+\titleclass{\subsubsubsection}{straight}[\subsection]
+
+\newcounter{subsubsubsection}[subsubsection]
+\renewcommand\thesubsubsubsection{\thesubsubsection.\arabic{subsubsubsection}}
+\titleformat{\subsubsubsection}{\normalfont\normalsize\bfseries}{\thesubsubsubsection}{1em}{}
+\titlespacing*{\subsubsubsection}{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+
+\makeatletter
+\def\toclevel@subsubsubsection{4}
+\def\l@subsubsubsection{\@dottedtocline{4}{7em}{4em}}
+
+\renewcommand\paragraph{\@startsection{paragraph}{6}{\parindent}{3.25ex \@plus1ex \@minus .2ex}{-1em}{\normalfont\normalsize\bfseries}}
+\makeatother
+
+\setcounter{secnumdepth}{4}
+\setcounter{tocdepth}{4}
+
+%
+%	Implement Hungarian and Romanian section tracking for the English thesis.
+%	\<lang>tableofcontents will print the corresponding one.
+%
+
+\PrerenderUnicode{áéúóőűíăâîșț}
+
+\makeatletter
+\newcommand\hungariantableofcontents{
+	\selectlanguage{hungarian}
+	\section*{\contentsname
+		\@mkboth{\MakeUppercase\contentsname}{\MakeUppercase\contentsname}}
+	\@starttoc{2.toc}
+	\selectlanguage{english}
+}
+\makeatother
+
+\newcommand\sectionhu[1]{\addcontentsline{2.toc}{section} {\protect\numberline{\thesection} #1}}
+\newcommand\subsectionhu[1]{\addcontentsline{2.toc}{subsection} {\protect\numberline{\thesubsection} #1}}
+\newcommand\subsubsectionhu[1]{\addcontentsline{2.toc}{subsubsection} {\protect\numberline{\thesubsubsection} #1}}
+\newcommand\subsubsubsectionhu[1]{\addcontentsline{2.toc}{subsubsubsection} {\protect\numberline{\thesubsubsubsection} #1}}
+
+\makeatletter
+\newcommand\romaniantableofcontents{
+	\selectlanguage{romanian}
+	\section*{\contentsname
+		\@mkboth{\MakeUppercase\contentsname}{\MakeUppercase\contentsname}}
+	\@starttoc{1.toc}
+	\selectlanguage{english}
+}
+\makeatother
+
+\newcommand\sectionro[1]{\addcontentsline{1.toc}{section} {\protect\numberline{\thesection} #1}}
+\newcommand\subsectionro[1]{\addcontentsline{1.toc}{subsection} {\protect\numberline{\thesubsection} #1}}
+\newcommand\subsubsectionro[1]{\addcontentsline{1.toc}{subsubsection} {\protect\numberline{\thesubsubsection} #1}}
+\newcommand\subsubsubsectionro[1]{\addcontentsline{1.toc}{subsubsubsection} {\protect\numberline{\thesubsubsubsection} #1}}
+
+%
+%	Support for multiple \listof[figures|tables|listings] between parts of the document.
+%	\clearcontents begins a new list.
+%
+
+\usepackage{xpatch}
+
+\newcounter{lofcntr}
+\newcounter{lotcntr}
+\newcounter{lolcntr}
+
+\NewDocumentCommand{\clearcontents}{}{
+	\stepcounter{lofcntr}
+	\stepcounter{lotcntr}
+	\stepcounter{lolcntr}
+	\setcounter{figure}{0}
+	\setcounter{table}{0}
+	\setcounter{listing}{0}
+}
+
+\makeatletter
+\NewDocumentCommand{\advancecontents}{}{
+	\def\ext@figure{\number\value{lofcntr}.\latex@ext@figure}
+	\def\ext@table{\number\value{lotcntr}.\latex@ext@table}
+	\@namedef{ext@listing}{\number\value{lolcntr}.\latex@ext@listing}
+}
+
+\AtBeginDocument{
+	\let\latex@ext@figure\ext@figure
+	\let\latex@ext@table\ext@table
+	\let\latex@ext@listing\ext@listing
+	\stepcounter{lofcntr}
+	\stepcounter{lotcntr}
+	\stepcounter{lolcntr}
+	\advancecontents
+}
+
+\AtBeginDocument{
+\xpretocmd{\caption}{
+	\advancecontents
+}{}{}
+}
+
+\xpatchcmd{\listoffigures}{%
+	\@starttoc{lof}%
+}{%
+	\@starttoc{\number\value{lofcntr}.lof}%
+}{}{}
+
+\xpatchcmd{\listoftables}{%
+	\@starttoc{lot}%
+}{%
+	\@starttoc{\number\value{lotcntr}.lot}%
+}{}{}
+\makeatother
