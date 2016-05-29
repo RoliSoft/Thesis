@@ -115,7 +115,7 @@
 	
 	One such case would be a developer of a managed language (for example, C\#) be required to interface with a non-managed language (for example, a library written in C) in which case the developer is now expected to do memory management in a language that does not promote its language management tools for it is a managed language. If said library is more complex, there are very high chances, that the developer will overlook some aspects (or not be aware they must be considered in the first place) and undesirable consequences may start happening, such as memory leaks and buffer over/underflows. In such case, it is recommended that a seasoned developer write a wrapper for the specific library in \textit{C++/CLI} (successor of \textit{Managed-C++}), a language designed by Microsoft for the intent purpose\cite{hstutter06} of bridging the managed and unmanaged worlds.
 	
-	There are other special circumstances under this argument, for example, situations in which the developer of the application might be security-aware, or a proper penetration testing/code review was done, but the proposed security fixes might impact performance, ease of use, or even cause minor to major discomfort for the users. In such cases, risk analysis will be done, and some of these proposed solutions will be rejected as being unjustifiably too obtrusive. It is not the \textit{right} course of action in such situations, but risk analysis[\ref{ssec:vulnriskanal}] is a pretty standard tool for decision makers.
+	There are other special circumstances under this argument, for example, situations in which the developer of the application might be security-aware, or a proper penetration testing/code review was done, but the proposed security fixes might impact performance, ease of use, or even cause minor to major discomfort for the users. In such cases, risk analysis will be done, and some of these proposed solutions will be rejected as being unjustifiably too obtrusive. It is not the \textit{right} course of action in such situations, but risk analysis[\ref{vulnriskanal}] is a pretty standard tool for decision makers.
 	
 	Another particular case would be IoT device ideas that have been funded through the use of crowdfunding platforms. These platforms, such as Kickstarter or IndieGoGo, are the hotbed of young entrepreneurial spirits with fresh ideas wanting to procure enough money in order to have a chance at executing them. Early prototypes of these projects are generally crafted using existing prototyping boards, such as Arduinos and Raspberry PIs. Later, when the proof of concept has proven to be viable, and the first batch is moved to manufacturing, a similar architecture is built so as to allow reuse of existing code. This generally means that experimental code is written in an environment in which the developer might not be comfortable enough in, is now being shipped as production code. This practice has spawned in the past lots of devices that are vulnerable and might present a huge security risk.\cite{mstan14}
 	
@@ -130,7 +130,7 @@
 	
 	When it comes to devices designed for, and services provided to home users, the balance of ease of use and security always comes into play. Users would like an easy-to-use device or application and would rather sacrifice security in order for experiencing a mild discomfort. In one study, in the context of online banking, a user mentioned that two-factor authentication was ``\textit{not} worth spending 5 minutes for \$1.99 purchases''\cite{ecrist14}. In the same study, it is shown that only 27\% of the users have \textit{voluntarily} opted to use multi-factor authentication, when available.
 	
-\subsection{Security Assurance in Enterprise Environments} \label{ssec:secassentenv}
+\subsection{Security Assurance in Enterprise Environments} \label{secassentenv}
 \subsectionhu{Biztonság Biztosítása a Vállalati Környezetekben} \subsectionro{Asigurarea Securității în Mediile de Întreprindere}
 
 	Security is of paramount importance in enterprise environments. In such an environment, hundreds if not thousands of users (employees) depend on the IT infrastructure, and it is business-critical for these services to be functioning and data to be accessible 24/7, otherwise minor to major losses might be incurred. These hundreds or thousands of employees will all have different levels of access, controlled by strict security policies on what they can and cannot do or access.
@@ -150,7 +150,7 @@
 	
 	One ``celebrity'' example for the aforementioned second point would be the \textit{Heartbleed} vulnerability in \textit{OpenSSL}. The project being a universal, highly platform-agnostic and trustworthy cryptography and PKI toolkit was the basis of the majority of daemon software which were using SSL/TLS sockets in the *NIX userland, and was also embedded in IoT devices that had any sort of web interface or have done cryptography in any way, shape or form. Every embedded device deployed with a vulnerable version of OpenSSL is now live and vulnerable, with no easy fix that can be applied by the vendor remotely, in most cases. This has been acknowledged by multiple leading networking gear vendors in statements saying ``Cisco and Juniper cannot just press a button and immediately replace the vulnerable software running on the machines.''\cite{jpaglier14}
 	
-\subsection{Security Assurance in the Financial Sector} \label{ssec:secassfinsec}
+\subsection{Security Assurance in the Financial Sector} \label{secassfinsec}
 \subsectionhu{Biztonság Biztosítása a Pénzügyi Ágazatban} \subsectionro{Asigurarea Securității în Sectorul Financiar}
 
 	\begin{wrapfigure}{r}{0.35\textwidth}
@@ -179,7 +179,7 @@
 	
 	While strict rules are set forth for protecting sensitive data, merchants tend to try and get away with the least amount of strictness they can still get compliance certified for, by skipping rules marked as ``best practice, not requirement'' and rules which they can tick on a \textit{technicality} due to the phrasing of the sentence. One such example would be the fact that for a long period of time, it was possible to \textit{trick} the code review requirement by substituting automated source code analyzers with automated penetration testing, however, since version 3.0 of the security standard, it has been clarified that penetration testing is a mandatory requirement in a different section, and as such they are not a substitute for code reviews.
 	
-\subsection{Government Mandated Security} \label{ssec:govmansec}
+\subsection{Government Mandated Security} \label{govmansec}
 \subsectionhu{Törvényileg Kötelezett Biztonság} \subsectionro{Securitate Obligat de Lege}
 	
 	The standards discussed in previous sections were all \textit{best practices} where implementing bodies would do their \textit{best effort} on complying, none of it was mandated\footnote{In 2009, Nevada (USA), then a year later, the State of Washington (USA), incorporated \textit{PCI DSS} into state law\cite{wash10}, however, the incorporated standard's sole purpose is to shield compliant parties from liability in case of a data breach.}.
@@ -232,7 +232,7 @@
 	
 	Similarly, a response team is available at the European Union level. \textit{CERT-EU} (\textit{Computer Emergency Response Team European Union Task Force}) was established on the November of 2012\cite{certeu13}, via mandated EU Commission decision. This body acts as a separate response team, meaning it does not exist solely to amalgamate reports of member countries' response teams.
 	
-\subsection{Vulnerability Databases} \label{ssec:vulndbs}
+\subsection{Vulnerability Databases} \label{vulndbs}
 \subsectionhu{Sebezhetőség Adatbázisok} \subsectionro{Baze de Date ale Vulnerabilităților}
 	
 	One of the projects sponsored by CERT/CC is \textit{CVE} (\textit{Common Vulnerabilities and Exposures}), which provides a reference method for publicly known and tracked vulnerabilities. \textit{NIST} (\textit{National Institute of Standards and Technology}) runs a website called \textit{NVD} (\textit{National Vulnerability Database}) which is a repository of public vulnerabilities represented in such a way as to allow for automatic consumption by vulnerability management software\cite{nvd15}.
@@ -251,7 +251,7 @@
 	
 	These components will be further discussed in the section regarding the implementation of the vulnerability assessment engine.
 	
-\subsection{Vulnerability Risk Analysis} \label{ssec:vulnriskanal}
+\subsection{Vulnerability Risk Analysis} \label{vulnriskanal}
 \subsectionhu{Sebezhetőségek Kockázatelemzése} \subsectionro{Analiză de Risc pentru Vulnerabilități}
 
 	During the project planning phase or later down the line when a vulnerability is discovered either during development or via penetration testing, risk analysis may be performed in order to assess the severity of the risk using the standard risk model formula shown in equation \ref{eq:risk}. Generally, if its fix would be too expensive, (e.g. it would require breaking changes, full infrastructure rebuild, or other miscellaneous major inconveniences) the results of the risk analysis are carefully evaluated by managers, and if no immediate major threat is imminent with a tremendous impact that can be caused by the discovered bug, an alternative route may be chosen which is not as costly.
@@ -294,7 +294,7 @@
 		\textrm{Impact} = \frac{(\textrm{Technical} + \textrm{Business})}{8}
 	\end{equation}
 		
-	Moving on to step 3, we calculate the impact of the risk, should it occur, from both a technical and business side. Equations \ref{eq:riskimptech} and \ref{eq:riskimpbsns} list the factors which should be considered. One important example of these factors would be ``Noncompliance,'' which might further damage the company both financially and reputation-wise. Non-compliance can lead to loss of audits, licenses, which in turn can lead to fines, loss of liability protections and inability to continue business until the company can be re-audited. For example, as discussed in section \ref{ssec:secassfinsec}, the violation of \textit{PCI compliance} can result in fines of $\$5,000$ to $\$100,000$ per month\cite{pcicompl} by the credit card company at their own discretion. If the company has no such compliance obligations, we can rate non-compliance as a non-issue with a score of 0, or if credit card data might be leaked, a maximum score of 9 should be provided.
+	Moving on to step 3, we calculate the impact of the risk, should it occur, from both a technical and business side. Equations \ref{eq:riskimptech} and \ref{eq:riskimpbsns} list the factors which should be considered. One important example of these factors would be ``Noncompliance,'' which might further damage the company both financially and reputation-wise. Non-compliance can lead to loss of audits, licenses, which in turn can lead to fines, loss of liability protections and inability to continue business until the company can be re-audited. For example, as discussed in section \ref{secassfinsec}, the violation of \textit{PCI compliance} can result in fines of $\$5,000$ to $\$100,000$ per month\cite{pcicompl} by the credit card company at their own discretion. If the company has no such compliance obligations, we can rate non-compliance as a non-issue with a score of 0, or if credit card data might be leaked, a maximum score of 9 should be provided.
 	
 	\begin{table}[!htbp]
 		\begin{minipage}{.4\linewidth}
@@ -329,7 +329,7 @@
 	
 	In the final step of the process, we make a decision regarding the mitigation of the risk. In general risk management theory, if the costs of mitigating a risk outweigh the costs of incurring the losses caused by its occurrence, the risk is not mitigated.
 	
-\subsection{Common Vulnerability Scoring System} \label{ssec:cvss}
+\subsection{Common Vulnerability Scoring System} \label{cvss}
 \subsectionhu{CVSS Pontozási Rendszer} \subsectionro{Sistem de Notare CVSS}
 	
 	\begin{wrapfigure}{r}{0.3\textwidth}
@@ -385,7 +385,7 @@
 		\end{cases}
 	\end{equation}
 	
-	As with the equations discussed in section \ref{ssec:vulnriskanal}, the ``Probability'' factor seen in equation \ref{eq:riskprob} is the functional equivalent of the ``Exploitability'' factor in equation \ref{eq:cvssexp}, similarly so are the ``Impact'' factors between equations \ref{eq:riskimp} and \ref{eq:cvssimp}.
+	As with the equations discussed in section \ref{vulnriskanal}, the ``Probability'' factor seen in equation \ref{eq:riskprob} is the functional equivalent of the ``Exploitability'' factor in equation \ref{eq:cvssexp}, similarly so are the ``Impact'' factors between equations \ref{eq:riskimp} and \ref{eq:cvssimp}.
 	
 	The final score given by equation \ref{eq:cvss} is on the scale of $0..1$, and its components can be used after scaling to $0..9$ in order to determine the severity of a risk by using table \ref{scoreclass} to classify it, which can then be looked up in table \ref{vulnrisksever}.
 	
@@ -394,7 +394,7 @@
 \section{Vulnerability Assessment}
 \sectionhu{Sebezhetőségek Felderítése} \sectionro{Descoperirea Vulnerabilităților}
 	
-	\textit{Vulnerability assessment} is the process of identifying and quantifying[\ref{ssec:vulnriskanal}] of the vulnerabilities present within an infrastructure.
+	\textit{Vulnerability assessment} is the process of identifying and quantifying[\ref{vulnriskanal}] of the vulnerabilities present within an infrastructure.
 	
 	In order to ensure the continuous security of an application, server or whole infrastructure, proactive measures need to be taken by the competent bodies. These measures generally include periodic scanning of the infrastructure in order to identify possible attack surfaces and test against newly discovered vulnerabilities.
 	
@@ -455,13 +455,13 @@
 \section{Related Work} \label{relwork}
 \sectionhu{Kapcsolódó Termékek} \sectionro{Soluții Aferente}
 	
-	As discussed in sections \ref{ssec:secassentenv}, \ref{ssec:secassfinsec} and \ref{ssec:govmansec}, vulnerability assessment is a booming business due to the huge market demand which has been created by the rapid outbreak of digitalization of various services.
+	As discussed in sections \ref{secassentenv}, \ref{secassfinsec} and \ref{govmansec}, vulnerability assessment is a booming business due to the huge market demand which has been created by the rapid outbreak of digitalization of various services.
 	
 	Whether organizations care about their security or just want to pass the yearly PCI audits, the manual analysis of the existence of all known vulnerabilities within the infrastructure would be a tedious process.
 	
 	As such, \textit{vulnerability scanners} have been developed by various companies in order to automate this process by checking against all known vulnerabilities and various configurations which are known to be substandard or are requirements on the PCI checklist.
 	
-\subsection{Commercial Solutions} \label{ssec:comtools}
+\subsection{Commercial Solutions} \label{comtools}
 \subsectionhu{Kereskedelmi Megoldások} \subsectionro{Soluții Comerciale}
 	
 	The \textit{nmap project} has been cataloging various security products, such as vulnerability scanners, and ranking them based on user feedback and their popularity based on usage\cite{sectools}. The three most popular vulnerability scanners will be presented in this section.
@@ -497,9 +497,9 @@
 	
 	There is a wealth of research available on the various topics within the field of network security. On the defensive side of research topics, as every vulnerability scanner with an active reconnaissance component has to contact the target hosts, paper \cite{panjwani05} experiments with evaluating whether port scans can be used as an alert for an impending attack.
 	
-	The component discussed in section \ref{ssec:icmpping} uses the industry-standard ICMP Echo Requests packets presented within in the aforementioned paper, therefore being susceptible to this kind of analysis.
+	The component discussed in section \ref{icmpping} uses the industry-standard ICMP Echo Requests packets presented within in the aforementioned paper, therefore being susceptible to this kind of analysis.
 	
-	A wide range of comparative studies are also available, examining different scanning methods, techniques, and the various commercial tools available to do so, some of which are mentioned in section \ref{ssec:comtools}.
+	A wide range of comparative studies are also available, examining different scanning methods, techniques, and the various commercial tools available to do so, some of which are mentioned in section \ref{comtools}.
 	
 	The most cited papers doing such comparative studies on black-box web and/or network vulnerability scanners with the inclusion of at least one of the aforementioned commercial tools are \cite{holm11,bau10,doupe10}.
 	
@@ -507,7 +507,7 @@
 	
 	As for creating new vulnerability scanners as part of the research, paper \cite{kals06} presents the implementation challenges faced when writing a web application vulnerability assessor. Similarly, but taking on a new perspective, paper \cite{guo05} focuses on the same goal, but extending the vulnerability assessment to networked devices, as opposed to limiting to just web applications.
 	
-	The paper \textit{ShoVAT}\cite{shovat15} presents a methodology for mapping service banners to CPE names for the purposes of vulnerability assessment. The implementation of the CPE-matcher component discussed in section \ref{ssec:matchcpe} is loosely based on this paper, with some slight implementation differences.
+	The paper \textit{ShoVAT}\cite{shovat15} presents a methodology for mapping service banners to CPE names for the purposes of vulnerability assessment. The implementation of the CPE-matcher component discussed in section \ref{matchcpe} is loosely based on this paper, with some slight implementation differences.
 	
 \section{Project Aim}
 \sectionhu{Projekt Célja} \sectionro{Scopul Proiectului}
@@ -521,7 +521,7 @@
 \subsection{Data Acquisition}
 \subsectionhu{Adatgyűjtés} \subsectionro{Achiziție de Date}
 	
-	In order to be useful for independent security researchers, the application needs to be able to utilize open-source intelligence. The two services presented in sections \ref{ssec:shodan} and \ref{ssec:censys}, namely Shodan\cite{shodan16} and Censys\cite{censys15}, are both candidates for usage within the passive data reconnaissance component.
+	In order to be useful for independent security researchers, the application needs to be able to utilize open-source intelligence. The two services presented in sections \ref{shodan} and \ref{censys}, namely Shodan\cite{shodan16} and Censys\cite{censys15}, are both candidates for usage within the passive data reconnaissance component.
 	
 	This way, researchers may execute queries and get instantaneous results, without having to have an infrastructure on which to launch the scans from, and then deal with the consequences, such as abuse emails.
 	
@@ -534,9 +534,9 @@
 	
 	The collected service banners should be analyzed in an entirely autonomous manner. That is, as opposed to the software and services discussed in section \ref{relwork}, the application should not rely on separate plugins for identifying the protocols and afterward identifying the servers speaking those protocols.
 	
-	The databases published by \textit{NIST} (as discussed in section \ref{ssec:vulndbs}) should be consumed in order to identify the newest vulnerabilities. Section \ref{ssec:matchcpe} presents the component consuming the database and autonomously mapping service banners to their equivalent \textit{CPE} names.
+	The databases published by \textit{NIST} (as discussed in section \ref{vulndbs}) should be consumed in order to identify the newest vulnerabilities. Section \ref{matchcpe} presents the component consuming the database and autonomously mapping service banners to their equivalent \textit{CPE} names.
 	
-	As a redundancy, section \ref{ssec:patternmatch} presents a different way of mapping service banners to CPE names, however, that does not rely on the aforementioned published databases, it instead relies on a database published by the developer or written/extended by the user/community.
+	As a redundancy, section \ref{patternmatch} presents a different way of mapping service banners to CPE names, however, that does not rely on the aforementioned published databases, it instead relies on a database published by the developer or written/extended by the user/community.
 			
 \subsection{Resolution Suggestions}
 \subsectionhu{Megoldási Javaslatok} \subsectionro{Sugestii de Soluționare}
@@ -565,7 +565,7 @@
 	
 	It should be noted that the legality of this practice varies by region, and one should generally not aim towards targets for which they previously have not received authorization to do so.
 
-\subsubsection{ICMP Echo Requests} \label{ssec:icmpping}
+\subsubsection{ICMP Echo Requests} \label{icmpping}
 \subsubsectionhu{ICMP `EchoRequest' Kérések} \subsubsectionro{Scanare cu ICMP `EchoRequest'}
 
 	The \textit{Internet Control Message Protocol} (\textit{ICMP}) has an `EchoRequest' packet type, to which the kernels of the intended destinations, if not explicitly disabled, will reply with an `EchoReply' packet, sending the received payload back, including its sequence number, which can then be used for statistical analysis purposes by the requesting party.
@@ -609,7 +609,7 @@
 
 	Such ``ping'' requests cannot be sent on a per-port basis, as such it cannot be used to discover the available services on a host, and can only be used for host discovery within a network. While this is the most standard way of probing a host for availability state, most firewalls are configured by default to drop such packets, as they are not crucial for the normal operation of a network. They are generally only used for troubleshooting purposes or by outside actors to try and map a given network.
 
-\subsubsection{ARP Solicitation} \label{ssec:arpping}
+\subsubsection{ARP Solicitation} \label{arpping}
 \subsubsectionhu{ARP `WhoHas' Kérések} \subsubsectionro{Scanare cu ARP `WhoHas'}
 
 	The \textit{Address Resolution Protocol} (\textit{ARP}) is the mechanism responsible for mapping network-layer IPv4 addresses to link-layer MAC addresses.
@@ -753,12 +753,12 @@
 	
 	As a result of this library usage due to this scanner, in order to compile the application with the ARP scanner included on Windows, the ``WinPcap Developer's Pack'' has to be installed and its path specified to CMake on the compiling machine, while the hosts running the application will need to have the WinPcap device driver installed.
 
-\subsubsection{TCP Scanning} \label{ssec:tcpscan}
+\subsubsection{TCP Scanning} \label{tcpscan}
 \subsubsectionhu{TCP Letapogatás} \subsubsectionro{Scanare TCP}
 
 	The TCP port scanning functionality is implemented by the \mintinline{cpp}{TcpScanner} component. The current implementation does not require super-user or administrator rights on the host device, as the component uses the operating system's network API to initiate connections.
 	
-	All the network operations are initiated in a non-blocking mode, after which the task at hand will go back into the queue until a state change has happened, as-is task multiplexing discussed in section \ref{ssec:tasks}.
+	All the network operations are initiated in a non-blocking mode, after which the task at hand will go back into the queue until a state change has happened, as-is task multiplexing discussed in section \ref{tasks}.
 
 	\begin{figure}[!htbp]
 		\centering
@@ -814,7 +814,7 @@
 	
 	At this point, if the server still has not sent a satisfactory reply, the scanner sends a TLS `ClientHello' packet in the hopes of negotiating a TLS connection. If the secure connection established, the previous plaintext protocol probes are retried in the hopes of getting a satisfactory reply message which can by analyzed by the other components of the application.
 
-\subsubsection{UDP Scanning} \label{ssec:udpscan}
+\subsubsection{UDP Scanning} \label{udpscan}
 \subsubsectionhu{UDP Letapogatás} \subsubsectionro{Scanare UDP}
 
 	The UDP protocol, as opposed to TCP, is connectionless. This means that it cannot be reliably determined whether a server is listening on the scanned port at all. Even if a server is listening, it might be possible that its implementation drops all packets which are not well-formed, instead of returning an error message which can be used to deduce the protocol.
@@ -865,7 +865,7 @@
 	
 	Such feat can be achieved by utilizing $3^{rd}$-party services which scan the public IP address space on a regular basis and make the results available either in a downloadable database dump or a publicly consumable API format.
 
-\subsubsection{Shodan} \label{ssec:shodan}
+\subsubsection{Shodan} \label{shodan}
 \subsubsectionhu{Shodan} \subsubsectionro{Shodan}
 
 	Shodan\footnote{I would like to thank the creator of Shodan for upgrading my account to an unlimited plan, so that I may continue the development of the application with unrestricted API access and scan credits.}\cite{shodan16} is a project which scans the entire IPv4 address space continuously and exposes the gathered data on a web interface in the form of a search engine. It also exposes various APIs which allows developers and security researchers to generate reports on queries, or query the database and consume the results themselves. Figure \ref{shodanscr} shows the data readily available on the service for a queried IP address.
@@ -881,7 +881,7 @@
 	
 	Implementation-wise, the \mintinline{cpp}{ShodanScanner} component takes care of contacting the Shodan JSON API interface and retrieving the data available for the specified IP addresses. This component extends the \mintinline{cpp}{HostScanner} class, and as such it is possible to substitute the default scanner to Shodan data for any scanning needs.
 
-\subsubsection{Censys} \label{ssec:censys}
+\subsubsection{Censys} \label{censys}
 \subsubsectionhu{Censys} \subsubsectionro{Censys}
 
 	Censys\cite{censys15} is a project created and run by the Regents of the University of Michigan. Similarly to the previously discussed service, it also gathers its data by regular Internet-wide scanning efforts. It allows developers and security researchers to initiate structured queries, full-text search queries or raw SQL queries from their web interface or the exposed RESTful API. Figure \ref{censysscr} shows the data readily available on the service for a queried IP address.
@@ -902,7 +902,7 @@
 \subsubsection{Amalgamation}
 \subsubsectionhu{Egyesítés} \subsubsectionro{Amalgamare}
 
-	The \mintinline{cpp}{PassiveScanner} component of the application initiates the requested scan tasks on both Shodan[\ref{ssec:shodan}] and Censys[\ref{ssec:censys}], merging the results at the end.
+	The \mintinline{cpp}{PassiveScanner} component of the application initiates the requested scan tasks on both Shodan[\ref{shodan}] and Censys[\ref{censys}], merging the results at the end.
 	
 	During the development phase of the application it was found that generally both services have had data on a requested IP address, but most of the times one of the services discovered more ports, have done much deeper analysis, or the information is more useful than at the competitor service.
 	
@@ -948,14 +948,14 @@
 
 	It should also be noted that the underlying server software is not exposed to the banned party in listing \ref{shodanban}, but the non-banned party in listing \ref{censysnoban} has their request forwarded from the load-balancer to the backend, revealing itself to be ``nginx 1.8.0,'' a version with at least one \textbf{known remotely-exploitable vulnerability}\cite{nginxcve} at this time.
 
-	In cases where both services return a service banner for a specific port, the longer banner is chosen during the amalgamation phase. One of the reasons for this decision was because ban messages are generally shorter\cite{qualys11} in order to avoid denial of service attacks. The other reason was that a longer banner generally means that the service in question possibly probed the port further (e.g. `STARTTLS' command sent to SMTP servers by Censys, but not by Shodan) which allows the pattern matching component described in \ref{ssec:patternmatch} to have more data available.
+	In cases where both services return a service banner for a specific port, the longer banner is chosen during the amalgamation phase. One of the reasons for this decision was because ban messages are generally shorter\cite{qualys11} in order to avoid denial of service attacks. The other reason was that a longer banner generally means that the service in question possibly probed the port further (e.g. `STARTTLS' command sent to SMTP servers by Censys, but not by Shodan) which allows the pattern matching component described in \ref{patternmatch} to have more data available.
 
-\subsection{External Reconnaissance} \label{ssec:nmapscan}
+\subsection{External Reconnaissance} \label{nmapscan}
 \subsectionhu{Külső Feltérképezés} \subsectionro{Scanare Externală}
 
 	This section presents the \mintinline{cpp}{NmapScanner} component of the application which executes an external application in order to scan the requested ports, and then parses the results of the $3^{rd}$-party application for further processing within the $1^{st}$-party application.
 	
-	While the application implements a broad range of protocol scanners as discussed in sections \ref{ssec:icmpping} through \ref{ssec:udpscan}, with an unified interface for task parallelization as discussed in section \ref{ssec:tasks}, as a measure of redundancy, the users are given the choice of using an external scanner for their reconnaissance purposes.
+	While the application implements a broad range of protocol scanners as discussed in sections \ref{icmpping} through \ref{udpscan}, with an unified interface for task parallelization as discussed in section \ref{tasks}, as a measure of redundancy, the users are given the choice of using an external scanner for their reconnaissance purposes.
 	
 	The component, as its name suggests, supports \textit{nmap} out-of-the-box as an alternative scanner, however, any $3^{rd}$-party application which generates nmap-compatible XML-based reports can be used. One such example is the \textit{masscan} scanner.
 	
@@ -973,8 +973,8 @@
 			\node at (0,0) {HostScanner};
 			\draw  (-1.5,0.5) rectangle (1.5,-0.5);
 			\node at (-2,-3) {InternalScanner};
-			\node at (-6,-3) {ArpPinger$^{\ref{ssec:arpping}}$};
-			\node at (2,-3) {NmapScanner$^{\ref{ssec:nmapscan}}$};
+			\node at (-6,-3) {ArpPinger$^{\ref{arpping}}$};
+			\node at (2,-3) {NmapScanner$^{\ref{nmapscan}}$};
 			\draw  (-3.75,-2.5) rectangle (-0.25,-3.5);
 			\draw  (0.25,-2.5) rectangle (3.75,-3.5);
 			\draw  (-7.5,-2.5) rectangle (-4.5,-3.5);
@@ -989,10 +989,10 @@
 			\draw  (4.5,-2.5) rectangle (7.5,-3.5);
 			\node (v3_1) at (6,-2.5) {};
 			\draw [es] (v1) edge (v3_1);
-			\node at (3.5,-6) {ShodanScanner$^{\ref{ssec:shodan}}$};
+			\node at (3.5,-6) {ShodanScanner$^{\ref{shodan}}$};
 			\draw  (1.5,-5.5) rectangle (5.5,-6.5);
 			\node (v3_2) at (3.5,-5.5) {};
-			\node at (8.5,-6) {CensysScanner$^{\ref{ssec:censys}}$};
+			\node at (8.5,-6) {CensysScanner$^{\ref{censys}}$};
 			\draw  (6.5,-5.5) rectangle (10.5,-6.5);
 			\node (v3_3) at (8.5,-5.5) {};
 			\node (v5) at (6,-3.5) {};
@@ -1000,9 +1000,9 @@
 			\draw [triangle 60-triangle 60] (v5) edge (v3_3);
 			\node at (-2,-6) {ServiceScanner};
 			\draw  (-3.75,-5.5) rectangle (-0.25,-6.5);
-			\node at (-2,-9) {TcpScanner$^{\ref{ssec:tcpscan}}$};
-			\node at (-6.25,-9) {IcmpScanner$^{\ref{ssec:icmpping}}$};
-			\node at (2,-9) {UdpScanner$^{\ref{ssec:udpscan}}$};
+			\node at (-2,-9) {TcpScanner$^{\ref{tcpscan}}$};
+			\node at (-6.25,-9) {IcmpScanner$^{\ref{icmpping}}$};
+			\node at (2,-9) {UdpScanner$^{\ref{udpscan}}$};
 			\draw  (-3.75,-8.5) rectangle (-0.25,-9.5);
 			\draw  (0.25,-8.5) rectangle (3.75,-9.5);
 			\draw  (-8,-8.5) rectangle (-4.5,-9.5);
@@ -1022,7 +1022,7 @@
 	\end{figure}
 	\endgroup
 
-\subsection{Multiplexing Task Runner} \label{ssec:tasks}
+\subsection{Multiplexing Task Runner} \label{tasks}
 \subsectionhu{Feladatok Párhuzamosítása} \subsectionro{Paralelizarea Sarcinilor}
 	
 	A ``task'' in this context is defined to be the action of scanning a port on an IP address for a specified protocol. Such tasks mostly consist of sending IP packets back and forth followed by waiting for their acknowledgment or lack thereof.
@@ -1086,7 +1086,7 @@
 			\node[color=gray] at (-2.1,0.25) {I/O Wait};
 			\node[color=gray] at (6.2,0.25) {I/O Wait};
 		\end{tikzpicture}
-		\caption{Phases of an UDP scan as implemented by component in section \ref{ssec:udpscan}}
+		\caption{Phases of an UDP scan as implemented by component in section \ref{udpscan}}
 		\label{taskudp}
 	\end{figure}
 	
@@ -1098,10 +1098,10 @@
 	
 	The multiplexing task runner uses a lock-free thread-safe underlying queue container, namely the concurrent FIFO implementation in Boost, \mintinline{cpp}{boost::lock free::queue<T>}. As a result, for heavy workloads when excessive resources are available, the task runner can theoretically use multiple consumers on the same queue.
 	
-\subsection{Protocol Tokenization} \label{ssec:tokenizer}
+\subsection{Protocol Tokenization} \label{tokenizer}
 \subsectionhu{Protokoll Értelmezés} \subsectionro{Interpretor de Protocoale}
 	
-	In order to improve the quality of the input for the CPE matcher component (further discussed in \ref{ssec:matchcpe}) and thereby minimizing the chances of false positives, the application makes a best effort to try recognizing and tokenizing the extracted service banners.
+	In order to improve the quality of the input for the CPE matcher component (further discussed in \ref{matchcpe}) and thereby minimizing the chances of false positives, the application makes a best effort to try recognizing and tokenizing the extracted service banners.
 	
 	The server replies are not fully parsed using a protocol-aware parser, instead it aims to either \textit{a)} extract server names, versions and operating system tags, or if that is not possible, \textit{b)} clean any known protocol strings, leaving only implementation-specific strings in the service banner.
 	
@@ -1173,9 +1173,9 @@
 	
 	The tokenizer implementation will try to remove as many non-implementation-specific tokens as possible, however in cases where a specific element cannot be determined with a high degree of certainty whether it is a protocol or implementation-specific string, the tokenizer will instead leave it in. This decision was made in order to ensure that the tokenizer does not remove any elements which are required for the CPE matcher during entry matching. If an element is left in falsely, it does not affect the scoring of the CPE matcher, however, if it was falsely removed, it could completely prevent the matching of that entry.
 	
-	If all of the implemented tokenizers fail to process a service banner, it will be sent to the next stage of discovery (usually to component described in \ref{ssec:matchcpe}) as one token, containing the whole service banner.
+	If all of the implemented tokenizers fail to process a service banner, it will be sent to the next stage of discovery (usually to component described in \ref{matchcpe}) as one token, containing the whole service banner.
 	
-\subsection{Pattern Matching of Service Banners} \label{ssec:patternmatch}
+\subsection{Pattern Matching of Service Banners} \label{patternmatch}
 \subsectionhu{Szerverek Minta-alapú Beazonosítása} \subsectionro{Identificare Software pe Bază de Model}
 
 	The purpose of the \mintinline{cpp}{ServiceRegexMatcher} component of the application is to take the original full service banner (without any tokenization) as an input and match it against a database of regular expressions, which in turn are mapped to their own CPE names.
@@ -1190,7 +1190,7 @@
 	
 	The example regular expression in listing \ref{nginxregex} matches against the response headers produced by the HTTP server software ``nginx''. See the service banner in listing \ref{httpsvcbnr} for an example that would be matched. Furthermore, the listed regular expression contains an optional capture group, which captures the version number. If the version number is listed in the service banner, the matcher component will return the CPE name \mintinline{matlab}{cpe:/a:nginx:nginx:1.9.12}, while without a version number listed, it will still return the CPE name \mintinline{matlab}{cpe:/a:nginx:nginx}.
 	
-	This behavior is different from the matcher described in section \ref{ssec:matchcpe}: whereas here a CPE name can be produced with high confidence with or without a known version number, the CPE dictionary-based matcher \textit{requires} a known version number, since it plays a pivotal role in the identifying and scoring process.
+	This behavior is different from the matcher described in section \ref{matchcpe}: whereas here a CPE name can be produced with high confidence with or without a known version number, the CPE dictionary-based matcher \textit{requires} a known version number, since it plays a pivotal role in the identifying and scoring process.
 	
 \subsubsection{Inferring Products Without Express Announcement}
 \subsubsectionhu{Identitás Kikövetkeztetése Névhírdetés Nélkül} \subsubsectionro{Deducerea Identității fără Anunțul cu Nume}
@@ -1246,10 +1246,10 @@
 	
 	For open-source software, it is possible to compare the source between different releases and check which publicly visible string changed, in order to write a pattern for detecting that range of versions. Building such a database of patterns, however, is beyond the scope of this project, and would be more suited for a community-sourced project.
 	
-\subsection{Matching of CPE Tokens in Service Banners} \label{ssec:matchcpe}
+\subsection{Matching of CPE Tokens in Service Banners} \label{matchcpe}
 \subsectionhu{Szerverek CPE-alapú Beazonosítása} \subsectionro{Identificare Software pe Bază de CPE}
 
-	As discussed in \ref{ssec:vulndbs}, the \textit{National Institute of Standards and Technology} runs a \textit{National Vulnerability Database}. The \mintinline{cpp}{CpeDictionaryMatcher} component presented within this section makes use of the publicly distributed, freely available and daily updated \textit{Common Platform Enumeration Dictionary}.
+	As discussed in \ref{vulndbs}, the \textit{National Institute of Standards and Technology} runs a \textit{National Vulnerability Database}. The \mintinline{cpp}{CpeDictionaryMatcher} component presented within this section makes use of the publicly distributed, freely available and daily updated \textit{Common Platform Enumeration Dictionary}.
 	
 	The \textit{CPE} is a naming scheme for hardware, software and operating systems\cite{cpe22}. Its v2.2 format is \mintinline{matlab}{cpe:/type:vendor:product:version:update:edition:language} where the `type' component can be \mintinline{matlab}{h} for `hardware', \mintinline{matlab}{o} for `operating system' and \mintinline{matlab}{a} for `application', while the rest of the components are self-explanatory.
 	
@@ -1315,11 +1315,11 @@
 	
 	During CPE matching, the entries are iterated, checking to see if the product-specific tokens match. If all of the tokens match, the entry-specific versions are iterated, checking to see if any of the version numbers are present in the input. If so, version-specific tokens are checked as well. A version is not considered a match if the version number matches, but even just one of the version-specific tokens do not.
 	
-	There are entries where multiple versions may match within the same product, such edge cases are discussed in subsection \ref{ssec:cpeedges}. In situations like these, a single version number is selected as the winner, which is determined by the distance of the tokens to the version number. The further a token is from the version number, the lesser it is considered to be relevant.
+	There are entries where multiple versions may match within the same product, such edge cases are discussed in subsection \ref{cpeedges}. In situations like these, a single version number is selected as the winner, which is determined by the distance of the tokens to the version number. The further a token is from the version number, the lesser it is considered to be relevant.
 	
 	For product names, however, if multiple products (including their complete version numbers with tokens) match, all of the matches will be returned. The reason for this decision is because a service banner may name multiple software in use, but not multiple versions of the same software to be in use. In listing \ref{httpsvcbnr}, the service banner reveals the existence of three products, namely ``nginx 1.9.12,'' ``PHP 5.6.19'' and ``Ubuntu.''
 	
-\subsubsection{Handling of Edge Cases} \label{ssec:cpeedges}
+\subsubsection{Handling of Edge Cases} \label{cpeedges}
 \subsubsectionhu{Élesetek Kezelése} \subsubsectionro{Soluționarea Cazurilor de Margine}
 
 	The now-defunct \textit{Sun Microsystems} vendor identifier is ``sun'', resulting in CPE names such as \mintinline{matlab}{cpe:/a:sun:jre}, \mintinline{matlab}{cpe:/a:sun:jdk} and \mintinline{matlab}{cpe:/o:sun:solaris:10.0}. The problematic part with this token is that most protocols, such as SMTP and HTTP, return the current date in the RFC 1123 format\cite{rfc2616}, which looks like this: ``Sun, 14 Mar 2016 16:33:02 GMT''.
@@ -1343,7 +1343,7 @@
 
 	The aforementioned ShoVAT\cite{shovat15} paper solved this issue by weighing tokens around the version number more than those further from the version number, which solution is ultimately what the application written within the scope of this thesis has also settled with on one hand.
 	
-	However, a different solution was also implemented to combat this. The protocol tokenizer component discussed in \ref{ssec:tokenizer} was developed for the express purpose of extracting product names and versions from a service banner, or if that is not possible, then removing irrelevant parts, such as dates and non-informational messages.
+	However, a different solution was also implemented to combat this. The protocol tokenizer component discussed in \ref{tokenizer} was developed for the express purpose of extracting product names and versions from a service banner, or if that is not possible, then removing irrelevant parts, such as dates and non-informational messages.
 		
 	\begin{listing}[H]
 		\begin{minted}[style=borland]{xml}
