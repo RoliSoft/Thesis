@@ -63,7 +63,7 @@
 \newcounter{subsubsubsection}[subsubsection]
 \renewcommand\thesubsubsubsection{\thesubsubsection.\arabic{subsubsubsection}}
 \titleformat{\subsubsubsection}
-  {\normalfont\normalsize\bfseries}{\thesubsubsubsection}{1em}{}
+	{\normalfont\normalsize\bfseries}{\thesubsubsubsection}{1em}{}
 \titlespacing*{\subsubsubsection}
 {0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
 
@@ -71,44 +71,44 @@
 \def\toclevel@subsubsubsection{4}
 \def\l@subsubsubsection{\@dottedtocline{4}{7em}{4em}}
 
-\renewcommand\paragraph{\@startsection{paragraph}{6}{\parindent}%
-  {3.25ex \@plus1ex \@minus .2ex}%
-  {-1em}%
-  {\normalfont\normalsize\bfseries}}
+\renewcommand\paragraph{\@startsection{paragraph}{6}{\parindent}
+	{3.25ex \@plus1ex \@minus .2ex}
+	{-1em}
+	{\normalfont\normalsize\bfseries}}
 \makeatother
 
 \setcounter{secnumdepth}{4}
 \setcounter{tocdepth}{4}
 
 \makeatletter
-\newcommand\hungariantableofcontents{%
-  \selectlanguage{hungarian}%
-  \section*{\contentsname
-    \@mkboth{\MakeUppercase\contentsname}{\MakeUppercase\contentsname}}%
-  \@starttoc{toc.hu}%
-  \selectlanguage{english}%
- }
+\newcommand\hungariantableofcontents{
+	\selectlanguage{hungarian}
+	\section*{\contentsname
+		\@mkboth{\MakeUppercase\contentsname}{\MakeUppercase\contentsname}}
+	\@starttoc{2.toc}
+	\selectlanguage{english}
+}
 \makeatother
-
-\newcommand\sectionhu[1]{\addcontentsline{toc.hu}{section} {\protect\numberline{\thesection} #1}}
-\newcommand\subsectionhu[1]{\addcontentsline{toc.hu}{subsection} {\protect\numberline{\thesubsection} #1}}
-\newcommand\subsubsectionhu[1]{\addcontentsline{toc.hu}{subsubsection} {\protect\numberline{\thesubsubsection} #1}}
-\newcommand\subsubsubsectionhu[1]{\addcontentsline{toc.hu}{subsubsubsection} {\protect\numberline{\thesubsubsubsection} #1}}
+%
+\newcommand\sectionhu[1]{\addcontentsline{2.toc}{section} {\protect\numberline{\thesection} #1}}
+\newcommand\subsectionhu[1]{\addcontentsline{2.toc}{subsection} {\protect\numberline{\thesubsection} #1}}
+\newcommand\subsubsectionhu[1]{\addcontentsline{2.toc}{subsubsection} {\protect\numberline{\thesubsubsection} #1}}
+\newcommand\subsubsubsectionhu[1]{\addcontentsline{2.toc}{subsubsubsection} {\protect\numberline{\thesubsubsubsection} #1}}
 
 \makeatletter
-\newcommand\romaniantableofcontents{%
-  \selectlanguage{romanian}%
-  \section*{\contentsname
-    \@mkboth{\MakeUppercase\contentsname}{\MakeUppercase\contentsname}}%
-  \@starttoc{toc.ro}%
-  \selectlanguage{english}%
- }
+\newcommand\romaniantableofcontents{
+	\selectlanguage{romanian}
+	\section*{\contentsname
+		\@mkboth{\MakeUppercase\contentsname}{\MakeUppercase\contentsname}}
+	\@starttoc{1.toc}
+	\selectlanguage{english}
+}
 \makeatother
 
-\newcommand\sectionro[1]{\addcontentsline{toc.ro}{section} {\protect\numberline{\thesection} #1}}
-\newcommand\subsectionro[1]{\addcontentsline{toc.ro}{subsection} {\protect\numberline{\thesubsection} #1}}
-\newcommand\subsubsectionro[1]{\addcontentsline{toc.ro}{subsubsection} {\protect\numberline{\thesubsubsection} #1}}
-\newcommand\subsubsubsectionro[1]{\addcontentsline{toc.ro}{subsubsubsection} {\protect\numberline{\thesubsubsubsection} #1}}
+\newcommand\sectionro[1]{\addcontentsline{1.toc}{section} {\protect\numberline{\thesection} #1}}
+\newcommand\subsectionro[1]{\addcontentsline{1.toc}{subsection} {\protect\numberline{\thesubsection} #1}}
+\newcommand\subsubsectionro[1]{\addcontentsline{1.toc}{subsubsection} {\protect\numberline{\thesubsubsection} #1}}
+\newcommand\subsubsubsectionro[1]{\addcontentsline{1.toc}{subsubsubsection} {\protect\numberline{\thesubsubsubsection} #1}}
 
 \usepackage{xpatch}
 
@@ -116,51 +116,49 @@
 \newcounter{lotcntr}
 \newcounter{lolcntr}
 
-\NewDocumentCommand{\clearcontents}{}{%
-  \stepcounter{lofcntr}%
-  \stepcounter{lotcntr}%
-  \stepcounter{lolcntr}%
-  \setcounter{figure}{0}
-  \setcounter{table}{0}
-  \setcounter{listing}{0}
+\NewDocumentCommand{\clearcontents}{}{
+	\stepcounter{lofcntr}
+	\stepcounter{lotcntr}
+	\stepcounter{lolcntr}
+	\setcounter{figure}{0}
+	\setcounter{table}{0}
+	\setcounter{listing}{0}
 }
 
 \makeatletter
-
-\NewDocumentCommand{\advancecontents}{}{%
-  \def\ext@figure{\number\value{lofcntr}\latex@ext@figure}
-  \def\ext@table{\number\value{lotcntr}\latex@ext@table}%
-  \@namedef{ext@listing}{\number\value{lolcntr}\latex@ext@listing}%
+\NewDocumentCommand{\advancecontents}{}{
+	\def\ext@figure{\number\value{lofcntr}.\latex@ext@figure}
+	\def\ext@table{\number\value{lotcntr}.\latex@ext@table}
+	\@namedef{ext@listing}{\number\value{lolcntr}.\latex@ext@listing}
 }
 
-\AtBeginDocument{%
-  \let\latex@ext@figure\ext@figure
-  \let\latex@ext@table\ext@table
-  \let\latex@ext@listing\ext@listing
-  \stepcounter{lofcntr}% 
-  \stepcounter{lotcntr}%
-  \stepcounter{lolcntr}%
-  \advancecontents%
+\AtBeginDocument{
+	\let\latex@ext@figure\ext@figure
+	\let\latex@ext@table\ext@table
+	\let\latex@ext@listing\ext@listing
+	\stepcounter{lofcntr}
+	\stepcounter{lotcntr}
+	\stepcounter{lolcntr}
+	\advancecontents
 }
 
-\AtBeginDocument{%
-\xpretocmd{\caption}{%
-  \advancecontents%
-}{\typeout{Patching caption worked!}}{\typeout{Patching caption failed miserably!}}
+\AtBeginDocument{
+\xpretocmd{\caption}{
+	\advancecontents
+}{}{}
 }
 
 \xpatchcmd{\listoffigures}{%
-  \@starttoc{lof}%
+	\@starttoc{lof}%
 }{%
-  \@starttoc{\number\value{lofcntr}lof}%
-}{\typeout{Patch success}}{\typeout{Patch failure}}
+	\@starttoc{\number\value{lofcntr}.lof}%
+}{}{}
 
 \xpatchcmd{\listoftables}{%
-  \@starttoc{lot}%
+	\@starttoc{lot}%
 }{%
-  \@starttoc{\number\value{lotcntr}lot}%
-}{\typeout{Patch success}}{\typeout{Patch failure}}
-
+	\@starttoc{\number\value{lotcntr}.lot}%
+}{}{}
 \makeatother
 
 \usepackage{minted}
@@ -179,10 +177,6 @@
 %	Romanian Section (Summarized Version)
 %
 
-\setcounter{figure}{99}
-\setcounter{table}{99}
-\setcounter{listing}{99}
-
 \begingroup
 	\renewcommand{\listoflistingscaption}{Lista fragmente de coduri}
 	\renewcommand{\listingscaption}{Fragment de cod}
@@ -194,10 +188,6 @@
 %
 %	Hungarian Section (Summarized Version)
 %
-
-\setcounter{figure}{199}
-\setcounter{table}{199}
-\setcounter{listing}{199}
 
 \begingroup
 	\renewcommand{\listoflistingscaption}{Kódrészletek jegyzéke}
@@ -441,11 +431,11 @@
 	The \textit{Open Web Application Security Project} has defined a risk rating methodology\cite{owasp4} specifically for vulnerabilities. The steps of risk analysis for a project are:
 	
 	\begin{enumerate}
-	  \item Identification of Risks
-	  \item Estimation of Probability
-	  \item Estimation of Impact
-	  \item Estimation of Severity
-	  \item Decision Regarding Risk Elimination
+		\item Identification of Risks
+		\item Estimation of Probability
+		\item Estimation of Impact
+		\item Estimation of Severity
+		\item Decision Regarding Risk Elimination
 	\end{enumerate}
 	
 	For the first step, in the case of a web application or a project with a web application subcomponent, we can start with OWASP's Top 10\cite{owasp10} list of most common security risks. After all the possible risks have been listed, we will need to go through them one-by-one and go through steps $2-5$ individually for each.
