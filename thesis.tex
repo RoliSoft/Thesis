@@ -1,4 +1,4 @@
-﻿% !TeX spellcheck = en_US
+% !TeX spellcheck = en_US
 
 \documentclass[a4paper,12pt]{article}
 
@@ -110,11 +110,58 @@
 \newcommand\subsubsectionro[1]{\addcontentsline{toc.ro}{subsubsection} {\protect\numberline{\thesubsubsection} #1}}
 \newcommand\subsubsubsectionro[1]{\addcontentsline{toc.ro}{subsubsubsection} {\protect\numberline{\thesubsubsubsection} #1}}
 
-\newcommand{\clearlist}{
-\begingroup
-\renewcommand\addvspace[1]{}
-\renewcommand\contentsline[4]{}}
-\newcommand{\resetlist}{\endgroup}
+\usepackage{xpatch}
+
+\newcounter{lofcntr}
+\newcounter{lotcntr}
+\newcounter{lolcntr}
+
+\NewDocumentCommand{\clearcontents}{}{%
+  \stepcounter{lofcntr}%
+  \stepcounter{lotcntr}%
+  \stepcounter{lolcntr}%
+  \setcounter{figure}{0}
+  \setcounter{table}{0}
+  \setcounter{listing}{0}
+}
+
+\makeatletter
+
+\NewDocumentCommand{\advancecontents}{}{%
+  \def\ext@figure{\number\value{lofcntr}\latex@ext@figure}
+  \def\ext@table{\number\value{lotcntr}\latex@ext@table}%
+  \@namedef{ext@listing}{\number\value{lolcntr}\latex@ext@listing}%
+}
+
+\AtBeginDocument{%
+  \let\latex@ext@figure\ext@figure
+  \let\latex@ext@table\ext@table
+  \let\latex@ext@listing\ext@listing
+  \stepcounter{lofcntr}% 
+  \stepcounter{lotcntr}%
+  \stepcounter{lolcntr}%
+  \advancecontents%
+}
+
+\AtBeginDocument{%
+\xpretocmd{\caption}{%
+  \advancecontents%
+}{\typeout{Patching caption worked!}}{\typeout{Patching caption failed miserably!}}
+}
+
+\xpatchcmd{\listoffigures}{%
+  \@starttoc{lof}%
+}{%
+  \@starttoc{\number\value{lofcntr}lof}%
+}{\typeout{Patch success}}{\typeout{Patch failure}}
+
+\xpatchcmd{\listoftables}{%
+  \@starttoc{lot}%
+}{%
+  \@starttoc{\number\value{lotcntr}lot}%
+}{\typeout{Patch success}}{\typeout{Patch failure}}
+
+\makeatother
 
 \usepackage{minted}
 \renewcommand{\theFancyVerbLine}{\rmfamily\scriptsize\arabic{FancyVerbLine}}
@@ -127,10 +174,6 @@
 \PrerenderUnicode{áéúóőűíăâîșț}
 
 \begin{document}
-
-\addtocontents{lof}{\protect\clearlist}
-\addtocontents{lot}{\protect\clearlist}
-\addtocontents{lol}{\protect\clearlist}
 
 %
 %	Romanian Section (Summarized Version)
@@ -146,6 +189,8 @@
 	\include{thesis_ro}
 \endgroup
 
+\clearcontents
+
 %
 %	Hungarian Section (Summarized Version)
 %
@@ -160,17 +205,11 @@
 	\include{thesis_hu}
 \endgroup
 
+\clearcontents
+
 %
 %	English Section (Full Version)
 %
-
-\setcounter{figure}{0}
-\setcounter{table}{0}
-\setcounter{listing}{0}
-
-\addtocontents{lof}{\protect\resetlist}
-\addtocontents{lot}{\protect\resetlist}
-\addtocontents{lol}{\protect\resetlist}
 
 \newpage
 \pagestyle{empty}
