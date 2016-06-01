@@ -1344,7 +1344,104 @@
 	The aforementioned ShoVAT\cite{shovat15} paper solved this issue by weighing tokens around the version number more than those further from the version number, which solution is ultimately what the application written within the scope of this thesis has also settled with on one hand.
 	
 	However, a different solution was also implemented to combat this. The protocol tokenizer component discussed in \ref{tokenizer} was developed for the express purpose of extracting product names and versions from a service banner, or if that is not possible, then removing irrelevant parts, such as dates and non-informational messages.
+	
+\subsection{Identification of Operating Systems} \label{opsysmatcher}
+\subsectionhu{Operációs Rendszerek Beazonosítása} \subsectionro{Identificarea Sistemelor de Operare}
+
+	The techniques discussed in the sections \ref{patternmatch} and \ref{matchcpe} cannot be used to identify the operating system of the scanned host, as in most of the cases, these services do not advertise the underlying operating system the server software is running on.
+	
+	The application implemented within the scope of this thesis supports the identification of \textbf{Debian}, \textbf{Ubuntu}, \textbf{Red Hat}, \textbf{CentOS} and \textbf{Fedora} Linux distributions. For these distributions, the exact version number of the installed operating system can be deduced as well, not just the name.
+	
+	After successful identification, the CPE names and CVE vulnerabilities discovered on the system can be traced back to a specific package in the distribution's package manager, thus allowing \textit{vulnerability validation} (further discussed in \ref{vulnvalid}) by checking with the vendor, whether the discovered vulnerability actually affects the active installation or not.
+	
+	Support for \textbf{Windows} is currently limited: the operating system itself can be identified, however due to the lack of a centralized package manager, the CPE to package name and vulnerability validation functions are not available for scanned hosts running such operating systems.
+	
+	Identification of the operating systems based on the gathered results are done by separate \mintinline{cpp}{*Identifier} classes, where one implementation exists for each operating system, and they are invoked in order of popularity until a certain hit is produced.
+	
+	A common theme within these identifier implementations is analyzing the discovered SSH server, as the SSH protocol requires every server to identify themselves accurately for compatibility reasons.
+	
+	While most server software have an option to decrease the verbosity of the announced software information (such as name, version, patch level and operating system) due to the aforementioned protocol requirements, no SSH server (at least on the supported Linux distributions) allows silencing the information contained within the service banner of the SSH service.
+	
+	In Debian or Debian-based (such as Ubuntu) distributions, the \mintinline{matlab}{openssh} package is modified to further increase the amount of information announced, as its service banner also contains the installed security patch version number as well. This behavior can be turned off using the \mintinline{matlab}{DebianBanner} configuration option, however, it is on by default, and it is not common practice to turn it off after a fresh installation.
+	
+	If the extended version information announcement is not turned off, the distribution can be deduced from that, otherwise, the SSH server version number can be looked up against the list of bundled OpenSSH packages in each distribution generation, as shown in table \ref{debsshvers} for Debian or table \ref{ubnsshvers} for Ubuntu.
+	
+	The ``Enterprise Linux'' distributions do not suffer from this, however, due to the nature of the release lifecycle of these distributions, multiple years may pass between the versions, and as such the SSH server version number will increase in the newer versions, but stay the same in the current generation ones.
+	
+	As a result, if the software is otherwise certain that the host is actually running one of these distributions, it is possible to tell the exact version number of a host running Red Hat or CentOS, by matching the version number of the discovered SSH service to the list of the version numbers of the SSH packages as shipped between different versions of the specific operating system distribution, as shown in table \ref{elsshvers}.
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{|rl|}
+			\hline
+			\textbf{Debian} & \textbf{OpenSSH} \\ \hline
+			Stretch (9) & 7.2p2 \\
+			Jessie (8) & 6.7p1 \\
+			Wheezy (7) & 6.6p1 -- 6.0p1 \\
+			Squeeze (6) & 5.5p1 \\
+			Lenny (5) & 5.1p1 \\
+			Etch (4) & 4.3p2 \\
+			Sarge (3.1) & 3.8.1p1 \\
+			Woody (3) & 3.4p1 \\ \hline
+		\end{tabular}
+		\caption{Bundled OpenSSH packages in each Debian distribution}
+		\label{debsshvers}
+	\end{table}
 		
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{|rl|}
+			\hline
+			\textbf{Ubuntu} & \textbf{OpenSSH} \\ \hline
+			Xenial (16.04) & 7.2p2 \\
+			Wily (15.10) & 6.9p1 \\
+			Vivid (15.04) & 6.7p1 \\
+			Utpic (14.10) & 6.6p1 \\
+			Trusty (14.04.4) & 6.6.1p1 \\
+			Trusty (14.04) & 5.9p1 \\
+			Lucid (10.04) & 5.3p1 \\
+			Hardy (8.04) & 4.7p1 \\
+			Dapper (6.06) & 4.2p1 \\ \hline
+		\end{tabular}
+		\caption{Bundled OpenSSH packages in each Ubuntu distribution}
+		\label{ubnsshvers}
+	\end{table}
+			
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{|rl|}
+			\hline
+			\textbf{E.L.} & \textbf{OpenSSH} \\ \hline
+			7 & 6.6.1p1 \\
+			6 & 6.6p1, 5.3, 5.2p1 \\
+			5 & 4.3 \\
+			4 & 3.9 \\ \hline
+		\end{tabular}
+		\caption{Bundled OpenSSH packages in each Red Hat/CentOS distribution}
+		\label{elsshvers}
+	\end{table}
+	
+	Tables \ref{debsshvers}, \ref{ubnsshvers} and \ref{elsshvers} were compiled manually, by navigating to the web interface of each distribution's package manager, and looking up historical release information for the ``openssh'' package. This list is hard-coded into the application, as it is not bound to change anymore.
+	
+	For operating systems where only identification is supported, without further interactions, such as Windows, the identification is achieved by analyzing the discovered service banners for various tokens unique to the platform. For example, the Windows identifier will look for ``Cygwin'' or ``Win32'' in the SSH banner, or the existence of platform-exclusive server software, such as an HTTP server identify itself as ``Microsoft IIS''.
+	
+\subsection{Vulnerability Validation} \label{vulnvalid}
+\subsectionhu{Sebezhetőségek Érvényesítése} \subsectionro{Validarea Vulnerabilităților}
+
+	The act of vulnerability validation is the phase in which the discovered vulnerabilities are checked whether they actually affect the discovered service or not.
+	
+	One obvious way to validate a vulnerability is by exploiting it. If the exploitation was successful, then the service is vulnerable. This, however, is unfeasible, as the vulnerability database (NVD) does not contain enough information in order to automatically generate and launch an exploitation attempt against a described vulnerability.
+	
+	Alternatively, even if it was possible to do so, in production environments it may not be desirable to launch exploits, as in case they may succeed, they may ultimately end up affecting the normal operation of the service, causing minor to major inconveniences on the public-facing service.
+	
+	However, in such enterprise settings, homogeneous environments are preferred, where the operating system's official package manager is used to install and update server software. This has the added advantage, of having information about the exact installed package, in case the operating system was successfully identified and is supported.
+	
+	For the operating systems listed as fully supported in section \ref{opsysmatcher}, regarding the identification of the various Linux distributions and their versions, the application supports querying the distributions' package repository, miscellaneous build system or dedicated security tracker for any CPE names or CVE vulnerabilities, in order to determine whether they are affected and whether a security fix is available.
+	
+	After querying an authoritative source, the application can discard vulnerabilities which do not affect the discovered operating system and package combination (e.g. ``NOT-FOR-US'' tag on the Debian Security Tracker) or otherwise check if the proper security update which addresses the vulnerability was applied or not.
+	
+	Just like in section \ref{opsysmatcher}, the package lookup functionality is laid out in separate \mintinline{cpp}{*Lookup} classes, having one implementation for each supported operating system. These classes are also the ones responsible for identifying the specific names of the packages, and generating the command line instructions which apply the specific software upgrades.
+	
 	\begin{listing}[H]
 		\begin{minted}[style=borland]{xml}
 			<entry id="CVE-2016-0742">
