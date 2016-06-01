@@ -1442,6 +1442,23 @@
 	
 	Just like in section \ref{opsysmatcher}, the package lookup functionality is laid out in separate \mintinline{cpp}{*Lookup} classes, having one implementation for each supported operating system. These classes are also the ones responsible for identifying the specific names of the packages, and generating the command line instructions which apply the specific software upgrades.
 	
+\subsection{Estimation of the Last System Upgrade Date}
+\subsectionhu{Utolsó Frissítési Dátum Megbecslése} \subsectionro{Estimarea Datei de Ultima Actualizare al Sistemului}
+
+	Some software, besides the regular application name and version number in the service banner (e.g. \mintinline{matlab}{PHP/5.5.12}) also announce the specific vendor patch level (e.g. \mintinline{matlab}{PHP/5.5.12-2ubuntu4.4}) which can be used to identify whether a security fix was applied to the software, or not.
+	
+	The components discussed in sections \ref{opsysmatcher} and \ref{vulnvalid} can work together in order to download the changelog of the identified package from the identified operating system's package manager.
+	
+	Since these changelogs contain the list of all minor and major releases with their associated dates, it is possible to estimate the date of the last system update of the host to some degree of accuracy, by starting the date range from the date when the installed patch was initially released, and ending the range right before the next patch was released. It can be assumed, that the last system update was initiated in this date range, as this security patch was the last one available for installation at the actual update time.
+	
+	If multiple packages can be identified to the patch level, the date range can be significantly reduced, thus increasing the accuracy of vulnerability validation on services whose exact patch level is not known.
+	
+	Continuing the example above, the mentioned security update was released on the April 17th of 2015, while the next security update under the version of \mintinline{matlab}{5.5.12-2ubuntu4.6} was released on July 6th of 2015. This information can be easily obtained from the published changelog of the ``php5'' package in the online interface of the Ubuntu package manager: \url{https://launchpad.net/ubuntu/utopic/+source/php5/+changelog}
+	
+	The estimation of the last system update is a useful functionality, as it can provide vulnerability validation for services whose exact patch level is not known. If by the start of the guesstimated update date range, a partially identified service already had a security update for an identified vulnerability, it can be freely discarded, as the corresponding security update was most likely applied later in the date range during the update.
+	
+	This functionality is, of course, only guesswork, and can be freely turned off in order to avoid false negatives during validation.
+	
 	\begin{listing}[H]
 		\begin{minted}[style=borland]{xml}
 			<entry id="CVE-2016-0742">
@@ -1481,6 +1498,75 @@
 		\caption{CVE-2016-0742 entry affecting nginx 1.9.9}
 		\label{nginxcve}
 	\end{listing}
+
+\section{Results}
+\sectionhu{Eredmények} \sectionro{Rezultate}
+
+	The application was tested against three higher education institutions with both active and passive scanning methods. After these tests have concluded, another one was conducted with only passive scanning against five randomly selected leading\footnote{Based on amount of assets held as per their individual performance reports for the year 2015.} banking institutions, which I would have expected to represent the ``gold standard'' in the test.
+
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{r|ccc|ccc|ccccc|}
+			\cline{2-12}
+			\multicolumn{1}{l|}{}                         & \multicolumn{3}{c|}{\textbf{Active S.}} & \multicolumn{8}{c|}{\textbf{Passive Scanning}}                                                             \\ \hline
+			\multicolumn{1}{|r|}{\textbf{Institution}}      & \textbf{$u_1$}    & \textbf{$u_2$}    & \textbf{$u_3$}   & \textbf{$u_1$} & \textbf{$u_2$} & \textbf{$u_3$} & \textbf{$b_1$} & \textbf{$b_2$} & \textbf{$b_3$} & \textbf{$b_4$} & \textbf{$b_5$} \\ \hline
+			\multicolumn{1}{|r|}{\textbf{Services}} & 165            & 178            & 455           & 201         & 269         & 623         & 41          & 19          & 69          & 31          & 11          \\
+			\multicolumn{1}{|r|}{\textbf{Identifiable}} & 143            & 145            & 402           & 112         & 148         & 352         & 24          & 8           & 58          & 9           & 9           \\
+			\multicolumn{1}{|r|}{\textbf{Identified}}   & 140            & 137            & 394           & 109         & 139         & 348         & 24          & 8           & 58          & 9           & 9           \\ \hline
+		\end{tabular}
+		\caption{Identifiable services and the number of CPE names identified by the application}
+		\label{cpeids}
+	\end{table}
+	
+	Table \ref{cpeids} presents the number of services discovered at the tested institutions for each scanning attempt. The ``Services'' row represents an \textit{open port}. The ``Identifiable'' row represents the services which have replied with a service banner, and at the same time that service banner contains enough information for the service to be properly identified under normal conditions, such as its software name and version number. This number was determined through manual verification of the service banners for this test. The ``Identified'' row represents the number of services correctly identified by the software.
+	
+	Out of the \textbf{1,410} identifiable service banners, \textbf{1,374} services were correctly identified by the application, resulting in a success rate of \textbf{97.45\%}.
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{r|ccc|ccc|ccccc|}
+			\cline{2-12}
+			\multicolumn{1}{l|}{}                         & \multicolumn{3}{c|}{\textbf{Active Scan}} & \multicolumn{8}{c|}{\textbf{Passive Scan}}                                                             \\ \hline
+			\multicolumn{1}{|r|}{\textbf{Institution}}      & \textbf{$u_1$}    & \textbf{$u_2$}    & \textbf{$u_3$}   & \textbf{$u_1$} & \textbf{$u_2$} & \textbf{$u_3$} & \textbf{$b_1$} & \textbf{$b_2$} & \textbf{$b_3$} & \textbf{$b_4$} & \textbf{$b_5$} \\
+			\multicolumn{1}{|r|}{\textbf{Services}} & 165            & 178            & 455           & 201         & 269         & 623         & 41          & 19          & 69          & 31          & 11          \\ \hline
+			\multicolumn{1}{|r|}{\textbf{Critical}}       & 183            & 121            & 160           & 161         & 131         & 230         & 8           & 0           & 30          & 6           & 6           \\
+			\multicolumn{1}{|r|}{\textbf{High}}          & 675            & 414            & 645           & 583         & 446         & 826         & 7           & 0           & 67          & 21          & 5           \\
+			\multicolumn{1}{|r|}{\textbf{Medium}}        & 2545           & 1441           & 2775          & 2308        & 1589        & 3247        & 19          & 0           & 299         & 133         & 9           \\
+			\multicolumn{1}{|r|}{\textbf{Low}}       & 231            & 151            & 275           & 195         & 170         & 335         & 7           & 0           & 26          & 13          & 4           \\
+			\multicolumn{1}{|r|}{\textbf{AV:N}}           & 3296           & 1970           & 3493          & 2961        & 2173        & 4248        & 40          & 0           & 393         & 153         & 22          \\ \hline
+		\end{tabular}
+		\caption{Discovered vulnerabilities of the services identified by the application}
+		\label{cpevulns}
+	\end{table}
+	
+	Table \ref{cpevulns} presents the number of vulnerabilities found on the services which have been discovered and successfully identified. The ``Critical,'' ``High,'' ``Medium'' and ``Low'' rows represent the number of vulnerabilities discovered for each severity level, while the ``AV:N'' row presents the number of vulnerabilities which can be remotely exploited over a network connection. (This information is available from the \textit{CVSS} scoring system presented in section \ref{cvss}, where the ``Access Vector'' field has the ``Network'' level associated to it.)
+	
+	The number of vulnerabilities discovered in the IP ranges of the banking institutions is unfortunately not surprising, as with a related project\footnote{\url{https://github.com/RoliSoft/Bank-Security-Audit}} of mine, I measured the response time of various banks to patching newly discovered critical vulnerabilities (such as Heartbleed, Shellshock, POODLE) and I've come to the conclusion, that some banks require up to 3 months in order to apply a security update for a critical vulnerability.
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{|r|l|}
+			\hline
+			\multicolumn{1}{|c|}{\textbf{Software}} & \multicolumn{1}{c|}{\textbf{CVE\#}} \\ \hline
+			\textit{Host Scanner\footnotemark{}}                   & 166                                 \\
+			OpenVAS                                 & 107                                 \\
+			Nessus                                  & 68                                  \\
+			Nexpose                                 & 311                                 \\ \hline
+		\end{tabular}
+		\caption{Comparison of identified vulnerabilities by competing software}
+		\label{foundvulns}
+	\end{table}
+	\footnotetext{Name of the application developed within the scope of this thesis.}
+	
+	As a second test, the application was compared to the commercial tools discussed in section \ref{comtools}. Since these applications make a lot of noise (as in, network traffic) plus might take too much time to complete besides potentially overloading the services, not to mention potential licensing issues (most of them only allow home use for the free/community editions, defined as scanning one private $/24$ IP range), rescanning the institutions in table \ref{cpevulns} would not be feasible.
+	
+	The scan targets were instead comprised of virtual machines on a virtual network, compiled of vulnerable machines which were made for the express purpose of CTF (``Capture the Flag'') style wargames, such as \textit{Metasploitable} and \textit{VulnOS}. These VM images were gathered from VulnHub\footnote{\url{https://www.vulnhub.com/}}, a website whose aim is to provide downloadable VM images which simulate a real-world vulnerable infrastructure in order to allow interested parties to practice and gain hands-on penetration testing experience without breaking the law.
+	
+	The weak results of ``OpenVAS'' and ``Nessus'' can be explain with the fact that their extension-based architecture failed to identify various obscure services on these hosts, as they did not have an extension written for them, and failing to identify some crucial services resulted in a decreased CVE count.
+	
+	On the other side of the spectrum, ``Nexpose'' exploited one of the discovered vulnerabilities, and using the acquired shell access, enumerated the list of installed packages using the operating system's package manager, gaining a clear advantage, as the other three testing applications only analyzed the vulnerability status of public-facing network-accessible servers, without having access to the full list of installed software on the host.
+	
+	It should be noted, that exploitation of the discovered vulnerabilities is out of the scope of this application, as it may not be desirable in live production environments, and straight-up illegal for security researchers without a prior agreement. In the application, vulnerability validation is instead performed without penetration, by gathering environmental information, identifying the operating system, and then using the operating system distribution's package manager to check whether the discovered package is affected by the vulnerability, as described in section \ref{vulnvalid}.
 
 \newpage
 \section{Bibliography}
