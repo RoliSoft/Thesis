@@ -873,7 +873,7 @@
 	\begin{figure}[!htbp]
 		\centering
 		\includegraphics[scale=0.355]{shodan.png}
-		\caption{Shodan report on 178.62.249.168}
+		\caption{Shodan report on an example IPv4 address}
 		\label{shodanscr}
 	\end{figure}
 	
@@ -889,7 +889,7 @@
 	\begin{figure}[!htbp]
 		\centering
 		\includegraphics[scale=0.355]{censys.png}
-		\caption{Censys report on 178.62.249.168}
+		\caption{Censys report on an example IPv4 address}
 		\label{censysscr}
 	\end{figure}
 	
@@ -898,13 +898,35 @@
 	In order to use Censys data in the application developed within the scope of this thesis, the user has to create a free account at \url{https://censys.io/} and specify the generated UID and secret key to the application via the \mintinline{bash}{--censys-key} argument.
 		
 	Implementation-wise, the \mintinline{cpp}{CensysScanner} component takes care of contacting the Censys JSON API interface and retrieving the data available for the specified IP addresses. Similarly, this component also extends the \mintinline{cpp}{HostScanner} class, and as such it is possible to substitute the default scanner to Censys data for any scanning needs.
+	
+\subsubsection{Mr Looquer} \label{looquer}
+\subsubsectionhu{Mr Looquer} \subsubsectionro{Mr Looquer}
+
+	Mr Looquer\cite{looquer16} is a new open initiative with a focus on IPv6 intelligence, launched by two security researchers in the May of 2016.
+	
+	IPv6 has a much larger address space of $ 2^{128} $ addresses, as compared to the address space of IPv4 consisting of only $ 2^{32} $ addresses. Due to this increased address space, the technique used by the two aforementioned services (\textit{Shodan} and \textit{Censys}) of scanning the whole IPv4 address space, cannot be used in the case of IPv6. While the creators of \textit{ZMap} claim it is possible to scan the whole IPv4 address space under 5 minutes\cite{zmap13}, this speed would translate to $ 7.537 \cdot 10^{23} $ years for the IPv6 address space.
+	
+	As such, this service uses various data acquisition techniques to gather publicly used IPv6 addresses. One example would be the registered domain list various top-level domain NICs publish on request, such as Verisign's \textit{TLD Zone File Access Program}\cite{verisign16} for \textit{.com} and \textit{.net} TLDs. With this list, they can perform zone walking and use heuristics to infer relationships between the pointing domains and the reverse domains of both the IPv4 and IPv6 associated addresses.
+	
+	Similarly to the previously discussed services, it also allows developers and security researchers to initiate structured queries and full-text search queries from their web interface or the exposed RESTful API. Figure \ref{looquerscr} shows the data readily available on the service for a queried IP address.
+	
+	\begin{figure}[!htbp]
+		\centering
+		\includegraphics[scale=0.355]{looquer.png}
+		\caption{Mr Looquer report on an example IPv6 address}
+		\label{looquerscr}
+	\end{figure}
+	
+	In order to use Mr Looquer data in the application developed within the scope of this thesis, the user has to create a free account at \url{https://mrlooquer.com/} and specify the generated API key to the application via the \mintinline{bash}{--looquer-key} argument.
+		
+	Implementation-wise, the \mintinline{cpp}{LooquerScanner} component takes care of contacting the Mr Looquer JSON API interface and retrieving the data available for the specified IP addresses. Similarly, this component also extends the \mintinline{cpp}{HostScanner} class, and as such it is possible to substitute the default scanner to Mr Looquer data for any scanning needs.
 
 \subsubsection{Amalgamation}
 \subsubsectionhu{Egyesítés} \subsubsectionro{Amalgamare}
 
-	The \mintinline{cpp}{PassiveScanner} component of the application initiates the requested scan tasks on both Shodan[\ref{shodan}] and Censys[\ref{censys}], merging the results at the end.
+	The \mintinline{cpp}{PassiveScanner} component of the application initiates the requested scan tasks on all three passive components, Shodan[\ref{shodan}], Censys[\ref{censys}] and Mr Looquer[\ref{looquer}], merging the results at the end.
 	
-	During the development phase of the application it was found that generally both services have had data on a requested IP address, but most of the times one of the services discovered more ports, have done much deeper analysis, or the information is more useful than at the competitor service.
+	During the development phase of the application it was found that generally most services have had data on a requested IP address, but most of the times one of the services discovered more ports, have done much deeper analysis, or the information is more useful than at the competitor service.
 	
 	One concrete example would be where one service was somehow identified and banned from indexing an IP address, as shown in listing \ref{shodanban}, yet the other one was able to access it freely and has data available as a result, as shown in listing \ref{censysnoban}.
 	
@@ -1832,7 +1854,7 @@ arguments:
 	
 	As a second test, the application was compared to the commercial tools discussed in section \ref{comtools}. Since these applications make a lot of noise (as in, network traffic) plus might take too much time to complete besides potentially overloading the services, not to mention potential licensing issues (most of them only allow home use for the free/community editions, defined as scanning one private $/24$ IP range), rescanning the institutions in table \ref{cpevulns} would not be feasible.
 	
-	The scan targets were instead comprised of virtual machines on a virtual network, compiled of vulnerable machines which were made for the express purpose of CTF (``Capture the Flag'') style wargames, such as \textit{Metasploitable} and \textit{VulnOS}. These VM images were gathered from VulnHub\footnote{\url{https://www.vulnhub.com/}}, a website whose aim is to provide downloadable VM images which simulate a real-world vulnerable infrastructure in order to allow interested parties to practice and gain hands-on penetration testing experience without breaking the law.
+	The scan targets were instead comprised of virtual machines on a virtual network, compiled of vulnerable machines which were made for the express purpose of CTF (``Capture the Flag'') style wargames, such as \textit{Metasploitable} and \textit{VulnOS}. These VM images were gathered from VulnHub\footnote{\url{https://www.vulnhub.com/}}, as suggested in article \cite{penintro15} and paper \cite{secgen15}, a website whose aim is to provide downloadable VM images which simulate a real-world vulnerable infrastructure in order to allow interested parties to practice and gain hands-on penetration testing experience without breaking the law.
 	
 	The weak results of ``OpenVAS'' and ``Nessus'' can be explain with the fact that their extension-based architecture failed to identify various obscure services on these hosts, as they did not have an extension written for them, and failing to identify some crucial services resulted in a decreased CVE count.
 	
