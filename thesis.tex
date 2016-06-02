@@ -1447,39 +1447,20 @@
 	
 	For operating systems where only identification is supported, without further interactions, such as Windows, the identification is achieved by analyzing the discovered service banners for various tokens unique to the platform. For example, the Windows identifier will look for ``Cygwin'' or ``Win32'' in the SSH banner, or the existence of platform-exclusive server software, such as an HTTP server identify itself as ``Microsoft IIS''.
 	
-\subsection{Vulnerability Validation} \label{vulnvalid}
-\subsectionhu{Sebezhetőségek Érvényesítése} \subsectionro{Validarea Vulnerabilităților}
-
-	The act of vulnerability validation is the phase in which the discovered vulnerabilities are checked whether they actually affect the discovered service or not.
+\subsection{Vulnerability Lookup}
+\subsectionhu{Sebezhetőségek Lekérdezése} \subsectionro{Căutarea Vulnerabilităților}
 	
-	One obvious way to validate a vulnerability is by exploiting it. If the exploitation was successful, then the service is vulnerable. This, however, is unfeasible, as the vulnerability database (NVD) does not contain enough information in order to automatically generate and launch an exploitation attempt against a described vulnerability.
+	This section presents the methodology which allows the application to find the vulnerabilities of an identified CPE name.
 	
-	Alternatively, even if it was possible to do so, in production environments it may not be desirable to launch exploits, as in case they may succeed, they may ultimately end up affecting the normal operation of the service, causing minor to major inconveniences on the public-facing service.
+	The vulnerability database in used by the application is \textit{NIST}'s \textit{National Vulnerability Database}, as discussed in section \ref{vulndbs}, which is an XML file containing \textit{CVE} entries. A CVE entry represents a single vulnerability, containing its description, \textit{CVSS} scoring (as discussed in \ref{cvss}), and a list of the affected CPE names (as briefly mentioned in \ref{matchcpe}).
 	
-	However, in such enterprise settings, homogeneous environments are preferred, where the operating system's official package manager is used to install and update server software. This has the added advantage, of having information about the exact installed package, in case the operating system was successfully identified and is supported.
+	When searching for vulnerabilities, the application traverses the list of CVE entries, and checks if any of the CVE entries' \mintinline{xml}{<vulnerable-software-list />} contains the CPE name in question.
 	
-	For the operating systems listed as fully supported in section \ref{opsysmatcher}, regarding the identification of the various Linux distributions and their versions, the application supports querying the distributions' package repository, miscellaneous build system or dedicated security tracker for any CPE names or CVE vulnerabilities, in order to determine whether they are affected and whether a security fix is available.
+	When comparing CPE entries, all components of the CPE have to match in order to declare the application vulnerable. It should be noted, that fields which do not have a value are considered to be wildcard components, and match to any value.
 	
-	After querying an authoritative source, the application can discard vulnerabilities which do not affect the discovered operating system and package combination (e.g. ``NOT-FOR-US'' tag on the Debian Security Tracker) or otherwise check if the proper security update which addresses the vulnerability was applied or not.
+	For example, \mintinline{matlab}{cpe:/o:microsoft:windows:10} refers to \textit{Windows 10}, while the \textit{Hungarian} version of Windows 10 is referred to as \mintinline{matlab}{cpe:/o:microsoft:windows:10:::hu}. When referred specifically, it means that the other language versions of the same product are not affected. However, if a CVE entry only refers to \mintinline{matlab}{cpe:/o:microsoft:windows:10}, it is assumed that other fields are set to \mintinline{matlab}{*}, being equal to \mintinline{matlab}{cpe:/o:microsoft:windows:10:*:*:*}, and therefore making the Hungarian version of the product affected as well.
 	
-	Just like in section \ref{opsysmatcher}, the package lookup functionality is laid out in separate \mintinline{cpp}{*Lookup} classes, having one implementation for each supported operating system. These classes are also the ones responsible for identifying the specific names of the packages, and generating the command line instructions which apply the specific software upgrades.
-	
-\subsection{Estimation of the Last System Upgrade Date}
-\subsectionhu{Utolsó Frissítési Dátum Megbecslése} \subsectionro{Estimarea Datei de Ultima Actualizare al Sistemului}
-
-	Some software, besides the regular application name and version number in the service banner (e.g. \mintinline{matlab}{PHP/5.5.12}) also announce the specific vendor patch level (e.g. \mintinline{matlab}{PHP/5.5.12-2ubuntu4.4}) which can be used to identify whether a security fix was applied to the software, or not.
-	
-	The components discussed in sections \ref{opsysmatcher} and \ref{vulnvalid} can work together in order to download the changelog of the identified package from the identified operating system's package manager.
-	
-	Since these changelogs contain the list of all minor and major releases with their associated dates, it is possible to estimate the date of the last system update of the host to some degree of accuracy, by starting the date range from the date when the installed patch was initially released, and ending the range right before the next patch was released. It can be assumed, that the last system update was initiated in this date range, as this security patch was the last one available for installation at the actual update time.
-	
-	If multiple packages can be identified to the patch level, the date range can be significantly reduced, thus increasing the accuracy of vulnerability validation on services whose exact patch level is not known.
-	
-	Continuing the example above, the mentioned security update was released on the April 17th of 2015, while the next security update under the version of \mintinline{matlab}{5.5.12-2ubuntu4.6} was released on July 6th of 2015. This information can be easily obtained from the published changelog of the ``php5'' package in the online interface of the Ubuntu package manager: \url{https://launchpad.net/ubuntu/utopic/+source/php5/+changelog}
-	
-	The estimation of the last system update is a useful functionality, as it can provide vulnerability validation for services whose exact patch level is not known. If by the start of the guesstimated update date range, a partially identified service already had a security update for an identified vulnerability, it can be freely discarded, as the corresponding security update was most likely applied later in the date range during the update.
-	
-	This functionality is, of course, only guesswork, and can be freely turned off in order to avoid false negatives during validation.
+	Section \ref{matchcpe} briefly introduces the CPE notation, giving an example to ``nginx 1.9.9'' in listing \ref{nginxcpe}. Continuing this example, listing \ref{nginxcve} presents the raw XML entry for the CVE item ``CVE-2016-0742'', which affects the aforementioned server software by having its CPE name in the list of vulnerable software.
 	
 	\begin{listing}[H]
 		\begin{minted}[style=borland]{xml}
@@ -1520,6 +1501,40 @@
 		\caption{CVE-2016-0742 entry affecting nginx 1.9.9}
 		\label{nginxcve}
 	\end{listing}
+	
+\subsection{Vulnerability Validation} \label{vulnvalid}
+\subsectionhu{Sebezhetőségek Érvényesítése} \subsectionro{Validarea Vulnerabilităților}
+
+	The act of vulnerability validation is the phase in which the discovered vulnerabilities are checked whether they actually affect the discovered service or not.
+	
+	One obvious way to validate a vulnerability is by exploiting it. If the exploitation was successful, then the service is vulnerable. This, however, is unfeasible, as the vulnerability database (NVD) does not contain enough information in order to automatically generate and launch an exploitation attempt against a described vulnerability.
+	
+	Alternatively, even if it was possible to do so, in production environments it may not be desirable to launch exploits, as in case they may succeed, they may ultimately end up affecting the normal operation of the service, causing minor to major inconveniences on the public-facing service.
+	
+	However, in such enterprise settings, homogeneous environments are preferred, where the operating system's official package manager is used to install and update server software. This has the added advantage, of having information about the exact installed package, in case the operating system was successfully identified and is supported.
+	
+	For the operating systems listed as fully supported in section \ref{opsysmatcher}, regarding the identification of the various Linux distributions and their versions, the application supports querying the distributions' package repository, miscellaneous build system or dedicated security tracker for any CPE names or CVE vulnerabilities, in order to determine whether they are affected and whether a security fix is available.
+	
+	After querying an authoritative source, the application can discard vulnerabilities which do not affect the discovered operating system and package combination (e.g. ``NOT-FOR-US'' tag on the Debian Security Tracker) or otherwise check if the proper security update which addresses the vulnerability was applied or not.
+	
+	Just like in section \ref{opsysmatcher}, the package lookup functionality is laid out in separate \mintinline{cpp}{*Lookup} classes, having one implementation for each supported operating system. These classes are also the ones responsible for identifying the specific names of the packages, and generating the command line instructions which apply the specific software upgrades.
+	
+\subsection{Estimation of the Last System Upgrade Date}
+\subsectionhu{Utolsó Frissítési Dátum Megbecslése} \subsectionro{Estimarea Datei de Ultima Actualizare al Sistemului}
+
+	Some software, besides the regular application name and version number in the service banner (e.g. \mintinline{matlab}{PHP/5.5.12}) also announce the specific vendor patch level (e.g. \mintinline{matlab}{PHP/5.5.12-2ubuntu4.4}) which can be used to identify whether a security fix was applied to the software, or not.
+	
+	The components discussed in sections \ref{opsysmatcher} and \ref{vulnvalid} can work together in order to download the changelog of the identified package from the identified operating system's package manager.
+	
+	Since these changelogs contain the list of all minor and major releases with their associated dates, it is possible to estimate the date of the last system update of the host to some degree of accuracy, by starting the date range from the date when the installed patch was initially released, and ending the range right before the next patch was released. It can be assumed, that the last system update was initiated in this date range, as this security patch was the last one available for installation at the actual update time.
+	
+	If multiple packages can be identified to the patch level, the date range can be significantly reduced, thus increasing the accuracy of vulnerability validation on services whose exact patch level is not known.
+	
+	Continuing the example above, the mentioned security update was released on the April 17th of 2015, while the next security update under the version of \mintinline{matlab}{5.5.12-2ubuntu4.6} was released on July 6th of 2015. This information can be easily obtained from the published changelog of the ``php5'' package in the online interface of the Ubuntu package manager: \url{https://launchpad.net/ubuntu/utopic/+source/php5/+changelog}
+	
+	The estimation of the last system update is a useful functionality, as it can provide vulnerability validation for services whose exact patch level is not known. If by the start of the guesstimated update date range, a partially identified service already had a security update for an identified vulnerability, it can be freely discarded, as the corresponding security update was most likely applied later in the date range during the update.
+	
+	This functionality is, of course, only guesswork, and can be freely turned off in order to avoid false negatives during validation.
 
 \section{User Guide}
 \sectionhu{Használati Útmutató} \sectionro{Ghid de Utilizare}
@@ -1534,7 +1549,7 @@
 	To compile and run the application, the dependencies must first be installed, which can be done with the following command lines, depending on the operating system the application is being compiled on:
 	
 	\vspace{-0.1in}
-	\paragraph{Debian/Ubuntu/Kali} Install the following packages:
+	\paragraph*{Debian/Ubuntu/Kali} Install the following packages:
 	
 	\begin{listing}[H]
 	\begin{minted}[linenos=false]{matlab}
@@ -1543,7 +1558,7 @@
 	\end{listing}
 		
 	\vspace{-0.4in}
-	\paragraph{RHEL/CentOS/Fedora} Install the following packages:
+	\paragraph*{RHEL/CentOS/Fedora} Install the following packages:
 	
 	\begin{listing}[H]
 	\begin{minted}[linenos=false]{matlab}
@@ -1552,7 +1567,7 @@
 	\end{listing}
 		
 	\vspace{-0.4in}
-	\paragraph{FreeBSD} Install the following packages:
+	\paragraph*{FreeBSD} Install the following packages:
 	
 	\begin{listing}[H]
 	\begin{minted}[linenos=false]{matlab}
@@ -1561,7 +1576,7 @@
 	\end{listing}
 		
 	\vspace{-0.4in}
-	\paragraph{Mac OS X} Install the following packages using \textit{Homebrew}\footnote{\url{http://brew.sh/}}:
+	\paragraph*{Mac OS X} Install the following packages using \textit{Homebrew}\footnote{\url{http://brew.sh/}}:
 	
 	\begin{listing}[H]
 	\begin{minted}[linenos=false]{matlab}
@@ -1570,7 +1585,7 @@
 	\end{listing}
 		
 	\vspace{-0.4in}
-	\paragraph{Windows} Install the following packages from the project root using \textit{Conan}\footnote{\url{https://conan.io/}}:
+	\paragraph*{Windows} Install the following packages from the project root using \textit{Conan}\footnote{\url{https://conan.io/}}:
 	
 	\begin{listing}[H]
 	\begin{minted}[linenos=false]{matlab}
