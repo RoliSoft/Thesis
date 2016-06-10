@@ -40,18 +40,19 @@
 
 \renewcommand{\arraystretch}{1.25}
 
-\linespread{1.2}
+\linespread{1.15}
 
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
 \usepackage{fontawesome}
+\usepackage{inconsolata}
 
 \usepackage{minted}
 \renewcommand{\theFancyVerbLine}{\rmfamily\scriptsize\arabic{FancyVerbLine}}
 \setminted{linenos,autogobble,breaklines,fontsize=\footnotesize,tabsize=4,numbersep=7pt,bgcolor=whitesmoke}
 \AtBeginEnvironment{minted}{%
 	\renewcommand{\fcolorbox}[4][]{#4}%
-	\linespread{1.15}%
+	\linespread{1.1}%
 }
 
 %
