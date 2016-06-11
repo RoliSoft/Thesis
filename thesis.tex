@@ -644,9 +644,9 @@
 			\node at (12,-3.75) {Client $d$};
 			\node at (6,-0.75) {Router};
 			\node at (6,-1.65) {$^{1}$ARP Packet Fields};
-			\draw[fill=whitesmoke] (3.5,-1.9) rectangle (8.5,-4);
+			\draw[fill=whitesmoke] (3.5,-1.9) rectangle (8.5,-4.2);
 			\draw (3.5,-1.4) rectangle (8.5,-1.9);
-			\node[align=left] at (6,-3) {\footnotesize Source IP: \ \ \ \ 192.168.13.31\\\footnotesize Source MAC: 46:25:f4:d3:18:67\\\footnotesize Target IP: \ \ \ \ 192.168.13.37\\\footnotesize Target MAC: 00:00:00:00:00:00};
+			\node[align=left] at (6,-3.1) {\footnotesize Source IP: \ \ \ \ 192.168.13.31\\\footnotesize Source MAC: 46:25:f4:d3:18:67\\\footnotesize Target IP: \ \ \ \ 192.168.13.37\\\footnotesize Target MAC: 00:00:00:00:00:00};
 		\end{tikzpicture}
 		\caption{ARP Request for MAC address of IP 192.168.13.37}
 		\label{arpreq}
@@ -671,9 +671,9 @@
 			\node[color=gray] at (12,-3.75) {Client $d$};
 			\node at (6,-0.75) {Router};
 			\node at (6,-1.65) {$^{2}$ARP Packet Fields};
-			\draw[fill=whitesmoke] (3.5,-1.9) rectangle (8.5,-4);
+			\draw[fill=whitesmoke] (3.5,-1.9) rectangle (8.5,-4.2);
 			\draw (3.5,-1.4) rectangle (8.5,-1.9);
-			\node[align=left] at (6,-3) {\footnotesize Source IP: \ \ \ \ 192.168.13.37\\\footnotesize Source MAC: 1e:41:56:a9:a8:81\\\footnotesize Target IP: \ \ \ \ 192.168.13.31\\\footnotesize Target MAC: 46:25:f4:d3:18:67};
+			\node[align=left] at (6,-3.1) {\footnotesize Source IP: \ \ \ \ 192.168.13.37\\\footnotesize Source MAC: 1e:41:56:a9:a8:81\\\footnotesize Target IP: \ \ \ \ 192.168.13.31\\\footnotesize Target MAC: 46:25:f4:d3:18:67};
 		\end{tikzpicture}
 		\caption{ARP Response with MAC address of IP 192.168.13.37}
 		\label{arpresp}
@@ -1164,7 +1164,7 @@
 			[
 				// token,           later mapped to,           by component
 				"nginx/1.9.12",  // cpe:/a:nginx:nginx:1.9.12, CpeDictionaryMatcher
-				"Ubuntu",        // cpe:/o:canonical:ubuntu,   OpSysMatcher
+				"Ubuntu",        // cpe:/o:canonical:ubuntu,   OperatingSystemIdentifier
 				"PHP/5.6.19"     // cpe:/a:php:php:5.6.19,     CpeDictionaryMatcher
 			]
 		\end{minted}
@@ -1524,7 +1524,7 @@
 	
 	For the operating systems listed as fully supported in section \ref{opsysmatcher}, regarding the identification of the various Linux distributions and their versions, the application supports querying the distributions' package repository, miscellaneous build system or dedicated security tracker for any CPE names or CVE vulnerabilities, in order to determine whether they are affected and whether a security fix is available.
 	
-	After querying an authoritative source, the application can discard vulnerabilities which do not affect the discovered operating system and package combination (e.g. ``NOT-FOR-US'' tag on the Debian Security Tracker) or otherwise check if the proper security update which addresses the vulnerability was applied or not.
+	After querying an authoritative source, the application can discard vulnerabilities which do not affect the discovered operating system and package combination (e.g. \mintinline{matlab}{NOT-FOR-US} tag on the Debian Security Tracker) or otherwise check if the proper security update which addresses the vulnerability was applied or not.
 	
 	Just like in section \ref{opsysmatcher}, the package lookup functionality is laid out in separate \mintinline{cpp}{*Lookup} classes, having one implementation for each supported operating system. These classes are also the ones responsible for identifying the specific names of the packages, and generating the command line instructions which apply the specific software upgrades.
 	
