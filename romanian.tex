@@ -100,3 +100,23 @@
 	Ca să fie folositoare și pentru administratorii de rețea care nu au experiențe semnificative în domeniul de securitate, aplicația trebuie să încearcă să generează o listă simplă cu pașii pentru a soluționa vulnerabilitățile descoperite pe fiecare server.
 	
 	În cazul serverurilor unde sistemul de operare a fost identificat cu succes, aplicația poate să generează o linie de comandă care când este rulat pe serverul cu vulnerabilități va actualiza programele vulnerabile.
+
+\section*{Soluții Aferente} \label{relwork_ro}
+	
+\subsection*{Soluții Comerciale} \label{comtools_ro}
+	
+	Proiectul \textit{nmap} menține o listă cu instrumentele de securitate, ordonat pe baza popularității acestora\cite{sectools}. În această secțiune vor fi prezentate trei instrumente de penetrare dintre cele mai populare din lista menționată ulterior.
+	
+	\paragraph*{Nessus} \textit{Nessus Vulnerability Scanner}\cite{nessus} este dezvoltat și menținut de Tenable Network Security. Inițial a fost gratuit și open-source, cu funcții opționale contra cost, dar în 2005 sursa a fost închisă. SecTools.org pune Nessus pe poziția numărul unu pe popularitatea instrumentelor din această categorie. Momentan există o ediție ``Community'' care e gratuit, dar are câteva funcții limitate și se poate folosi numai pentru uz personal. Abonamentul anual pentru versiunea plătită începe de la \$2,190 per utilizator.
+	
+	\paragraph*{OpenVAS} \textit{Open Vulnerability Assessment System}\cite{openvas} este un fork al proiectului Nessus, din perioada în care era open-source. Momentan este dezvoltat și menținut de Greenbone Networks. SecTools.org pune OpenVAS pe poziția numărul doi pe popularitate instrumentelor din această categorie, iar popularitatea acestuia este într-o creștere continuară din cauza sursei deschise.
+	
+	\paragraph*{Nexpose} \textit{Nexpose Vulnerability Scanner}\cite{nexpose} este dezvoltat și menținut de Rapid7, o companie care este cunoscut în domeniul de securitate din cauza unui alt proiectul dezvoltate de ei, anume \textit{Metasploit}. SecTools.org pune Nexpose pe poziția numărul trei pe popularitate instrumentelor din această categorie. Abonamentele anuale încep de la \$2,000, dar există și o variantă ``Community'' care se poate folosii gratis pentru uz personal.
+	
+\subsection*{Lucrări Științifice}
+	
+	Anumite articole studiază eficiența al soluțiilor comerciale existente. Cele mai citate dintre aceste articole sunt \cite{holm11,bau10,doupe10}.
+	
+	Publicația \cite{kals06} detaliază planificarea și realizarea unei sistem de teste de penetrare pentru web, iar dintr-o altă perspectivă, articolul \cite{guo05} studiază securitatea dispozitivelor conectate la o rețea publică.
+	
+	\textit{ShoVAT}\cite{shovat15} prezintă o metodologie care este folosită și în aplicația dezvoltată în scopul licenței cu mici modificări, componentul fiind detaliat în secțiunea \ref{matchcpe_ro}, vorbind despre identificarea serviciilor într-un mod autonom, folosind baza de date publicat de instituția NIST.
