@@ -1057,9 +1057,6 @@
 	\end{figure}
 	\endgroup
 	
-	\definecolor{plantucolor0000}{RGB}{0,0,0}
-	\definecolor{plantucolor0001}{RGB}{255,255,255}
-				
 	\begin{figure}[!htbp]
 		%	@startuml
 		%	Application -> PortScannerFactory: IP:port list to be scanned
@@ -1069,32 +1066,32 @@
 		%	@enduml
 		\centering
 		\begin{tikzpicture}[yscale=-1,scale=0.9,every node/.style={scale=0.9}]
-			\draw[color=plantucolor0000,dash pattern=on 5.0pt off 5.0pt] (51pt,39.6094pt) -- (51pt,181.0156pt);
-			\draw[color=plantucolor0000,dash pattern=on 5.0pt off 5.0pt] (220pt,39.6094pt) -- (220pt,181.0156pt);
-			\draw[color=plantucolor0000,dash pattern=on 5.0pt off 5.0pt] (351pt,39.6094pt) -- (351pt,181.0156pt);
-			\draw[color=plantucolor0000,fill=plantucolor0001] (8pt,3pt) rectangle (91pt,34.6094pt);
+			\draw[dash pattern=on 5.0pt off 5.0pt] (51pt,39.6094pt) -- (51pt,181.0156pt);
+			\draw[dash pattern=on 5.0pt off 5.0pt] (220pt,39.6094pt) -- (220pt,181.0156pt);
+			\draw[dash pattern=on 5.0pt off 5.0pt] (351pt,39.6094pt) -- (351pt,181.0156pt);
+			\draw (8pt,3pt) rectangle (91pt,34.6094pt);
 			\node at (15pt,10pt)[below right]{Application};
-			\draw[color=plantucolor0000,fill=plantucolor0001] (8pt,180.0156pt) rectangle (91pt,211.625pt);
+			\draw (8pt,180.0156pt) rectangle (91pt,211.625pt);
 			\node at (15pt,187.0156pt)[below right]{Application};
-			\draw[color=plantucolor0000,fill=plantucolor0001] (148pt,3pt) rectangle (289pt,34.6094pt);
+			\draw (148pt,3pt) rectangle (289pt,34.6094pt);
 			\node at (155pt,10pt)[below right]{PortScannerFactory};
-			\draw[color=plantucolor0000,fill=plantucolor0001] (148pt,180.0156pt) rectangle (289pt,211.625pt);
+			\draw (148pt,180.0156pt) rectangle (289pt,211.625pt);
 			\node at (155pt,187.0156pt)[below right]{PortScannerFactory};
-			\draw[color=plantucolor0000,fill=plantucolor0001] (303pt,3pt) rectangle (395pt,34.6094pt);
+			\draw (303pt,3pt) rectangle (395pt,34.6094pt);
 			\node at (310pt,10pt)[below right]{TaskRunner};
-			\draw[color=plantucolor0000,fill=plantucolor0001] (303pt,180.0156pt) rectangle (395pt,211.625pt);
+			\draw (303pt,180.0156pt) rectangle (395pt,211.625pt);
 			\node at (310pt,187.0156pt)[below right]{TaskRunner};
-			\draw[color=plantucolor0000,fill=plantucolor0000] (208.5pt,67.6094pt) -- (218.5pt,71.6094pt) -- (208.5pt,75.6094pt) -- (212.5pt,71.6094pt) -- cycle;
-			\draw[color=plantucolor0000] (51.5pt,71.6094pt) -- (214.5pt,71.6094pt);
+			\draw[fill=black] (208.5pt,67.6094pt) -- (218.5pt,71.6094pt) -- (208.5pt,75.6094pt) -- (212.5pt,71.6094pt) -- cycle;
+			\draw (51.5pt,71.6094pt) -- (214.5pt,71.6094pt);
 			\node at (58.5pt,53.6094pt)[below right]{IP:port list to be scanned};
-			\draw[color=plantucolor0000,fill=plantucolor0000] (62.5pt,97.9609pt) -- (52.5pt,101.9609pt) -- (62.5pt,105.9609pt) -- (58.5pt,101.9609pt) -- cycle;
-			\draw[color=plantucolor0000,dash pattern=on 2.0pt off 2.0pt] (56.5pt,101.9609pt) -- (219.5pt,101.9609pt);
+			\draw[fill=black] (62.5pt,97.9609pt) -- (52.5pt,101.9609pt) -- (62.5pt,105.9609pt) -- (58.5pt,101.9609pt) -- cycle;
+			\draw[dash pattern=on 2.0pt off 2.0pt] (56.5pt,101.9609pt) -- (219.5pt,101.9609pt);
 			\node at (68.5pt,83.9609pt)[below right]{return tasks};
-			\draw[color=plantucolor0000,fill=plantucolor0000] (339pt,128.3125pt) -- (349pt,132.3125pt) -- (339pt,136.3125pt) -- (343pt,132.3125pt) -- cycle;
-			\draw[color=plantucolor0000] (51.5pt,132.3125pt) -- (345pt,132.3125pt);
+			\draw[fill=black] (339pt,128.3125pt) -- (349pt,132.3125pt) -- (339pt,136.3125pt) -- (343pt,132.3125pt) -- cycle;
+			\draw (51.5pt,132.3125pt) -- (345pt,132.3125pt);
 			\node at (58.5pt,114.3125pt)[below right]{list of tasks};
-			\draw[color=plantucolor0000,fill=plantucolor0000] (62.5pt,158.6641pt) -- (52.5pt,162.6641pt) -- (62.5pt,166.6641pt) -- (58.5pt,162.6641pt) -- cycle;
-			\draw[color=plantucolor0000,dash pattern=on 2.0pt off 2.0pt] (56.5pt,162.6641pt) -- (350pt,162.6641pt);
+			\draw[fill=black] (62.5pt,158.6641pt) -- (52.5pt,162.6641pt) -- (62.5pt,166.6641pt) -- (58.5pt,162.6641pt) -- cycle;
+			\draw[dash pattern=on 2.0pt off 2.0pt] (56.5pt,162.6641pt) -- (350pt,162.6641pt);
 			\node at (68.5pt,144.6641pt)[below right]{results of tasks};
 		\end{tikzpicture}
 		\caption{Sequence Diagram for Task Instantiation and Multiplexed Running}
@@ -1110,32 +1107,32 @@
 		%	@enduml
 		\centering
 		\begin{tikzpicture}[yscale=-1,scale=0.9,every node/.style={scale=0.9}]
-			\draw[color=plantucolor0000,dash pattern=on 5.0pt off 5.0pt] (51pt,39.6094pt) -- (51pt,181.0156pt);
-			\draw[color=plantucolor0000,dash pattern=on 5.0pt off 5.0pt] (169pt,39.6094pt) -- (169pt,181.0156pt);
-			\draw[color=plantucolor0000,dash pattern=on 5.0pt off 5.0pt] (321pt,39.6094pt) -- (321pt,181.0156pt);
-			\draw[color=plantucolor0000,fill=plantucolor0001] (8pt,3pt) rectangle (91pt,34.6094pt);
+			\draw[dash pattern=on 5.0pt off 5.0pt] (51pt,39.6094pt) -- (51pt,181.0156pt);
+			\draw[dash pattern=on 5.0pt off 5.0pt] (169pt,39.6094pt) -- (169pt,181.0156pt);
+			\draw[dash pattern=on 5.0pt off 5.0pt] (321pt,39.6094pt) -- (321pt,181.0156pt);
+			\draw (8pt,3pt) rectangle (91pt,34.6094pt);
 			\node at (15pt,10pt)[below right]{Application};
-			\draw[color=plantucolor0000,fill=plantucolor0001] (8pt,180.0156pt) rectangle (91pt,211.625pt);
+			\draw (8pt,180.0156pt) rectangle (91pt,211.625pt);
 			\node at (15pt,187.0156pt)[below right]{Application};
-			\draw[color=plantucolor0000,fill=plantucolor0001] (105pt,3pt) rectangle (229pt,34.6094pt);
+			\draw (105pt,3pt) rectangle (229pt,34.6094pt);
 			\node at (112pt,10pt)[below right]{BannerProcessor};
-			\draw[color=plantucolor0000,fill=plantucolor0001] (105pt,180.0156pt) rectangle (229pt,211.625pt);
+			\draw (105pt,180.0156pt) rectangle (229pt,211.625pt);
 			\node at (112pt,187.0156pt)[below right]{BannerProcessor};
-			\draw[color=plantucolor0000,fill=plantucolor0001] (243pt,3pt) rectangle (395pt,34.6094pt);
+			\draw (243pt,3pt) rectangle (395pt,34.6094pt);
 			\node at (250pt,10pt)[below right]{ServiceRegexMatcher};
-			\draw[color=plantucolor0000,fill=plantucolor0001] (243pt,180.0156pt) rectangle (395pt,211.625pt);
+			\draw (243pt,180.0156pt) rectangle (395pt,211.625pt);
 			\node at (250pt,187.0156pt)[below right]{ServiceRegexMatcher};
-			\draw[color=plantucolor0000,fill=plantucolor0000] (157pt,67.6094pt) -- (167pt,71.6094pt) -- (157pt,75.6094pt) -- (161pt,71.6094pt) -- cycle;
-			\draw[color=plantucolor0000] (51.5pt,71.6094pt) -- (163pt,71.6094pt);
+			\draw[fill=black] (157pt,67.6094pt) -- (167pt,71.6094pt) -- (157pt,75.6094pt) -- (161pt,71.6094pt) -- cycle;
+			\draw (51.5pt,71.6094pt) -- (163pt,71.6094pt);
 			\node at (58.5pt,53.6094pt)[below right]{service banners};
-			\draw[color=plantucolor0000,fill=plantucolor0000] (309pt,97.9609pt) -- (319pt,101.9609pt) -- (309pt,105.9609pt) -- (313pt,101.9609pt) -- cycle;
-			\draw[color=plantucolor0000] (169pt,101.9609pt) -- (315pt,101.9609pt);
+			\draw[fill=black] (309pt,97.9609pt) -- (319pt,101.9609pt) -- (309pt,105.9609pt) -- (313pt,101.9609pt) -- cycle;
+			\draw (169pt,101.9609pt) -- (315pt,101.9609pt);
 			\node at (176pt,83.9609pt)[below right]{match regexes};
-			\draw[color=plantucolor0000,fill=plantucolor0000] (180pt,128.3125pt) -- (170pt,132.3125pt) -- (180pt,136.3125pt) -- (176pt,132.3125pt) -- cycle;
-			\draw[color=plantucolor0000,dash pattern=on 2.0pt off 2.0pt] (174pt,132.3125pt) -- (320pt,132.3125pt);
+			\draw[fill=black] (180pt,128.3125pt) -- (170pt,132.3125pt) -- (180pt,136.3125pt) -- (176pt,132.3125pt) -- cycle;
+			\draw[dash pattern=on 2.0pt off 2.0pt] (174pt,132.3125pt) -- (320pt,132.3125pt);
 			\node at (186pt,114.3125pt)[below right]{return CPE};
-			\draw[color=plantucolor0000,fill=plantucolor0000] (62.5pt,158.6641pt) -- (52.5pt,162.6641pt) -- (62.5pt,166.6641pt) -- (58.5pt,162.6641pt) -- cycle;
-			\draw[color=plantucolor0000,dash pattern=on 2.0pt off 2.0pt] (56.5pt,162.6641pt) -- (168pt,162.6641pt);
+			\draw[fill=black] (62.5pt,158.6641pt) -- (52.5pt,162.6641pt) -- (62.5pt,166.6641pt) -- (58.5pt,162.6641pt) -- cycle;
+			\draw[dash pattern=on 2.0pt off 2.0pt] (56.5pt,162.6641pt) -- (168pt,162.6641pt);
 			\node at (68.5pt,144.6641pt)[below right]{return CPE};
 		\end{tikzpicture}
 		\caption{Sequence Diagram for Pattern-based Matching of Service Banners}
@@ -1153,43 +1150,43 @@
 		%	@enduml
 		\centering
 		\begin{tikzpicture}[yscale=-1,scale=0.9,every node/.style={scale=0.9}]
-			\draw[color=plantucolor0000,dash pattern=on 5.0pt off 5.0pt] (51pt,39.6094pt) -- (51pt,241.7188pt);
-			\draw[color=plantucolor0000,dash pattern=on 5.0pt off 5.0pt] (169pt,39.6094pt) -- (169pt,241.7188pt);
-			\draw[color=plantucolor0000,dash pattern=on 5.0pt off 5.0pt] (309pt,39.6094pt) -- (309pt,241.7188pt);
-			\draw[color=plantucolor0000,dash pattern=on 5.0pt off 5.0pt] (464pt,39.6094pt) -- (464pt,241.7188pt);
-			\draw[color=plantucolor0000,fill=plantucolor0001] (8pt,3pt) rectangle (91pt,34.6094pt);
+			\draw[dash pattern=on 5.0pt off 5.0pt] (51pt,39.6094pt) -- (51pt,241.7188pt);
+			\draw[dash pattern=on 5.0pt off 5.0pt] (169pt,39.6094pt) -- (169pt,241.7188pt);
+			\draw[dash pattern=on 5.0pt off 5.0pt] (309pt,39.6094pt) -- (309pt,241.7188pt);
+			\draw[dash pattern=on 5.0pt off 5.0pt] (464pt,39.6094pt) -- (464pt,241.7188pt);
+			\draw (8pt,3pt) rectangle (91pt,34.6094pt);
 			\node at (15pt,10pt)[below right]{Application};
-			\draw[color=plantucolor0000,fill=plantucolor0001] (8pt,240.7188pt) rectangle (91pt,272.3281pt);
+			\draw (8pt,240.7188pt) rectangle (91pt,272.3281pt);
 			\node at (15pt,247.7188pt)[below right]{Application};
-			\draw[color=plantucolor0000,fill=plantucolor0001] (105pt,3pt) rectangle (229pt,34.6094pt);
+			\draw (105pt,3pt) rectangle (229pt,34.6094pt);
 			\node at (112pt,10pt)[below right]{BannerProcessor};
-			\draw[color=plantucolor0000,fill=plantucolor0001] (105pt,240.7188pt) rectangle (229pt,272.3281pt);
+			\draw (105pt,240.7188pt) rectangle (229pt,272.3281pt);
 			\node at (112pt,247.7188pt)[below right]{BannerProcessor};
-			\draw[color=plantucolor0000,fill=plantucolor0001] (243pt,3pt) rectangle (371pt,34.6094pt);
+			\draw (243pt,3pt) rectangle (371pt,34.6094pt);
 			\node at (250pt,10pt)[below right]{ProtocolTokenizer};
-			\draw[color=plantucolor0000,fill=plantucolor0001] (243pt,240.7188pt) rectangle (371pt,272.3281pt);
+			\draw (243pt,240.7188pt) rectangle (371pt,272.3281pt);
 			\node at (250pt,247.7188pt)[below right]{ProtocolTokenizer};
-			\draw[color=plantucolor0000,fill=plantucolor0001] (385pt,3pt) rectangle (539pt,34.6094pt);
+			\draw (385pt,3pt) rectangle (539pt,34.6094pt);
 			\node at (392pt,10pt)[below right]{CpeDictionaryMatcher};
-			\draw[color=plantucolor0000,fill=plantucolor0001] (385pt,240.7188pt) rectangle (539pt,272.3281pt);
+			\draw (385pt,240.7188pt) rectangle (539pt,272.3281pt);
 			\node at (392pt,247.7188pt)[below right]{CpeDictionaryMatcher};
-			\draw[color=plantucolor0000,fill=plantucolor0000] (157pt,67.6094pt) -- (167pt,71.6094pt) -- (157pt,75.6094pt) -- (161pt,71.6094pt) -- cycle;
-			\draw[color=plantucolor0000] (51.5pt,71.6094pt) -- (163pt,71.6094pt);
+			\draw[fill=black] (157pt,67.6094pt) -- (167pt,71.6094pt) -- (157pt,75.6094pt) -- (161pt,71.6094pt) -- cycle;
+			\draw (51.5pt,71.6094pt) -- (163pt,71.6094pt);
 			\node at (58.5pt,53.6094pt)[below right]{service banners};
-			\draw[color=plantucolor0000,fill=plantucolor0000] (297pt,97.9609pt) -- (307pt,101.9609pt) -- (297pt,105.9609pt) -- (301pt,101.9609pt) -- cycle;
-			\draw[color=plantucolor0000] (169pt,101.9609pt) -- (303pt,101.9609pt);
+			\draw[fill=black] (297pt,97.9609pt) -- (307pt,101.9609pt) -- (297pt,105.9609pt) -- (301pt,101.9609pt) -- cycle;
+			\draw (169pt,101.9609pt) -- (303pt,101.9609pt);
 			\node at (176pt,83.9609pt)[below right]{service banner};
-			\draw[color=plantucolor0000,fill=plantucolor0000] (180pt,128.3125pt) -- (170pt,132.3125pt) -- (180pt,136.3125pt) -- (176pt,132.3125pt) -- cycle;
-			\draw[color=plantucolor0000] (174pt,132.3125pt) -- (308pt,132.3125pt);
+			\draw[fill=black] (180pt,128.3125pt) -- (170pt,132.3125pt) -- (180pt,136.3125pt) -- (176pt,132.3125pt) -- cycle;
+			\draw (174pt,132.3125pt) -- (308pt,132.3125pt);
 			\node at (186pt,114.3125pt)[below right]{return tokens};
-			\draw[color=plantucolor0000,fill=plantucolor0000] (452pt,158.6641pt) -- (462pt,162.6641pt) -- (452pt,166.6641pt) -- (456pt,162.6641pt) -- cycle;
-			\draw[color=plantucolor0000] (169pt,162.6641pt) -- (458pt,162.6641pt);
+			\draw[fill=black] (452pt,158.6641pt) -- (462pt,162.6641pt) -- (452pt,166.6641pt) -- (456pt,162.6641pt) -- cycle;
+			\draw (169pt,162.6641pt) -- (458pt,162.6641pt);
 			\node at (176pt,144.6641pt)[below right]{extracted tokens};
-			\draw[color=plantucolor0000,fill=plantucolor0000] (180pt,189.0156pt) -- (170pt,193.0156pt) -- (180pt,197.0156pt) -- (176pt,193.0156pt) -- cycle;
-			\draw[color=plantucolor0000,dash pattern=on 2.0pt off 2.0pt] (174pt,193.0156pt) -- (463pt,193.0156pt);
+			\draw[fill=black] (180pt,189.0156pt) -- (170pt,193.0156pt) -- (180pt,197.0156pt) -- (176pt,193.0156pt) -- cycle;
+			\draw[dash pattern=on 2.0pt off 2.0pt] (174pt,193.0156pt) -- (463pt,193.0156pt);
 			\node at (186pt,175.0156pt)[below right]{return CPE};
-			\draw[color=plantucolor0000,fill=plantucolor0000] (62.5pt,219.3672pt) -- (52.5pt,223.3672pt) -- (62.5pt,227.3672pt) -- (58.5pt,223.3672pt) -- cycle;
-			\draw[color=plantucolor0000,dash pattern=on 2.0pt off 2.0pt] (56.5pt,223.3672pt) -- (168pt,223.3672pt);
+			\draw[fill=black] (62.5pt,219.3672pt) -- (52.5pt,223.3672pt) -- (62.5pt,227.3672pt) -- (58.5pt,223.3672pt) -- cycle;
+			\draw[dash pattern=on 2.0pt off 2.0pt] (56.5pt,223.3672pt) -- (168pt,223.3672pt);
 			\node at (68.5pt,205.3672pt)[below right]{return CPE};
 		\end{tikzpicture}
 		\caption{Sequence Diagram for CPE Token-based Matching of Service Banners}
@@ -1205,32 +1202,32 @@
 		%	@enduml
 		\centering
 		\begin{tikzpicture}[yscale=-1,scale=0.9,every node/.style={scale=0.9}]
-			\draw[color=plantucolor0000,dash pattern=on 5.0pt off 5.0pt] (74pt,39.6094pt) -- (74pt,181.0156pt);
-			\draw[color=plantucolor0000,dash pattern=on 5.0pt off 5.0pt] (216.5pt,39.6094pt) -- (216.5pt,181.0156pt);
-			\draw[color=plantucolor0000,dash pattern=on 5.0pt off 5.0pt] (352.5pt,39.6094pt) -- (352.5pt,181.0156pt);
-			\draw[color=plantucolor0000,fill=plantucolor0001] (8pt,3pt) rectangle (136pt,34.6094pt);
+			\draw[dash pattern=on 5.0pt off 5.0pt] (74pt,39.6094pt) -- (74pt,181.0156pt);
+			\draw[dash pattern=on 5.0pt off 5.0pt] (216.5pt,39.6094pt) -- (216.5pt,181.0156pt);
+			\draw[dash pattern=on 5.0pt off 5.0pt] (352.5pt,39.6094pt) -- (352.5pt,181.0156pt);
+			\draw (8pt,3pt) rectangle (136pt,34.6094pt);
 			\node at (15pt,10pt)[below right]{ProtocolTokenizer};
-			\draw[color=plantucolor0000,fill=plantucolor0001] (8pt,180.0156pt) rectangle (136pt,211.625pt);
+			\draw (8pt,180.0156pt) rectangle (136pt,211.625pt);
 			\node at (15pt,187.0156pt)[below right]{ProtocolTokenizer};
-			\draw[color=plantucolor0000,fill=plantucolor0001] (164.5pt,3pt) rectangle (265.5pt,34.6094pt);
+			\draw (164.5pt,3pt) rectangle (265.5pt,34.6094pt);
 			\node at (171.5pt,10pt)[below right]{HttpTokenizer};
-			\draw[color=plantucolor0000,fill=plantucolor0001] (164.5pt,180.0156pt) rectangle (265.5pt,211.625pt);
+			\draw (164.5pt,180.0156pt) rectangle (265.5pt,211.625pt);
 			\node at (171.5pt,187.0156pt)[below right]{HttpTokenizer};
-			\draw[color=plantucolor0000,fill=plantucolor0001] (279.5pt,3pt) rectangle (421.5pt,34.6094pt);
+			\draw (279.5pt,3pt) rectangle (421.5pt,34.6094pt);
 			\node at (286.5pt,10pt)[below right]{ThreeDigitTokenizer};
-			\draw[color=plantucolor0000,fill=plantucolor0001] (279.5pt,180.0156pt) rectangle (421.5pt,211.625pt);
+			\draw (279.5pt,180.0156pt) rectangle (421.5pt,211.625pt);
 			\node at (286.5pt,187.0156pt)[below right]{ThreeDigitTokenizer};
-			\draw[color=plantucolor0000,fill=plantucolor0000] (205pt,67.6094pt) -- (215pt,71.6094pt) -- (205pt,75.6094pt) -- (209pt,71.6094pt) -- cycle;
-			\draw[color=plantucolor0000] (74pt,71.6094pt) -- (211pt,71.6094pt);
+			\draw[fill=black] (205pt,67.6094pt) -- (215pt,71.6094pt) -- (205pt,75.6094pt) -- (209pt,71.6094pt) -- cycle;
+			\draw (74pt,71.6094pt) -- (211pt,71.6094pt);
 			\node at (81pt,53.6094pt)[below right]{HTTP service banner};
-			\draw[color=plantucolor0000,fill=plantucolor0000] (85pt,97.9609pt) -- (75pt,101.9609pt) -- (85pt,105.9609pt) -- (81pt,101.9609pt) -- cycle;
-			\draw[color=plantucolor0000,dash pattern=on 2.0pt off 2.0pt] (79pt,101.9609pt) -- (216pt,101.9609pt);
+			\draw[fill=black] (85pt,97.9609pt) -- (75pt,101.9609pt) -- (85pt,105.9609pt) -- (81pt,101.9609pt) -- cycle;
+			\draw[dash pattern=on 2.0pt off 2.0pt] (79pt,101.9609pt) -- (216pt,101.9609pt);
 			\node at (91pt,83.9609pt)[below right]{return tokens};
-			\draw[color=plantucolor0000,fill=plantucolor0000] (340.5pt,128.3125pt) -- (350.5pt,132.3125pt) -- (340.5pt,136.3125pt) -- (344.5pt,132.3125pt) -- cycle;
-			\draw[color=plantucolor0000] (74pt,132.3125pt) -- (346.5pt,132.3125pt);
+			\draw[fill=black] (340.5pt,128.3125pt) -- (350.5pt,132.3125pt) -- (340.5pt,136.3125pt) -- (344.5pt,132.3125pt) -- cycle;
+			\draw (74pt,132.3125pt) -- (346.5pt,132.3125pt);
 			\node at (81pt,114.3125pt)[below right]{service banner};
-			\draw[color=plantucolor0000,fill=plantucolor0000] (85pt,158.6641pt) -- (75pt,162.6641pt) -- (85pt,166.6641pt) -- (81pt,162.6641pt) -- cycle;
-			\draw[color=plantucolor0000,dash pattern=on 2.0pt off 2.0pt] (79pt,162.6641pt) -- (351.5pt,162.6641pt);
+			\draw[fill=black] (85pt,158.6641pt) -- (75pt,162.6641pt) -- (85pt,166.6641pt) -- (81pt,162.6641pt) -- cycle;
+			\draw[dash pattern=on 2.0pt off 2.0pt] (79pt,162.6641pt) -- (351.5pt,162.6641pt);
 			\node at (91pt,144.6641pt)[below right]{return tokens};
 		\end{tikzpicture}
 		\caption{Sequence Diagram for Protocol-based Tokenization of Service Banners}
@@ -1246,32 +1243,32 @@
 		%	@enduml
 		\centering
 		\begin{tikzpicture}[yscale=-1,scale=0.9,every node/.style={scale=0.9}]
-			\draw[color=plantucolor0000,dash pattern=on 5.0pt off 5.0pt] (51pt,39.6094pt) -- (51pt,181.0156pt);
-			\draw[color=plantucolor0000,dash pattern=on 5.0pt off 5.0pt] (208pt,39.6094pt) -- (208pt,181.0156pt);
-			\draw[color=plantucolor0000,dash pattern=on 5.0pt off 5.0pt] (365.5pt,39.6094pt) -- (365.5pt,181.0156pt);
-			\draw[color=plantucolor0000,fill=plantucolor0001] (8pt,3pt) rectangle (91pt,34.6094pt);
+			\draw[dash pattern=on 5.0pt off 5.0pt] (51pt,39.6094pt) -- (51pt,181.0156pt);
+			\draw[dash pattern=on 5.0pt off 5.0pt] (208pt,39.6094pt) -- (208pt,181.0156pt);
+			\draw[dash pattern=on 5.0pt off 5.0pt] (365.5pt,39.6094pt) -- (365.5pt,181.0156pt);
+			\draw (8pt,3pt) rectangle (91pt,34.6094pt);
 			\node at (15pt,10pt)[below right]{Application};
-			\draw[color=plantucolor0000,fill=plantucolor0001] (8pt,180.0156pt) rectangle (91pt,211.625pt);
+			\draw (8pt,180.0156pt) rectangle (91pt,211.625pt);
 			\node at (15pt,187.0156pt)[below right]{Application};
-			\draw[color=plantucolor0000,fill=plantucolor0001] (118pt,3pt) rectangle (295pt,34.6094pt);
+			\draw (118pt,3pt) rectangle (295pt,34.6094pt);
 			\node at (125pt,10pt)[below right]{OperatingSystemIdentifier};
-			\draw[color=plantucolor0000,fill=plantucolor0001] (118pt,180.0156pt) rectangle (295pt,211.625pt);
+			\draw (118pt,180.0156pt) rectangle (295pt,211.625pt);
 			\node at (125pt,187.0156pt)[below right]{OperatingSystemIdentifier};
-			\draw[color=plantucolor0000,fill=plantucolor0001] (325.5pt,3pt) rectangle (401.5pt,34.6094pt);
+			\draw (325.5pt,3pt) rectangle (401.5pt,34.6094pt);
 			\node at (332.5pt,10pt)[below right]{*Identifier\footnotemark};
-			\draw[color=plantucolor0000,fill=plantucolor0001] (325.5pt,180.0156pt) rectangle (401.5pt,211.625pt);
+			\draw (325.5pt,180.0156pt) rectangle (401.5pt,211.625pt);
 			\node at (332.5pt,187.0156pt)[below right]{*Identifier};
-			\draw[color=plantucolor0000,fill=plantucolor0000] (196.5pt,67.6094pt) -- (206.5pt,71.6094pt) -- (196.5pt,75.6094pt) -- (200.5pt,71.6094pt) -- cycle;
-			\draw[color=plantucolor0000] (51.5pt,71.6094pt) -- (202.5pt,71.6094pt);
+			\draw[fill=black] (196.5pt,67.6094pt) -- (206.5pt,71.6094pt) -- (196.5pt,75.6094pt) -- (200.5pt,71.6094pt) -- cycle;
+			\draw (51.5pt,71.6094pt) -- (202.5pt,71.6094pt);
 			\node at (58.5pt,53.6094pt)[below right]{service banners of host};
-			\draw[color=plantucolor0000,fill=plantucolor0000] (353.5pt,97.9609pt) -- (363.5pt,101.9609pt) -- (353.5pt,105.9609pt) -- (357.5pt,101.9609pt) -- cycle;
-			\draw[color=plantucolor0000] (208.5pt,101.9609pt) -- (359.5pt,101.9609pt);
+			\draw[fill=black] (353.5pt,97.9609pt) -- (363.5pt,101.9609pt) -- (353.5pt,105.9609pt) -- (357.5pt,101.9609pt) -- cycle;
+			\draw (208.5pt,101.9609pt) -- (359.5pt,101.9609pt);
 			\node at (215.5pt,83.9609pt)[below right]{service banners of host};
-			\draw[color=plantucolor0000,fill=plantucolor0000] (219.5pt,128.3125pt) -- (209.5pt,132.3125pt) -- (219.5pt,136.3125pt) -- (215.5pt,132.3125pt) -- cycle;
-			\draw[color=plantucolor0000,dash pattern=on 2.0pt off 2.0pt] (213.5pt,132.3125pt) -- (364.5pt,132.3125pt);
+			\draw[fill=black] (219.5pt,128.3125pt) -- (209.5pt,132.3125pt) -- (219.5pt,136.3125pt) -- (215.5pt,132.3125pt) -- cycle;
+			\draw[dash pattern=on 2.0pt off 2.0pt] (213.5pt,132.3125pt) -- (364.5pt,132.3125pt);
 			\node at (225.5pt,114.3125pt)[below right]{return OS CPE};
-			\draw[color=plantucolor0000,fill=plantucolor0000] (62.5pt,158.6641pt) -- (52.5pt,162.6641pt) -- (62.5pt,166.6641pt) -- (58.5pt,162.6641pt) -- cycle;
-			\draw[color=plantucolor0000,dash pattern=on 2.0pt off 2.0pt] (56.5pt,162.6641pt) -- (207.5pt,162.6641pt);
+			\draw[fill=black] (62.5pt,158.6641pt) -- (52.5pt,162.6641pt) -- (62.5pt,166.6641pt) -- (58.5pt,162.6641pt) -- cycle;
+			\draw[dash pattern=on 2.0pt off 2.0pt] (56.5pt,162.6641pt) -- (207.5pt,162.6641pt);
 			\node at (68.5pt,144.6641pt)[below right]{return OS CPE};
 		\end{tikzpicture}
 		\caption{Sequence Diagram for Operating System Identification}
@@ -1287,32 +1284,32 @@
 		%	@enduml
 		\centering
 		\begin{tikzpicture}[yscale=-1,scale=0.9,every node/.style={scale=0.9}]
-			\draw[color=plantucolor0000,dash pattern=on 5.0pt off 5.0pt] (51pt,39.6094pt) -- (51pt,181.0156pt);
-			\draw[color=plantucolor0000,dash pattern=on 5.0pt off 5.0pt] (184pt,39.6094pt) -- (184pt,181.0156pt);
-			\draw[color=plantucolor0000,dash pattern=on 5.0pt off 5.0pt] (357pt,39.6094pt) -- (357pt,181.0156pt);
-			\draw[color=plantucolor0000,fill=plantucolor0001] (8pt,3pt) rectangle (91pt,34.6094pt);
+			\draw[dash pattern=on 5.0pt off 5.0pt] (51pt,39.6094pt) -- (51pt,181.0156pt);
+			\draw[dash pattern=on 5.0pt off 5.0pt] (184pt,39.6094pt) -- (184pt,181.0156pt);
+			\draw[dash pattern=on 5.0pt off 5.0pt] (357pt,39.6094pt) -- (357pt,181.0156pt);
+			\draw (8pt,3pt) rectangle (91pt,34.6094pt);
 			\node at (15pt,10pt)[below right]{Application};
-			\draw[color=plantucolor0000,fill=plantucolor0001] (8pt,180.0156pt) rectangle (91pt,211.625pt);
+			\draw (8pt,180.0156pt) rectangle (91pt,211.625pt);
 			\node at (15pt,187.0156pt)[below right]{Application};
-			\draw[color=plantucolor0000,fill=plantucolor0001] (105pt,3pt) rectangle (260pt,34.6094pt);
+			\draw (105pt,3pt) rectangle (260pt,34.6094pt);
 			\node at (112pt,10pt)[below right]{VendorLookupFactory};
-			\draw[color=plantucolor0000,fill=plantucolor0001] (105pt,180.0156pt) rectangle (260pt,211.625pt);
+			\draw (105pt,180.0156pt) rectangle (260pt,211.625pt);
 			\node at (112pt,187.0156pt)[below right]{VendorLookupFactory};
-			\draw[color=plantucolor0000,fill=plantucolor0001] (274pt,3pt) rectangle (436pt,34.6094pt);
+			\draw (274pt,3pt) rectangle (436pt,34.6094pt);
 			\node at (281pt,10pt)[below right]{VendorPackageLookup};
-			\draw[color=plantucolor0000,fill=plantucolor0001] (274pt,180.0156pt) rectangle (436pt,211.625pt);
+			\draw (274pt,180.0156pt) rectangle (436pt,211.625pt);
 			\node at (281pt,187.0156pt)[below right]{VendorPackageLookup};
-			\draw[color=plantucolor0000,fill=plantucolor0000] (172.5pt,67.6094pt) -- (182.5pt,71.6094pt) -- (172.5pt,75.6094pt) -- (176.5pt,71.6094pt) -- cycle;
-			\draw[color=plantucolor0000] (51.5pt,71.6094pt) -- (178.5pt,71.6094pt);
+			\draw[fill=black] (172.5pt,67.6094pt) -- (182.5pt,71.6094pt) -- (172.5pt,75.6094pt) -- (176.5pt,71.6094pt) -- cycle;
+			\draw (51.5pt,71.6094pt) -- (178.5pt,71.6094pt);
 			\node at (58.5pt,53.6094pt)[below right]{identified OS};
-			\draw[color=plantucolor0000,fill=plantucolor0000] (62.5pt,97.9609pt) -- (52.5pt,101.9609pt) -- (62.5pt,105.9609pt) -- (58.5pt,101.9609pt) -- cycle;
-			\draw[color=plantucolor0000,dash pattern=on 2.0pt off 2.0pt] (56.5pt,101.9609pt) -- (183.5pt,101.9609pt);
+			\draw[fill=black] (62.5pt,97.9609pt) -- (52.5pt,101.9609pt) -- (62.5pt,105.9609pt) -- (58.5pt,101.9609pt) -- cycle;
+			\draw[dash pattern=on 2.0pt off 2.0pt] (56.5pt,101.9609pt) -- (183.5pt,101.9609pt);
 			\node at (68.5pt,83.9609pt)[below right]{lookup instance};
-			\draw[color=plantucolor0000,fill=plantucolor0000] (345pt,128.3125pt) -- (355pt,132.3125pt) -- (345pt,136.3125pt) -- (349pt,132.3125pt) -- cycle;
-			\draw[color=plantucolor0000] (51.5pt,132.3125pt) -- (351pt,132.3125pt);
+			\draw[fill=black] (345pt,128.3125pt) -- (355pt,132.3125pt) -- (345pt,136.3125pt) -- (349pt,132.3125pt) -- cycle;
+			\draw (51.5pt,132.3125pt) -- (351pt,132.3125pt);
 			\node at (58.5pt,114.3125pt)[below right]{query CVE};
-			\draw[color=plantucolor0000,fill=plantucolor0000] (62.5pt,158.6641pt) -- (52.5pt,162.6641pt) -- (62.5pt,166.6641pt) -- (58.5pt,162.6641pt) -- cycle;
-			\draw[color=plantucolor0000,dash pattern=on 2.0pt off 2.0pt] (56.5pt,162.6641pt) -- (356pt,162.6641pt);
+			\draw[fill=black] (62.5pt,158.6641pt) -- (52.5pt,162.6641pt) -- (62.5pt,166.6641pt) -- (58.5pt,162.6641pt) -- cycle;
+			\draw[dash pattern=on 2.0pt off 2.0pt] (56.5pt,162.6641pt) -- (356pt,162.6641pt);
 			\node at (68.5pt,144.6641pt)[below right]{return metadata};
 		\end{tikzpicture}
 		\caption{Sequence Diagram for Package Manager-based Vulnerability Validation}
@@ -1328,32 +1325,32 @@
 		%	@enduml
 		\centering
 		\begin{tikzpicture}[yscale=-1,scale=0.9,every node/.style={scale=0.9}]
-			\draw[color=plantucolor0000,dash pattern=on 5.0pt off 5.0pt] (51pt,39.6094pt) -- (51pt,181.0156pt);
-			\draw[color=plantucolor0000,dash pattern=on 5.0pt off 5.0pt] (210.5pt,39.6094pt) -- (210.5pt,181.0156pt);
-			\draw[color=plantucolor0000,dash pattern=on 5.0pt off 5.0pt] (330.5pt,39.6094pt) -- (330.5pt,181.0156pt);
-			\draw[color=plantucolor0000,fill=plantucolor0001] (8pt,3pt) rectangle (91pt,34.6094pt);
+			\draw[dash pattern=on 5.0pt off 5.0pt] (51pt,39.6094pt) -- (51pt,181.0156pt);
+			\draw[dash pattern=on 5.0pt off 5.0pt] (210.5pt,39.6094pt) -- (210.5pt,181.0156pt);
+			\draw[dash pattern=on 5.0pt off 5.0pt] (330.5pt,39.6094pt) -- (330.5pt,181.0156pt);
+			\draw (8pt,3pt) rectangle (91pt,34.6094pt);
 			\node at (15pt,10pt)[below right]{Application};
-			\draw[color=plantucolor0000,fill=plantucolor0001] (8pt,180.0156pt) rectangle (91pt,211.625pt);
+			\draw (8pt,180.0156pt) rectangle (91pt,211.625pt);
 			\node at (15pt,187.0156pt)[below right]{Application};
-			\draw[color=plantucolor0000,fill=plantucolor0001] (139.5pt,3pt) rectangle (277.5pt,34.6094pt);
+			\draw (139.5pt,3pt) rectangle (277.5pt,34.6094pt);
 			\node at (146.5pt,10pt)[below right]{VulnerabilityLookup};
-			\draw[color=plantucolor0000,fill=plantucolor0001] (139.5pt,180.0156pt) rectangle (277.5pt,211.625pt);
+			\draw (139.5pt,180.0156pt) rectangle (277.5pt,211.625pt);
 			\node at (146.5pt,187.0156pt)[below right]{VulnerabilityLookup};
-			\draw[color=plantucolor0000,fill=plantucolor0001] (291.5pt,3pt) rectangle (366.5pt,34.6094pt);
+			\draw (291.5pt,3pt) rectangle (366.5pt,34.6094pt);
 			\node at (298.5pt,10pt)[below right]{Database};
-			\draw[color=plantucolor0000,fill=plantucolor0001] (291.5pt,180.0156pt) rectangle (366.5pt,211.625pt);
+			\draw (291.5pt,180.0156pt) rectangle (366.5pt,211.625pt);
 			\node at (298.5pt,187.0156pt)[below right]{Database};
-			\draw[color=plantucolor0000,fill=plantucolor0000] (198.5pt,67.6094pt) -- (208.5pt,71.6094pt) -- (198.5pt,75.6094pt) -- (202.5pt,71.6094pt) -- cycle;
-			\draw[color=plantucolor0000] (51.5pt,71.6094pt) -- (204.5pt,71.6094pt);
+			\draw[fill=black] (198.5pt,67.6094pt) -- (208.5pt,71.6094pt) -- (198.5pt,75.6094pt) -- (202.5pt,71.6094pt) -- cycle;
+			\draw (51.5pt,71.6094pt) -- (204.5pt,71.6094pt);
 			\node at (58.5pt,53.6094pt)[below right]{CPEs w/ version};
-			\draw[color=plantucolor0000,fill=plantucolor0000] (319pt,97.9609pt) -- (329pt,101.9609pt) -- (319pt,105.9609pt) -- (323pt,101.9609pt) -- cycle;
-			\draw[color=plantucolor0000] (210.5pt,101.9609pt) -- (325pt,101.9609pt);
+			\draw[fill=black] (319pt,97.9609pt) -- (329pt,101.9609pt) -- (319pt,105.9609pt) -- (323pt,101.9609pt) -- cycle;
+			\draw (210.5pt,101.9609pt) -- (325pt,101.9609pt);
 			\node at (217.5pt,83.9609pt)[below right]{find affected};
-			\draw[color=plantucolor0000,fill=plantucolor0000] (221.5pt,128.3125pt) -- (211.5pt,132.3125pt) -- (221.5pt,136.3125pt) -- (217.5pt,132.3125pt) -- cycle;
-			\draw[color=plantucolor0000] (215.5pt,132.3125pt) -- (330pt,132.3125pt);
+			\draw[fill=black] (221.5pt,128.3125pt) -- (211.5pt,132.3125pt) -- (221.5pt,136.3125pt) -- (217.5pt,132.3125pt) -- cycle;
+			\draw (215.5pt,132.3125pt) -- (330pt,132.3125pt);
 			\node at (227.5pt,114.3125pt)[below right]{raw CVE entries};
-			\draw[color=plantucolor0000,fill=plantucolor0000] (62.5pt,158.6641pt) -- (52.5pt,162.6641pt) -- (62.5pt,166.6641pt) -- (58.5pt,162.6641pt) -- cycle;
-			\draw[color=plantucolor0000] (56.5pt,162.6641pt) -- (209.5pt,162.6641pt);
+			\draw[fill=black] (62.5pt,158.6641pt) -- (52.5pt,162.6641pt) -- (62.5pt,166.6641pt) -- (58.5pt,162.6641pt) -- cycle;
+			\draw (56.5pt,162.6641pt) -- (209.5pt,162.6641pt);
 			\node at (68.5pt,144.6641pt)[below right]{return processed CVEs};
 		\end{tikzpicture}
 		\caption{Sequence Diagram for Vulnerability Lookup}
