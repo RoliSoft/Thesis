@@ -979,7 +979,7 @@
 
 	It should also be noted that the underlying server software is not exposed to the banned party in listing \ref{shodanban}, but the non-banned party in listing \ref{censysnoban} has their request forwarded from the load-balancer to the backend, revealing itself to be ``nginx 1.8.0,'' a version with at least one \textbf{known remotely-exploitable vulnerability}\cite{nginxcve} at this time.
 
-	In cases where both services return a service banner for a specific port, the longer banner is chosen during the amalgamation phase. One of the reasons for this decision was because ban messages are generally shorter\cite{qualys11} in order to avoid denial of service attacks. The other reason was that a longer banner generally means that the service in question possibly probed the port further (e.g. `STARTTLS' command sent to SMTP servers by Censys, but not by Shodan) which allows the pattern matching component described in \ref{patternmatch} to have more data available.
+	In cases where both services return a service banner for a specific port, the longer banner is chosen during the amalgamation phase. One of the reasons for this decision was because ban messages are generally shorter\cite{qualys11} in order to avoid denial of service attacks. The other reason was that a longer banner generally means that the service in question possibly probed the port further (e.g. \mintinline{matlab}{STARTTLS} command sent to SMTP servers by Censys, but not by Shodan) which allows the pattern matching component described in \ref{patternmatch} to have more data available.
 
 \subsection{External Reconnaissance} \label{nmapscan}
 \subsectionhu{Külső Feltérképezés} \subsectionro{Scanare Externală}
@@ -1057,316 +1057,10 @@
 	\end{figure}
 	\endgroup
 	
-	\begin{figure}[!htbp]
-		%	@startuml
-		%	Application -> PortScannerFactory: IP:port list to be scanned
-		%	PortScannerFactory --> Application: return tasks
-		%	Application -> TaskRunner: list of tasks
-		%	TaskRunner --> Application: results of tasks
-		%	@enduml
-		\centering
-		\begin{tikzpicture}[yscale=-1,scale=0.9,every node/.style={scale=0.9}]
-			\draw[dash pattern=on 5.0pt off 5.0pt] (51pt,39.6094pt) -- (51pt,181.0156pt);
-			\draw[dash pattern=on 5.0pt off 5.0pt] (220pt,39.6094pt) -- (220pt,181.0156pt);
-			\draw[dash pattern=on 5.0pt off 5.0pt] (351pt,39.6094pt) -- (351pt,181.0156pt);
-			\draw (8pt,3pt) rectangle (91pt,34.6094pt);
-			\node at (15pt,10pt)[below right]{Application};
-			\draw (8pt,180.0156pt) rectangle (91pt,211.625pt);
-			\node at (15pt,187.0156pt)[below right]{Application};
-			\draw (148pt,3pt) rectangle (289pt,34.6094pt);
-			\node at (155pt,10pt)[below right]{PortScannerFactory};
-			\draw (148pt,180.0156pt) rectangle (289pt,211.625pt);
-			\node at (155pt,187.0156pt)[below right]{PortScannerFactory};
-			\draw (303pt,3pt) rectangle (395pt,34.6094pt);
-			\node at (310pt,10pt)[below right]{TaskRunner};
-			\draw (303pt,180.0156pt) rectangle (395pt,211.625pt);
-			\node at (310pt,187.0156pt)[below right]{TaskRunner};
-			\draw[fill=black] (208.5pt,67.6094pt) -- (218.5pt,71.6094pt) -- (208.5pt,75.6094pt) -- (212.5pt,71.6094pt) -- cycle;
-			\draw (51.5pt,71.6094pt) -- (214.5pt,71.6094pt);
-			\node at (58.5pt,53.6094pt)[below right]{IP:port list to be scanned};
-			\draw[fill=black] (62.5pt,97.9609pt) -- (52.5pt,101.9609pt) -- (62.5pt,105.9609pt) -- (58.5pt,101.9609pt) -- cycle;
-			\draw[dash pattern=on 2.0pt off 2.0pt] (56.5pt,101.9609pt) -- (219.5pt,101.9609pt);
-			\node at (68.5pt,83.9609pt)[below right]{return tasks};
-			\draw[fill=black] (339pt,128.3125pt) -- (349pt,132.3125pt) -- (339pt,136.3125pt) -- (343pt,132.3125pt) -- cycle;
-			\draw (51.5pt,132.3125pt) -- (345pt,132.3125pt);
-			\node at (58.5pt,114.3125pt)[below right]{list of tasks};
-			\draw[fill=black] (62.5pt,158.6641pt) -- (52.5pt,162.6641pt) -- (62.5pt,166.6641pt) -- (58.5pt,162.6641pt) -- cycle;
-			\draw[dash pattern=on 2.0pt off 2.0pt] (56.5pt,162.6641pt) -- (350pt,162.6641pt);
-			\node at (68.5pt,144.6641pt)[below right]{results of tasks};
-		\end{tikzpicture}
-		\caption{Sequence Diagram for Task Instantiation and Multiplexed Running}
-		\label{seqtasks}
-	\end{figure}
-					
-	\begin{figure}[!htbp]
-		%	@startuml
-		%	Application -> BannerProcessor: service banners
-		%	BannerProcessor -> ServiceRegexMatcher: match regexes
-		%	ServiceRegexMatcher --> BannerProcessor: return CPE
-		%	BannerProcessor --> Application: return CPE
-		%	@enduml
-		\centering
-		\begin{tikzpicture}[yscale=-1,scale=0.9,every node/.style={scale=0.9}]
-			\draw[dash pattern=on 5.0pt off 5.0pt] (51pt,39.6094pt) -- (51pt,181.0156pt);
-			\draw[dash pattern=on 5.0pt off 5.0pt] (169pt,39.6094pt) -- (169pt,181.0156pt);
-			\draw[dash pattern=on 5.0pt off 5.0pt] (321pt,39.6094pt) -- (321pt,181.0156pt);
-			\draw (8pt,3pt) rectangle (91pt,34.6094pt);
-			\node at (15pt,10pt)[below right]{Application};
-			\draw (8pt,180.0156pt) rectangle (91pt,211.625pt);
-			\node at (15pt,187.0156pt)[below right]{Application};
-			\draw (105pt,3pt) rectangle (229pt,34.6094pt);
-			\node at (112pt,10pt)[below right]{BannerProcessor};
-			\draw (105pt,180.0156pt) rectangle (229pt,211.625pt);
-			\node at (112pt,187.0156pt)[below right]{BannerProcessor};
-			\draw (243pt,3pt) rectangle (395pt,34.6094pt);
-			\node at (250pt,10pt)[below right]{ServiceRegexMatcher};
-			\draw (243pt,180.0156pt) rectangle (395pt,211.625pt);
-			\node at (250pt,187.0156pt)[below right]{ServiceRegexMatcher};
-			\draw[fill=black] (157pt,67.6094pt) -- (167pt,71.6094pt) -- (157pt,75.6094pt) -- (161pt,71.6094pt) -- cycle;
-			\draw (51.5pt,71.6094pt) -- (163pt,71.6094pt);
-			\node at (58.5pt,53.6094pt)[below right]{service banners};
-			\draw[fill=black] (309pt,97.9609pt) -- (319pt,101.9609pt) -- (309pt,105.9609pt) -- (313pt,101.9609pt) -- cycle;
-			\draw (169pt,101.9609pt) -- (315pt,101.9609pt);
-			\node at (176pt,83.9609pt)[below right]{match regexes};
-			\draw[fill=black] (180pt,128.3125pt) -- (170pt,132.3125pt) -- (180pt,136.3125pt) -- (176pt,132.3125pt) -- cycle;
-			\draw[dash pattern=on 2.0pt off 2.0pt] (174pt,132.3125pt) -- (320pt,132.3125pt);
-			\node at (186pt,114.3125pt)[below right]{return CPE};
-			\draw[fill=black] (62.5pt,158.6641pt) -- (52.5pt,162.6641pt) -- (62.5pt,166.6641pt) -- (58.5pt,162.6641pt) -- cycle;
-			\draw[dash pattern=on 2.0pt off 2.0pt] (56.5pt,162.6641pt) -- (168pt,162.6641pt);
-			\node at (68.5pt,144.6641pt)[below right]{return CPE};
-		\end{tikzpicture}
-		\caption{Sequence Diagram for Pattern-based Matching of Service Banners}
-		\label{seqregex}
-	\end{figure}
-						
-	\begin{figure}[!htbp]
-		%	@startuml
-		%	Application -> BannerProcessor: service banners
-		%	BannerProcessor -> ProtocolTokenizer: service banner
-		%	ProtocolTokenizer -> BannerProcessor: return tokens
-		%	BannerProcessor -> CpeDictionaryMatcher: extracted tokens
-		%	CpeDictionaryMatcher --> BannerProcessor: return CPE
-		%	BannerProcessor --> Application: return CPE
-		%	@enduml
-		\centering
-		\begin{tikzpicture}[yscale=-1,scale=0.9,every node/.style={scale=0.9}]
-			\draw[dash pattern=on 5.0pt off 5.0pt] (51pt,39.6094pt) -- (51pt,241.7188pt);
-			\draw[dash pattern=on 5.0pt off 5.0pt] (169pt,39.6094pt) -- (169pt,241.7188pt);
-			\draw[dash pattern=on 5.0pt off 5.0pt] (309pt,39.6094pt) -- (309pt,241.7188pt);
-			\draw[dash pattern=on 5.0pt off 5.0pt] (464pt,39.6094pt) -- (464pt,241.7188pt);
-			\draw (8pt,3pt) rectangle (91pt,34.6094pt);
-			\node at (15pt,10pt)[below right]{Application};
-			\draw (8pt,240.7188pt) rectangle (91pt,272.3281pt);
-			\node at (15pt,247.7188pt)[below right]{Application};
-			\draw (105pt,3pt) rectangle (229pt,34.6094pt);
-			\node at (112pt,10pt)[below right]{BannerProcessor};
-			\draw (105pt,240.7188pt) rectangle (229pt,272.3281pt);
-			\node at (112pt,247.7188pt)[below right]{BannerProcessor};
-			\draw (243pt,3pt) rectangle (371pt,34.6094pt);
-			\node at (250pt,10pt)[below right]{ProtocolTokenizer};
-			\draw (243pt,240.7188pt) rectangle (371pt,272.3281pt);
-			\node at (250pt,247.7188pt)[below right]{ProtocolTokenizer};
-			\draw (385pt,3pt) rectangle (539pt,34.6094pt);
-			\node at (392pt,10pt)[below right]{CpeDictionaryMatcher};
-			\draw (385pt,240.7188pt) rectangle (539pt,272.3281pt);
-			\node at (392pt,247.7188pt)[below right]{CpeDictionaryMatcher};
-			\draw[fill=black] (157pt,67.6094pt) -- (167pt,71.6094pt) -- (157pt,75.6094pt) -- (161pt,71.6094pt) -- cycle;
-			\draw (51.5pt,71.6094pt) -- (163pt,71.6094pt);
-			\node at (58.5pt,53.6094pt)[below right]{service banners};
-			\draw[fill=black] (297pt,97.9609pt) -- (307pt,101.9609pt) -- (297pt,105.9609pt) -- (301pt,101.9609pt) -- cycle;
-			\draw (169pt,101.9609pt) -- (303pt,101.9609pt);
-			\node at (176pt,83.9609pt)[below right]{service banner};
-			\draw[fill=black] (180pt,128.3125pt) -- (170pt,132.3125pt) -- (180pt,136.3125pt) -- (176pt,132.3125pt) -- cycle;
-			\draw (174pt,132.3125pt) -- (308pt,132.3125pt);
-			\node at (186pt,114.3125pt)[below right]{return tokens};
-			\draw[fill=black] (452pt,158.6641pt) -- (462pt,162.6641pt) -- (452pt,166.6641pt) -- (456pt,162.6641pt) -- cycle;
-			\draw (169pt,162.6641pt) -- (458pt,162.6641pt);
-			\node at (176pt,144.6641pt)[below right]{extracted tokens};
-			\draw[fill=black] (180pt,189.0156pt) -- (170pt,193.0156pt) -- (180pt,197.0156pt) -- (176pt,193.0156pt) -- cycle;
-			\draw[dash pattern=on 2.0pt off 2.0pt] (174pt,193.0156pt) -- (463pt,193.0156pt);
-			\node at (186pt,175.0156pt)[below right]{return CPE};
-			\draw[fill=black] (62.5pt,219.3672pt) -- (52.5pt,223.3672pt) -- (62.5pt,227.3672pt) -- (58.5pt,223.3672pt) -- cycle;
-			\draw[dash pattern=on 2.0pt off 2.0pt] (56.5pt,223.3672pt) -- (168pt,223.3672pt);
-			\node at (68.5pt,205.3672pt)[below right]{return CPE};
-		\end{tikzpicture}
-		\caption{Sequence Diagram for CPE Token-based Matching of Service Banners}
-		\label{seqtoken}
-	\end{figure}
-							
-	\begin{figure}[!htbp]
-		%	@startuml
-		%	ProtocolTokenizer -> HttpTokenizer: HTTP service banner
-		%	HttpTokenizer --> ProtocolTokenizer: return tokens
-		%	ProtocolTokenizer -> ThreeDigitTokenizer: service banner
-		%	ThreeDigitTokenizer --> ProtocolTokenizer: return tokens
-		%	@enduml
-		\centering
-		\begin{tikzpicture}[yscale=-1,scale=0.9,every node/.style={scale=0.9}]
-			\draw[dash pattern=on 5.0pt off 5.0pt] (74pt,39.6094pt) -- (74pt,181.0156pt);
-			\draw[dash pattern=on 5.0pt off 5.0pt] (216.5pt,39.6094pt) -- (216.5pt,181.0156pt);
-			\draw[dash pattern=on 5.0pt off 5.0pt] (352.5pt,39.6094pt) -- (352.5pt,181.0156pt);
-			\draw (8pt,3pt) rectangle (136pt,34.6094pt);
-			\node at (15pt,10pt)[below right]{ProtocolTokenizer};
-			\draw (8pt,180.0156pt) rectangle (136pt,211.625pt);
-			\node at (15pt,187.0156pt)[below right]{ProtocolTokenizer};
-			\draw (164.5pt,3pt) rectangle (265.5pt,34.6094pt);
-			\node at (171.5pt,10pt)[below right]{HttpTokenizer};
-			\draw (164.5pt,180.0156pt) rectangle (265.5pt,211.625pt);
-			\node at (171.5pt,187.0156pt)[below right]{HttpTokenizer};
-			\draw (279.5pt,3pt) rectangle (421.5pt,34.6094pt);
-			\node at (286.5pt,10pt)[below right]{ThreeDigitTokenizer};
-			\draw (279.5pt,180.0156pt) rectangle (421.5pt,211.625pt);
-			\node at (286.5pt,187.0156pt)[below right]{ThreeDigitTokenizer};
-			\draw[fill=black] (205pt,67.6094pt) -- (215pt,71.6094pt) -- (205pt,75.6094pt) -- (209pt,71.6094pt) -- cycle;
-			\draw (74pt,71.6094pt) -- (211pt,71.6094pt);
-			\node at (81pt,53.6094pt)[below right]{HTTP service banner};
-			\draw[fill=black] (85pt,97.9609pt) -- (75pt,101.9609pt) -- (85pt,105.9609pt) -- (81pt,101.9609pt) -- cycle;
-			\draw[dash pattern=on 2.0pt off 2.0pt] (79pt,101.9609pt) -- (216pt,101.9609pt);
-			\node at (91pt,83.9609pt)[below right]{return tokens};
-			\draw[fill=black] (340.5pt,128.3125pt) -- (350.5pt,132.3125pt) -- (340.5pt,136.3125pt) -- (344.5pt,132.3125pt) -- cycle;
-			\draw (74pt,132.3125pt) -- (346.5pt,132.3125pt);
-			\node at (81pt,114.3125pt)[below right]{service banner};
-			\draw[fill=black] (85pt,158.6641pt) -- (75pt,162.6641pt) -- (85pt,166.6641pt) -- (81pt,162.6641pt) -- cycle;
-			\draw[dash pattern=on 2.0pt off 2.0pt] (79pt,162.6641pt) -- (351.5pt,162.6641pt);
-			\node at (91pt,144.6641pt)[below right]{return tokens};
-		\end{tikzpicture}
-		\caption{Sequence Diagram for Protocol-based Tokenization of Service Banners}
-		\label{seqtokenize}
-	\end{figure}
-	
-	\begin{figure}[!htbp]
-		%	@startuml
-		%	Application -> OperatingSystemIdentifier: service banners of host
-		%	OperatingSystemIdentifier -> _Identifier: service banners of host
-		%	_Identifier --> OperatingSystemIdentifier: return OS CPE
-		%	OperatingSystemIdentifier --> Application: return OS CPE
-		%	@enduml
-		\centering
-		\begin{tikzpicture}[yscale=-1,scale=0.9,every node/.style={scale=0.9}]
-			\draw[dash pattern=on 5.0pt off 5.0pt] (51pt,39.6094pt) -- (51pt,181.0156pt);
-			\draw[dash pattern=on 5.0pt off 5.0pt] (208pt,39.6094pt) -- (208pt,181.0156pt);
-			\draw[dash pattern=on 5.0pt off 5.0pt] (365.5pt,39.6094pt) -- (365.5pt,181.0156pt);
-			\draw (8pt,3pt) rectangle (91pt,34.6094pt);
-			\node at (15pt,10pt)[below right]{Application};
-			\draw (8pt,180.0156pt) rectangle (91pt,211.625pt);
-			\node at (15pt,187.0156pt)[below right]{Application};
-			\draw (118pt,3pt) rectangle (295pt,34.6094pt);
-			\node at (125pt,10pt)[below right]{OperatingSystemIdentifier};
-			\draw (118pt,180.0156pt) rectangle (295pt,211.625pt);
-			\node at (125pt,187.0156pt)[below right]{OperatingSystemIdentifier};
-			\draw (325.5pt,3pt) rectangle (401.5pt,34.6094pt);
-			\node at (332.5pt,10pt)[below right]{*Identifier\footnotemark};
-			\draw (325.5pt,180.0156pt) rectangle (401.5pt,211.625pt);
-			\node at (332.5pt,187.0156pt)[below right]{*Identifier};
-			\draw[fill=black] (196.5pt,67.6094pt) -- (206.5pt,71.6094pt) -- (196.5pt,75.6094pt) -- (200.5pt,71.6094pt) -- cycle;
-			\draw (51.5pt,71.6094pt) -- (202.5pt,71.6094pt);
-			\node at (58.5pt,53.6094pt)[below right]{service banners of host};
-			\draw[fill=black] (353.5pt,97.9609pt) -- (363.5pt,101.9609pt) -- (353.5pt,105.9609pt) -- (357.5pt,101.9609pt) -- cycle;
-			\draw (208.5pt,101.9609pt) -- (359.5pt,101.9609pt);
-			\node at (215.5pt,83.9609pt)[below right]{service banners of host};
-			\draw[fill=black] (219.5pt,128.3125pt) -- (209.5pt,132.3125pt) -- (219.5pt,136.3125pt) -- (215.5pt,132.3125pt) -- cycle;
-			\draw[dash pattern=on 2.0pt off 2.0pt] (213.5pt,132.3125pt) -- (364.5pt,132.3125pt);
-			\node at (225.5pt,114.3125pt)[below right]{return OS CPE};
-			\draw[fill=black] (62.5pt,158.6641pt) -- (52.5pt,162.6641pt) -- (62.5pt,166.6641pt) -- (58.5pt,162.6641pt) -- cycle;
-			\draw[dash pattern=on 2.0pt off 2.0pt] (56.5pt,162.6641pt) -- (207.5pt,162.6641pt);
-			\node at (68.5pt,144.6641pt)[below right]{return OS CPE};
-		\end{tikzpicture}
-		\caption{Sequence Diagram for Operating System Identification}
-		\label{seqos}
-	\end{figure}
-		
-	\begin{figure}[!htbp]
-		%	@startuml
-		%	Application -> VendorLookupFactory: identified OS
-		%	VendorLookupFactory --> Application: lookup instance
-		%	Application -> VendorPackageLookup: query CVE
-		%	VendorPackageLookup --> Application: return metadata
-		%	@enduml
-		\centering
-		\begin{tikzpicture}[yscale=-1,scale=0.9,every node/.style={scale=0.9}]
-			\draw[dash pattern=on 5.0pt off 5.0pt] (51pt,39.6094pt) -- (51pt,181.0156pt);
-			\draw[dash pattern=on 5.0pt off 5.0pt] (184pt,39.6094pt) -- (184pt,181.0156pt);
-			\draw[dash pattern=on 5.0pt off 5.0pt] (357pt,39.6094pt) -- (357pt,181.0156pt);
-			\draw (8pt,3pt) rectangle (91pt,34.6094pt);
-			\node at (15pt,10pt)[below right]{Application};
-			\draw (8pt,180.0156pt) rectangle (91pt,211.625pt);
-			\node at (15pt,187.0156pt)[below right]{Application};
-			\draw (105pt,3pt) rectangle (260pt,34.6094pt);
-			\node at (112pt,10pt)[below right]{VendorLookupFactory};
-			\draw (105pt,180.0156pt) rectangle (260pt,211.625pt);
-			\node at (112pt,187.0156pt)[below right]{VendorLookupFactory};
-			\draw (274pt,3pt) rectangle (436pt,34.6094pt);
-			\node at (281pt,10pt)[below right]{VendorPackageLookup};
-			\draw (274pt,180.0156pt) rectangle (436pt,211.625pt);
-			\node at (281pt,187.0156pt)[below right]{VendorPackageLookup};
-			\draw[fill=black] (172.5pt,67.6094pt) -- (182.5pt,71.6094pt) -- (172.5pt,75.6094pt) -- (176.5pt,71.6094pt) -- cycle;
-			\draw (51.5pt,71.6094pt) -- (178.5pt,71.6094pt);
-			\node at (58.5pt,53.6094pt)[below right]{identified OS};
-			\draw[fill=black] (62.5pt,97.9609pt) -- (52.5pt,101.9609pt) -- (62.5pt,105.9609pt) -- (58.5pt,101.9609pt) -- cycle;
-			\draw[dash pattern=on 2.0pt off 2.0pt] (56.5pt,101.9609pt) -- (183.5pt,101.9609pt);
-			\node at (68.5pt,83.9609pt)[below right]{lookup instance};
-			\draw[fill=black] (345pt,128.3125pt) -- (355pt,132.3125pt) -- (345pt,136.3125pt) -- (349pt,132.3125pt) -- cycle;
-			\draw (51.5pt,132.3125pt) -- (351pt,132.3125pt);
-			\node at (58.5pt,114.3125pt)[below right]{query CVE};
-			\draw[fill=black] (62.5pt,158.6641pt) -- (52.5pt,162.6641pt) -- (62.5pt,166.6641pt) -- (58.5pt,162.6641pt) -- cycle;
-			\draw[dash pattern=on 2.0pt off 2.0pt] (56.5pt,162.6641pt) -- (356pt,162.6641pt);
-			\node at (68.5pt,144.6641pt)[below right]{return metadata};
-		\end{tikzpicture}
-		\caption{Sequence Diagram for Package Manager-based Vulnerability Validation}
-		\label{seqvuln}
-	\end{figure}
-			
-	\begin{figure}[!htbp]
-		%	@startuml
-		%	Application -> VulnerabilityLookup: CPEs w/ version
-		%	VulnerabilityLookup -> Database: find affected
-		%	Database -> VulnerabilityLookup: raw CVE entries
-		%	VulnerabilityLookup -> Application: return processed CVEs
-		%	@enduml
-		\centering
-		\begin{tikzpicture}[yscale=-1,scale=0.9,every node/.style={scale=0.9}]
-			\draw[dash pattern=on 5.0pt off 5.0pt] (51pt,39.6094pt) -- (51pt,181.0156pt);
-			\draw[dash pattern=on 5.0pt off 5.0pt] (210.5pt,39.6094pt) -- (210.5pt,181.0156pt);
-			\draw[dash pattern=on 5.0pt off 5.0pt] (330.5pt,39.6094pt) -- (330.5pt,181.0156pt);
-			\draw (8pt,3pt) rectangle (91pt,34.6094pt);
-			\node at (15pt,10pt)[below right]{Application};
-			\draw (8pt,180.0156pt) rectangle (91pt,211.625pt);
-			\node at (15pt,187.0156pt)[below right]{Application};
-			\draw (139.5pt,3pt) rectangle (277.5pt,34.6094pt);
-			\node at (146.5pt,10pt)[below right]{VulnerabilityLookup};
-			\draw (139.5pt,180.0156pt) rectangle (277.5pt,211.625pt);
-			\node at (146.5pt,187.0156pt)[below right]{VulnerabilityLookup};
-			\draw (291.5pt,3pt) rectangle (366.5pt,34.6094pt);
-			\node at (298.5pt,10pt)[below right]{Database};
-			\draw (291.5pt,180.0156pt) rectangle (366.5pt,211.625pt);
-			\node at (298.5pt,187.0156pt)[below right]{Database};
-			\draw[fill=black] (198.5pt,67.6094pt) -- (208.5pt,71.6094pt) -- (198.5pt,75.6094pt) -- (202.5pt,71.6094pt) -- cycle;
-			\draw (51.5pt,71.6094pt) -- (204.5pt,71.6094pt);
-			\node at (58.5pt,53.6094pt)[below right]{CPEs w/ version};
-			\draw[fill=black] (319pt,97.9609pt) -- (329pt,101.9609pt) -- (319pt,105.9609pt) -- (323pt,101.9609pt) -- cycle;
-			\draw (210.5pt,101.9609pt) -- (325pt,101.9609pt);
-			\node at (217.5pt,83.9609pt)[below right]{find affected};
-			\draw[fill=black] (221.5pt,128.3125pt) -- (211.5pt,132.3125pt) -- (221.5pt,136.3125pt) -- (217.5pt,132.3125pt) -- cycle;
-			\draw (215.5pt,132.3125pt) -- (330pt,132.3125pt);
-			\node at (227.5pt,114.3125pt)[below right]{raw CVE entries};
-			\draw[fill=black] (62.5pt,158.6641pt) -- (52.5pt,162.6641pt) -- (62.5pt,166.6641pt) -- (58.5pt,162.6641pt) -- cycle;
-			\draw (56.5pt,162.6641pt) -- (209.5pt,162.6641pt);
-			\node at (68.5pt,144.6641pt)[below right]{return processed CVEs};
-		\end{tikzpicture}
-		\caption{Sequence Diagram for Vulnerability Lookup}
-		\label{seqnvd}
-	\end{figure}
-	
-	\footnotetext{Represents all implemented operating system identifier classes, enumerated in order of popularity.}
-
 \subsection{Multiplexing Task Runner} \label{tasks}
 \subsectionhu{Feladatok Párhuzamosítása} \subsectionro{Paralelizarea Sarcinilor}
 	
 	A ``task'' in this context is defined to be the action of scanning a port on an IP address for a specified protocol. Such tasks mostly consist of sending IP packets back and forth followed by waiting for their acknowledgment or lack thereof.
-	
-	As such, the parallelization method of using a thread pool and multiple threads is not efficient, since most threads would spend their time sleeping. Given the costly nature of thread spawning and managing, this is not efficient unless more lightweight threads can be spawned, such as `goroutines' in the Go programming language.
-	
-	The application instead implements a consumer-producer queue for storing and retrieving its tasks during scheduling, as shown in figure \ref{taskqueue}.
 	
 	\begin{figure}[!htbp]
 		\centering
@@ -1399,6 +1093,10 @@
 		\label{taskqueue}
 	\end{figure}
 	
+	As such, the parallelization method of using a thread pool and multiple threads is not efficient, since most threads would spend their time sleeping. Given the costly nature of thread spawning and managing, this is not efficient unless more lightweight threads can be spawned, such as `goroutines' in the Go programming language.
+	
+	The application instead implements a consumer-producer queue for storing and retrieving its tasks during scheduling, as shown in figure \ref{taskqueue}.
+	
 	\begin{figure}[!htbp]
 		\centering
 		\begin{tikzpicture}
@@ -1427,7 +1125,50 @@
 		\label{taskudp}
 	\end{figure}
 	
-	In figure \ref{taskudp}, the phases of a UDP scan task are shown. Each `phase' shows up in the queue as a different `task.' As a result of this scheduling and task multiplexing, one thread can handle all the scanning tasks needs.
+	Figure \ref{taskudp} presents the phases of a UDP scan task. Each `phase' shows up in the queue as a different `task.' As a result of this scheduling and task multiplexing, one thread can handle all the scanning tasks needs.
+	
+	Figure \ref{seqtasks} represents the sequence diagram of the process through which tasks are initiated and placed onto the queue for multiplexed execution.
+	
+	\begin{figure}[!htbp]
+		%	@startuml
+		%	Application -> PortScannerFactory: IP:port list to be scanned
+		%	PortScannerFactory --> Application: return tasks
+		%	Application -> TaskRunner: list of tasks
+		%	TaskRunner --> Application: results of tasks
+		%	@enduml
+		\centering
+		\begin{tikzpicture}[yscale=-1]
+			\draw[dash pattern=on 5.0pt off 5.0pt] (51pt,39.6094pt) -- (51pt,181.0156pt);
+			\draw[dash pattern=on 5.0pt off 5.0pt] (220pt,39.6094pt) -- (220pt,181.0156pt);
+			\draw[dash pattern=on 5.0pt off 5.0pt] (351pt,39.6094pt) -- (351pt,181.0156pt);
+			\draw (8pt,3pt) rectangle (91pt,34.6094pt);
+			\node at (15pt,10pt)[below right]{Application};
+			\draw (8pt,180.0156pt) rectangle (91pt,211.625pt);
+			\node at (15pt,187.0156pt)[below right]{Application};
+			\draw (148pt,3pt) rectangle (289pt,34.6094pt);
+			\node at (155pt,10pt)[below right]{PortScannerFactory};
+			\draw (148pt,180.0156pt) rectangle (289pt,211.625pt);
+			\node at (155pt,187.0156pt)[below right]{PortScannerFactory};
+			\draw (303pt,3pt) rectangle (395pt,34.6094pt);
+			\node at (310pt,10pt)[below right]{TaskRunner};
+			\draw (303pt,180.0156pt) rectangle (395pt,211.625pt);
+			\node at (310pt,187.0156pt)[below right]{TaskRunner};
+			\draw[fill=black] (208.5pt,67.6094pt) -- (218.5pt,71.6094pt) -- (208.5pt,75.6094pt) -- (212.5pt,71.6094pt) -- cycle;
+			\draw (51.5pt,71.6094pt) -- (214.5pt,71.6094pt);
+			\node at (58.5pt,53.6094pt)[below right]{IP:port list to be scanned};
+			\draw[fill=black] (62.5pt,97.9609pt) -- (52.5pt,101.9609pt) -- (62.5pt,105.9609pt) -- (58.5pt,101.9609pt) -- cycle;
+			\draw[dash pattern=on 2.0pt off 2.0pt] (56.5pt,101.9609pt) -- (219.5pt,101.9609pt);
+			\node at (68.5pt,83.9609pt)[below right]{return tasks};
+			\draw[fill=black] (339pt,128.3125pt) -- (349pt,132.3125pt) -- (339pt,136.3125pt) -- (343pt,132.3125pt) -- cycle;
+			\draw (51.5pt,132.3125pt) -- (345pt,132.3125pt);
+			\node at (58.5pt,114.3125pt)[below right]{list of tasks};
+			\draw[fill=black] (62.5pt,158.6641pt) -- (52.5pt,162.6641pt) -- (62.5pt,166.6641pt) -- (58.5pt,162.6641pt) -- cycle;
+			\draw[dash pattern=on 2.0pt off 2.0pt] (56.5pt,162.6641pt) -- (350pt,162.6641pt);
+			\node at (68.5pt,144.6641pt)[below right]{results of tasks};
+		\end{tikzpicture}
+		\caption{Sequence Diagram for Task Instantiation and Multiplexed Execution}
+		\label{seqtasks}
+	\end{figure}
 	
 	All tasks are implemented to use their sockets in a non-blocking mode, as such, as soon as one task has sent an IP packet and is about to wait for the results of its I/O operation, it instead goes into the back of the queue.
 	
@@ -1443,6 +1184,49 @@
 	The server replies are not fully parsed using a protocol-aware parser, instead it aims to either \textit{a)} extract server names, versions and operating system tags, or if that is not possible, \textit{b)} clean any known protocol strings, leaving only implementation-specific strings in the service banner.
 	
 	Currently, there are two protocol tokenizers implemented, and these are run in order of protocol popularity when a service banner needs to be cleaned. An API is exposed which does this, \mintinline{cpp}{ProtocolTokenizer::AutoTokenize(const std::string& banner)}.
+	
+	Figure \ref{seqtokenize} represents the sequence diagram of the process through which an unidentified service banner is automatically tokenized via the aforementioned exposed API.
+	
+	\begin{figure}[!htbp]
+		%	@startuml
+		%	ProtocolTokenizer -> HttpTokenizer: HTTP service banner
+		%	HttpTokenizer --> ProtocolTokenizer: return tokens
+		%	ProtocolTokenizer -> ThreeDigitTokenizer: service banner
+		%	ThreeDigitTokenizer --> ProtocolTokenizer: return tokens
+		%	@enduml
+		\centering
+		\begin{tikzpicture}[yscale=-1,scale=0.95,every node/.style={scale=0.95}]
+			\draw[dash pattern=on 5.0pt off 5.0pt] (74pt,39.6094pt) -- (74pt,181.0156pt);
+			\draw[dash pattern=on 5.0pt off 5.0pt] (216.5pt,39.6094pt) -- (216.5pt,181.0156pt);
+			\draw[dash pattern=on 5.0pt off 5.0pt] (352.5pt,39.6094pt) -- (352.5pt,181.0156pt);
+			\draw (8pt,3pt) rectangle (136pt,34.6094pt);
+			\node at (15pt,10pt)[below right]{ProtocolTokenizer};
+			\draw (8pt,180.0156pt) rectangle (136pt,211.625pt);
+			\node at (15pt,187.0156pt)[below right]{ProtocolTokenizer};
+			\draw (164.5pt,3pt) rectangle (265.5pt,34.6094pt);
+			\node at (171.5pt,10pt)[below right]{HttpTokenizer};
+			\draw (164.5pt,180.0156pt) rectangle (265.5pt,211.625pt);
+			\node at (171.5pt,187.0156pt)[below right]{HttpTokenizer};
+			\draw (279.5pt,3pt) rectangle (421.5pt,34.6094pt);
+			\node at (286.5pt,10pt)[below right]{ThreeDigitTokenizer};
+			\draw (279.5pt,180.0156pt) rectangle (421.5pt,211.625pt);
+			\node at (286.5pt,187.0156pt)[below right]{ThreeDigitTokenizer};
+			\draw[fill=black] (205pt,67.6094pt) -- (215pt,71.6094pt) -- (205pt,75.6094pt) -- (209pt,71.6094pt) -- cycle;
+			\draw (74pt,71.6094pt) -- (211pt,71.6094pt);
+			\node at (81pt,53.6094pt)[below right]{HTTP service banner};
+			\draw[fill=black] (85pt,97.9609pt) -- (75pt,101.9609pt) -- (85pt,105.9609pt) -- (81pt,101.9609pt) -- cycle;
+			\draw[dash pattern=on 2.0pt off 2.0pt] (79pt,101.9609pt) -- (216pt,101.9609pt);
+			\node at (91pt,83.9609pt)[below right]{return tokens};
+			\draw[fill=black] (340.5pt,128.3125pt) -- (350.5pt,132.3125pt) -- (340.5pt,136.3125pt) -- (344.5pt,132.3125pt) -- cycle;
+			\draw (74pt,132.3125pt) -- (346.5pt,132.3125pt);
+			\node at (81pt,114.3125pt)[below right]{service banner};
+			\draw[fill=black] (85pt,158.6641pt) -- (75pt,162.6641pt) -- (85pt,166.6641pt) -- (81pt,162.6641pt) -- cycle;
+			\draw[dash pattern=on 2.0pt off 2.0pt] (79pt,162.6641pt) -- (351.5pt,162.6641pt);
+			\node at (91pt,144.6641pt)[below right]{return tokens};
+		\end{tikzpicture}
+		\caption{Sequence Diagram for Protocol-based Tokenization of Service Banners}
+		\label{seqtokenize}
+	\end{figure}
 	
 \subsubsection{Hyper-Text Transfer Protocol Tokenizer}
 \subsubsectionhu{HTTP Értelmező} \subsubsectionro{Interpretor HTTP}
@@ -1528,6 +1312,49 @@
 	The example regular expression in listing \ref{nginxregex} matches against the response headers produced by the HTTP server software ``nginx''. See the service banner in listing \ref{httpsvcbnr} for an example that would be matched. Furthermore, the listed regular expression contains an optional capture group, which captures the version number. If the version number is listed in the service banner, the matcher component will return the CPE name \mintinline{matlab}{cpe:/a:nginx:nginx:1.9.12}, while without a version number listed, it will still return the CPE name \mintinline{matlab}{cpe:/a:nginx:nginx}.
 	
 	This behavior is different from the matcher described in section \ref{matchcpe}: whereas here a CPE name can be produced with high confidence with or without a known version number, the CPE dictionary-based matcher \textit{requires} a known version number, since it plays a pivotal role in the identifying and scoring process.
+	
+	Figure \ref{seqregex} represents the sequence diagram for the process of pattern-matching unidentified service banners. The ``BannerProcessor'' component of the sequence diagram acts as an intermediary, making sure to properly merge the returned information from the ``ServiceRegexMatcher'' component into the host object, as the latter class only contains the regular expression matching implementation.
+		
+	\begin{figure}[!htbp]
+		%	@startuml
+		%	Application -> BannerProcessor: service banners
+		%	BannerProcessor -> ServiceRegexMatcher: match regexes
+		%	ServiceRegexMatcher --> BannerProcessor: return CPE
+		%	BannerProcessor --> Application: return CPE
+		%	@enduml
+		\centering
+		\begin{tikzpicture}[yscale=-1]
+			\draw[dash pattern=on 5.0pt off 5.0pt] (51pt,39.6094pt) -- (51pt,181.0156pt);
+			\draw[dash pattern=on 5.0pt off 5.0pt] (169pt,39.6094pt) -- (169pt,181.0156pt);
+			\draw[dash pattern=on 5.0pt off 5.0pt] (321pt,39.6094pt) -- (321pt,181.0156pt);
+			\draw (8pt,3pt) rectangle (91pt,34.6094pt);
+			\node at (15pt,10pt)[below right]{Application};
+			\draw (8pt,180.0156pt) rectangle (91pt,211.625pt);
+			\node at (15pt,187.0156pt)[below right]{Application};
+			\draw (105pt,3pt) rectangle (229pt,34.6094pt);
+			\node at (112pt,10pt)[below right]{BannerProcessor};
+			\draw (105pt,180.0156pt) rectangle (229pt,211.625pt);
+			\node at (112pt,187.0156pt)[below right]{BannerProcessor};
+			\draw (243pt,3pt) rectangle (395pt,34.6094pt);
+			\node at (250pt,10pt)[below right]{ServiceRegexMatcher};
+			\draw (243pt,180.0156pt) rectangle (395pt,211.625pt);
+			\node at (250pt,187.0156pt)[below right]{ServiceRegexMatcher};
+			\draw[fill=black] (157pt,67.6094pt) -- (167pt,71.6094pt) -- (157pt,75.6094pt) -- (161pt,71.6094pt) -- cycle;
+			\draw (51.5pt,71.6094pt) -- (163pt,71.6094pt);
+			\node at (58.5pt,53.6094pt)[below right]{service banners};
+			\draw[fill=black] (309pt,97.9609pt) -- (319pt,101.9609pt) -- (309pt,105.9609pt) -- (313pt,101.9609pt) -- cycle;
+			\draw (169pt,101.9609pt) -- (315pt,101.9609pt);
+			\node at (176pt,83.9609pt)[below right]{match regexes};
+			\draw[fill=black] (180pt,128.3125pt) -- (170pt,132.3125pt) -- (180pt,136.3125pt) -- (176pt,132.3125pt) -- cycle;
+			\draw[dash pattern=on 2.0pt off 2.0pt] (174pt,132.3125pt) -- (320pt,132.3125pt);
+			\node at (186pt,114.3125pt)[below right]{return CPE};
+			\draw[fill=black] (62.5pt,158.6641pt) -- (52.5pt,162.6641pt) -- (62.5pt,166.6641pt) -- (58.5pt,162.6641pt) -- cycle;
+			\draw[dash pattern=on 2.0pt off 2.0pt] (56.5pt,162.6641pt) -- (168pt,162.6641pt);
+			\node at (68.5pt,144.6641pt)[below right]{return CPE};
+		\end{tikzpicture}
+		\caption{Sequence Diagram for Pattern-based Matching of Service Banners}
+		\label{seqregex}
+	\end{figure}
 	
 \subsubsection{Inferring Products Without Express Announcement}
 \subsubsectionhu{Identitás Kikövetkeztetése Névhírdetés Nélkül} \subsubsectionro{Deducerea Identității fără Anunțul cu Nume}
@@ -1656,6 +1483,62 @@
 	
 	For product names, however, if multiple products (including their complete version numbers with tokens) match, all of the matches will be returned. The reason for this decision is because a service banner may name multiple software in use, but not multiple versions of the same software to be in use. In listing \ref{httpsvcbnr}, the service banner reveals the existence of three products, namely ``nginx 1.9.12,'' ``PHP 5.6.19'' and ``Ubuntu.''
 	
+	Figure \ref{seqtoken} represents the sequence diagram of the process through which an unidentified service banner is tokenized and matched against the database of known tokens. The ``ProtocolTokenizer'' component of the sequence diagram has its own sequence diagram visible in figure \ref{seqtokenize}. The ``BannerProcessor'' component acts as an intermediary, making sure to properly merge the returned information from the ``CpeDictionaryMatcher'' component into the host object, as the latter class only contains the token matching implementation.
+	
+	\begin{figure}[!htbp]
+		%	@startuml
+		%	Application -> BannerProcessor: service banners
+		%	BannerProcessor -> ProtocolTokenizer: service banner
+		%	ProtocolTokenizer -> BannerProcessor: return tokens
+		%	BannerProcessor -> CpeDictionaryMatcher: extracted tokens
+		%	CpeDictionaryMatcher --> BannerProcessor: return CPE
+		%	BannerProcessor --> Application: return CPE
+		%	@enduml
+		\centering
+		\begin{tikzpicture}[yscale=-1,scale=0.8,every node/.style={scale=0.8}]
+			\draw[dash pattern=on 5.0pt off 5.0pt] (51pt,39.6094pt) -- (51pt,241.7188pt);
+			\draw[dash pattern=on 5.0pt off 5.0pt] (169pt,39.6094pt) -- (169pt,241.7188pt);
+			\draw[dash pattern=on 5.0pt off 5.0pt] (309pt,39.6094pt) -- (309pt,241.7188pt);
+			\draw[dash pattern=on 5.0pt off 5.0pt] (464pt,39.6094pt) -- (464pt,241.7188pt);
+			\draw (8pt,3pt) rectangle (91pt,34.6094pt);
+			\node at (15pt,10pt)[below right]{Application};
+			\draw (8pt,240.7188pt) rectangle (91pt,272.3281pt);
+			\node at (15pt,247.7188pt)[below right]{Application};
+			\draw (105pt,3pt) rectangle (229pt,34.6094pt);
+			\node at (112pt,10pt)[below right]{BannerProcessor};
+			\draw (105pt,240.7188pt) rectangle (229pt,272.3281pt);
+			\node at (112pt,247.7188pt)[below right]{BannerProcessor};
+			\draw (243pt,3pt) rectangle (371pt,34.6094pt);
+			\node at (250pt,10pt)[below right]{ProtocolTokenizer};
+			\draw (243pt,240.7188pt) rectangle (371pt,272.3281pt);
+			\node at (250pt,247.7188pt)[below right]{ProtocolTokenizer};
+			\draw (385pt,3pt) rectangle (539pt,34.6094pt);
+			\node at (392pt,10pt)[below right]{CpeDictionaryMatcher};
+			\draw (385pt,240.7188pt) rectangle (539pt,272.3281pt);
+			\node at (392pt,247.7188pt)[below right]{CpeDictionaryMatcher};
+			\draw[fill=black] (157pt,67.6094pt) -- (167pt,71.6094pt) -- (157pt,75.6094pt) -- (161pt,71.6094pt) -- cycle;
+			\draw (51.5pt,71.6094pt) -- (163pt,71.6094pt);
+			\node at (58.5pt,53.6094pt)[below right]{service banners};
+			\draw[fill=black] (297pt,97.9609pt) -- (307pt,101.9609pt) -- (297pt,105.9609pt) -- (301pt,101.9609pt) -- cycle;
+			\draw (169pt,101.9609pt) -- (303pt,101.9609pt);
+			\node at (176pt,83.9609pt)[below right]{service banner};
+			\draw[fill=black] (180pt,128.3125pt) -- (170pt,132.3125pt) -- (180pt,136.3125pt) -- (176pt,132.3125pt) -- cycle;
+			\draw (174pt,132.3125pt) -- (308pt,132.3125pt);
+			\node at (186pt,114.3125pt)[below right]{return tokens};
+			\draw[fill=black] (452pt,158.6641pt) -- (462pt,162.6641pt) -- (452pt,166.6641pt) -- (456pt,162.6641pt) -- cycle;
+			\draw (169pt,162.6641pt) -- (458pt,162.6641pt);
+			\node at (176pt,144.6641pt)[below right]{extracted tokens};
+			\draw[fill=black] (180pt,189.0156pt) -- (170pt,193.0156pt) -- (180pt,197.0156pt) -- (176pt,193.0156pt) -- cycle;
+			\draw[dash pattern=on 2.0pt off 2.0pt] (174pt,193.0156pt) -- (463pt,193.0156pt);
+			\node at (186pt,175.0156pt)[below right]{return CPE};
+			\draw[fill=black] (62.5pt,219.3672pt) -- (52.5pt,223.3672pt) -- (62.5pt,227.3672pt) -- (58.5pt,223.3672pt) -- cycle;
+			\draw[dash pattern=on 2.0pt off 2.0pt] (56.5pt,223.3672pt) -- (168pt,223.3672pt);
+			\node at (68.5pt,205.3672pt)[below right]{return CPE};
+		\end{tikzpicture}
+		\caption{Sequence Diagram for CPE Token-based Matching of Service Banners}
+		\label{seqtoken}
+	\end{figure}
+	
 \subsubsection{Handling of Edge Cases} \label{cpeedges}
 \subsubsectionhu{Élesetek Kezelése} \subsubsectionro{Soluționarea Cazurilor de Margine}
 
@@ -1762,6 +1645,49 @@
 	
 	For operating systems where only identification is supported, without further interactions, such as Windows, the identification is achieved by analyzing the discovered service banners for various tokens unique to the platform. For example, the Windows identifier will look for ``Cygwin'' or ``Win32'' in the SSH banner, or the existence of platform-exclusive server software, such as an HTTP server identify itself as ``Microsoft IIS''.
 	
+	Figure \ref{seqos} represents the sequence diagram for the process through which a collection of service banners are processed on a per-host basis, in order to determine the operating system and version of the host. The ``*Identifier'' component of the sequence diagram represents all the implemented operating system identifier classes, which are enumerated in order of popularity until an implementation successfully returns.
+	
+	\begin{figure}[!htbp]
+		%	@startuml
+		%	Application -> OperatingSystemIdentifier: service banners of host
+		%	OperatingSystemIdentifier -> _Identifier: service banners of host
+		%	_Identifier --> OperatingSystemIdentifier: return OS CPE
+		%	OperatingSystemIdentifier --> Application: return OS CPE
+		%	@enduml
+		\centering
+		\begin{tikzpicture}[yscale=-1]
+			\draw[dash pattern=on 5.0pt off 5.0pt] (51pt,39.6094pt) -- (51pt,181.0156pt);
+			\draw[dash pattern=on 5.0pt off 5.0pt] (208pt,39.6094pt) -- (208pt,181.0156pt);
+			\draw[dash pattern=on 5.0pt off 5.0pt] (365.5pt,39.6094pt) -- (365.5pt,181.0156pt);
+			\draw (8pt,3pt) rectangle (91pt,34.6094pt);
+			\node at (15pt,10pt)[below right]{Application};
+			\draw (8pt,180.0156pt) rectangle (91pt,211.625pt);
+			\node at (15pt,187.0156pt)[below right]{Application};
+			\draw (118pt,3pt) rectangle (295pt,34.6094pt);
+			\node at (125pt,10pt)[below right]{OperatingSystemIdentifier};
+			\draw (118pt,180.0156pt) rectangle (295pt,211.625pt);
+			\node at (125pt,187.0156pt)[below right]{OperatingSystemIdentifier};
+			\draw (325.5pt,3pt) rectangle (401.5pt,34.6094pt);
+			\node at (332.5pt,10pt)[below right]{*Identifier};
+			\draw (325.5pt,180.0156pt) rectangle (401.5pt,211.625pt);
+			\node at (332.5pt,187.0156pt)[below right]{*Identifier};
+			\draw[fill=black] (196.5pt,67.6094pt) -- (206.5pt,71.6094pt) -- (196.5pt,75.6094pt) -- (200.5pt,71.6094pt) -- cycle;
+			\draw (51.5pt,71.6094pt) -- (202.5pt,71.6094pt);
+			\node at (58.5pt,53.6094pt)[below right]{service banners of host};
+			\draw[fill=black] (353.5pt,97.9609pt) -- (363.5pt,101.9609pt) -- (353.5pt,105.9609pt) -- (357.5pt,101.9609pt) -- cycle;
+			\draw (208.5pt,101.9609pt) -- (359.5pt,101.9609pt);
+			\node at (215.5pt,83.9609pt)[below right]{service banners of host};
+			\draw[fill=black] (219.5pt,128.3125pt) -- (209.5pt,132.3125pt) -- (219.5pt,136.3125pt) -- (215.5pt,132.3125pt) -- cycle;
+			\draw[dash pattern=on 2.0pt off 2.0pt] (213.5pt,132.3125pt) -- (364.5pt,132.3125pt);
+			\node at (225.5pt,114.3125pt)[below right]{return OS CPE};
+			\draw[fill=black] (62.5pt,158.6641pt) -- (52.5pt,162.6641pt) -- (62.5pt,166.6641pt) -- (58.5pt,162.6641pt) -- cycle;
+			\draw[dash pattern=on 2.0pt off 2.0pt] (56.5pt,162.6641pt) -- (207.5pt,162.6641pt);
+			\node at (68.5pt,144.6641pt)[below right]{return OS CPE};
+		\end{tikzpicture}
+		\caption{Sequence Diagram for Operating System Identification}
+		\label{seqos}
+	\end{figure}
+	
 \subsection{Vulnerability Lookup}
 \subsectionhu{Sebezhetőségek Lekérdezése} \subsectionro{Căutarea Vulnerabilităților}
 	
@@ -1774,6 +1700,49 @@
 	When comparing CPE entries, all components of the CPE have to match in order to declare the application vulnerable. It should be noted, that fields which do not have a value are considered to be wildcard components, and match to any value.
 	
 	For example, \mintinline{matlab}{cpe:/o:microsoft:windows:10} refers to \textit{Windows 10}, while the \textit{Hungarian} version of Windows 10 is referred to as \mintinline{matlab}{cpe:/o:microsoft:windows:10:::hu}. When referred specifically, it means that the other language versions of the same product are not affected. However, if a CVE entry only refers to \mintinline{matlab}{cpe:/o:microsoft:windows:10}, it is assumed that other fields are set to \mintinline{matlab}{*}, being equal to \mintinline{matlab}{cpe:/o:microsoft:windows:10:*:*:*}, and therefore making the Hungarian version of the product affected as well.
+	
+	Figure \ref{seqnvd} presents the sequence diagram of the process through which CPE names are resolved to CVE entries within the application. The ``Database'' component of the diagram represents the aforementioned National Vulnerability Database, however, the application itself is not querying the published XML file directly, it instead is querying a SQLite database, which is filled with the relevant fields of the published XML file. This is done in order to increase performance and lower memory consumption of each lookup request.
+	
+	\begin{figure}[!htbp]
+		%	@startuml
+		%	Application -> VulnerabilityLookup: CPEs w/ version
+		%	VulnerabilityLookup -> Database: find affected
+		%	Database -> VulnerabilityLookup: raw CVE entries
+		%	VulnerabilityLookup -> Application: return processed CVEs
+		%	@enduml
+		\centering
+		\begin{tikzpicture}[yscale=-1]
+			\draw[dash pattern=on 5.0pt off 5.0pt] (51pt,39.6094pt) -- (51pt,181.0156pt);
+			\draw[dash pattern=on 5.0pt off 5.0pt] (210.5pt,39.6094pt) -- (210.5pt,181.0156pt);
+			\draw[dash pattern=on 5.0pt off 5.0pt] (330.5pt,39.6094pt) -- (330.5pt,181.0156pt);
+			\draw (8pt,3pt) rectangle (91pt,34.6094pt);
+			\node at (15pt,10pt)[below right]{Application};
+			\draw (8pt,180.0156pt) rectangle (91pt,211.625pt);
+			\node at (15pt,187.0156pt)[below right]{Application};
+			\draw (139.5pt,3pt) rectangle (277.5pt,34.6094pt);
+			\node at (146.5pt,10pt)[below right]{VulnerabilityLookup};
+			\draw (139.5pt,180.0156pt) rectangle (277.5pt,211.625pt);
+			\node at (146.5pt,187.0156pt)[below right]{VulnerabilityLookup};
+			\draw (291.5pt,3pt) rectangle (366.5pt,34.6094pt);
+			\node at (298.5pt,10pt)[below right]{Database};
+			\draw (291.5pt,180.0156pt) rectangle (366.5pt,211.625pt);
+			\node at (298.5pt,187.0156pt)[below right]{Database};
+			\draw[fill=black] (198.5pt,67.6094pt) -- (208.5pt,71.6094pt) -- (198.5pt,75.6094pt) -- (202.5pt,71.6094pt) -- cycle;
+			\draw (51.5pt,71.6094pt) -- (204.5pt,71.6094pt);
+			\node at (58.5pt,53.6094pt)[below right]{CPEs w/ version};
+			\draw[fill=black] (319pt,97.9609pt) -- (329pt,101.9609pt) -- (319pt,105.9609pt) -- (323pt,101.9609pt) -- cycle;
+			\draw (210.5pt,101.9609pt) -- (325pt,101.9609pt);
+			\node at (217.5pt,83.9609pt)[below right]{find affected};
+			\draw[fill=black] (221.5pt,128.3125pt) -- (211.5pt,132.3125pt) -- (221.5pt,136.3125pt) -- (217.5pt,132.3125pt) -- cycle;
+			\draw (215.5pt,132.3125pt) -- (330pt,132.3125pt);
+			\node at (227.5pt,114.3125pt)[below right]{raw CVE entries};
+			\draw[fill=black] (62.5pt,158.6641pt) -- (52.5pt,162.6641pt) -- (62.5pt,166.6641pt) -- (58.5pt,162.6641pt) -- cycle;
+			\draw (56.5pt,162.6641pt) -- (209.5pt,162.6641pt);
+			\node at (68.5pt,144.6641pt)[below right]{return processed CVEs};
+		\end{tikzpicture}
+		\caption{Sequence Diagram for Vulnerability Lookup}
+		\label{seqnvd}
+	\end{figure}
 	
 	Section \ref{matchcpe} briefly introduces the CPE notation, giving an example to ``nginx 1.9.9'' in listing \ref{nginxcpe}. Continuing this example, listing \ref{nginxcve} presents the raw XML entry for the CVE item ``CVE-2016-0742'', which affects the aforementioned server software by having its CPE name in the list of vulnerable software.
 	
@@ -1833,6 +1802,49 @@
 	After querying an authoritative source, the application can discard vulnerabilities which do not affect the discovered operating system and package combination (e.g. \mintinline{matlab}{NOT-FOR-US} tag on the Debian Security Tracker) or otherwise check if the proper security update which addresses the vulnerability was applied or not.
 	
 	Just like in section \ref{opsysmatcher}, the package lookup functionality is laid out in separate \mintinline{cpp}{*Lookup} classes, having one implementation for each supported operating system. These classes are also the ones responsible for identifying the specific names of the packages, and generating the command line instructions which apply the specific software upgrades.
+	
+	Figure \ref{seqvuln} presents the sequence diagram of the process through which an identified CVE vulnerability is validated for a host with an identified and supported operating system through its package manager.
+	
+	\begin{figure}[!htbp]
+		%	@startuml
+		%	Application -> VendorLookupFactory: identified OS
+		%	VendorLookupFactory --> Application: lookup instance
+		%	Application -> VendorPackageLookup: query CVE
+		%	VendorPackageLookup --> Application: return metadata
+		%	@enduml
+		\centering
+		\begin{tikzpicture}[yscale=-1,scale=0.95,every node/.style={scale=0.95}]
+			\draw[dash pattern=on 5.0pt off 5.0pt] (51pt,39.6094pt) -- (51pt,181.0156pt);
+			\draw[dash pattern=on 5.0pt off 5.0pt] (184pt,39.6094pt) -- (184pt,181.0156pt);
+			\draw[dash pattern=on 5.0pt off 5.0pt] (357pt,39.6094pt) -- (357pt,181.0156pt);
+			\draw (8pt,3pt) rectangle (91pt,34.6094pt);
+			\node at (15pt,10pt)[below right]{Application};
+			\draw (8pt,180.0156pt) rectangle (91pt,211.625pt);
+			\node at (15pt,187.0156pt)[below right]{Application};
+			\draw (105pt,3pt) rectangle (260pt,34.6094pt);
+			\node at (112pt,10pt)[below right]{VendorLookupFactory};
+			\draw (105pt,180.0156pt) rectangle (260pt,211.625pt);
+			\node at (112pt,187.0156pt)[below right]{VendorLookupFactory};
+			\draw (274pt,3pt) rectangle (436pt,34.6094pt);
+			\node at (281pt,10pt)[below right]{VendorPackageLookup};
+			\draw (274pt,180.0156pt) rectangle (436pt,211.625pt);
+			\node at (281pt,187.0156pt)[below right]{VendorPackageLookup};
+			\draw[fill=black] (172.5pt,67.6094pt) -- (182.5pt,71.6094pt) -- (172.5pt,75.6094pt) -- (176.5pt,71.6094pt) -- cycle;
+			\draw (51.5pt,71.6094pt) -- (178.5pt,71.6094pt);
+			\node at (58.5pt,53.6094pt)[below right]{identified OS};
+			\draw[fill=black] (62.5pt,97.9609pt) -- (52.5pt,101.9609pt) -- (62.5pt,105.9609pt) -- (58.5pt,101.9609pt) -- cycle;
+			\draw[dash pattern=on 2.0pt off 2.0pt] (56.5pt,101.9609pt) -- (183.5pt,101.9609pt);
+			\node at (68.5pt,83.9609pt)[below right]{lookup instance};
+			\draw[fill=black] (345pt,128.3125pt) -- (355pt,132.3125pt) -- (345pt,136.3125pt) -- (349pt,132.3125pt) -- cycle;
+			\draw (51.5pt,132.3125pt) -- (351pt,132.3125pt);
+			\node at (58.5pt,114.3125pt)[below right]{query CVE};
+			\draw[fill=black] (62.5pt,158.6641pt) -- (52.5pt,162.6641pt) -- (62.5pt,166.6641pt) -- (58.5pt,162.6641pt) -- cycle;
+			\draw[dash pattern=on 2.0pt off 2.0pt] (56.5pt,162.6641pt) -- (356pt,162.6641pt);
+			\node at (68.5pt,144.6641pt)[below right]{return metadata};
+		\end{tikzpicture}
+		\caption{Sequence Diagram for Package Manager-based Vulnerability Validation}
+		\label{seqvuln}
+	\end{figure}
 	
 \subsection{Estimation of the Last System Upgrade Date}
 \subsectionhu{Utolsó Frissítési Dátum Megbecslése} \subsectionro{Estimarea Datei de Ultima Actualizare al Sistemului}
