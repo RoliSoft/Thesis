@@ -67,4 +67,36 @@
 \newpage
 \section*{Scopul Proiectului}
 
-	Lorem ipsum.
+	Scopul proiectului este de a dezvolta o aplicație, care poate să scaneze o rețea și să descoperă vulnerabilitățile rețelei scanate.
+
+	Aplicația trebuie să fie complet autonomă în procesul de descoperirea vulnerabilităților, fără a depinde de actualizări de la dezvoltator pentru a identifica servicii și vulnerabilități noi.
+
+	Publicul țintă al aplicației trebuie să fie cât mai largă. Aplicația trebuie să fie un instrument util pentru cercetători în domeniul de securitate, pentru consultanți, dar și pentru administratori, chiar în cazul în care administratorii rețelei nu au experiențe semnificative în domeniul de securitate.
+
+\subsection*{Achiziție de Date}
+
+	Pentru a fi folositor cercetătorilor independenți în domeniul de securitate, aplicația trebuie să conține metode de ``OSINT'' (``open-source intelligence''). Serviciile prezentate în secțiunea \ref{passive_ro}, anume Shodan\cite{shodan16}, Censys\cite{censys15} și Mr Looquer\cite{looquer16}, sunt candidate perfecți pentru componentul al aplicației care achiziționează date prin metode pasive.
+	
+	Prin suportarea metodelor pentru a achiziționa date fără o scanare activă, cercetătorii în domeniul de securitate pot să lanseze o scanare pentru care vor primi rezultate instante, fără necesitatea de a avea o infrastructură largă pentru scanare.
+	
+	În cazul contrar, consultanții în domeniul de securitate în general trebuie să lanseze o scanare împotriva unei infrastructuri private, pentru care date nu sunt disponibile pe serviciile menționate anterior. Din acest motiv, aplicația trebuie să conține și metode active pentru achiziționarea datelor.
+	
+	Indiferent de faptul că aplicația implementează mai multe moduri de a achiziționa date, ca un mijloc de redundanță, utilizatorii pot să lanseze scanarea cu o aplicație exterioară, importând rezultatele pentru procesare în final. În mod implicit, aplicația de scanare \textit{nmap} este suportat, dar orice aplicație se poate folosi care generează reporturi în format XML care sunt compatibile cu nmap; un exemplu pentru un astfel de aplicație ar fi \textit{masscan}.
+
+\subsection*{Analizarea Datelor}
+
+	Bannerele de serviciu (``service banner'') care au fost colectate trebuie să fie analizate într-un mod complet autonom. Contrar cu aplicațiile prezentate în secțiunea \ref{relwork_ro}, aplicația dezvoltată nu trebuie să depinde pe extensii pentru a identifica servicii și descoperi vulnerabilități.
+
+	Aplicația trebuie să folosească bazele de date publicate de instituția \textit{NIST}, discutat în secțiunea \ref{vulndbs_ro}. Secțiunea \ref{matchcpe_ro} prezintă componentele care procesează bannerele de serviciu folosind bazele de date menționate anterior, și asociază o nume \textit{CPE} într-un mod complet autonom.
+
+	Ca un mijloc de redundanță, secțiunea \ref{patternmatch_ro} prezintă o metodă alternativă pentru procesarea bannerelor de serviciu. Această metodă nu folosește bazele de date menționate anterior, ci o bază de date care conține nume CPE asociate cu expresii regulate, creat și menținut de dezvoltatorul aplicației sau comunitatea.
+
+\subsection*{Sugestii de Soluționare}
+
+	După ce serviciile scanate au fost identificate, descoperirea vulnerabilităților este o simplă operațiune de căutarea în baza de date cu vulnerabilități \textit{CVE}.
+	
+	Din punctul acesta, aplicația trebuie să prezintă cât mai multe informații utile utilizatorului despre serviciile și vulnerabilitățile descoperite, ca și cum ar fi punctajul de CVSS al vulnerabilităților în descoperite în infrastructură pentru analiza de risc.
+	
+	Ca să fie folositoare și pentru administratorii de rețea care nu au experiențe semnificative în domeniul de securitate, aplicația trebuie să încearcă să generează o listă simplă cu pașii pentru a soluționa vulnerabilitățile descoperite pe fiecare server.
+	
+	În cazul serverurilor unde sistemul de operare a fost identificat cu succes, aplicația poate să generează o linie de comandă care când este rulat pe serverul cu vulnerabilități va actualiza programele vulnerabile.
