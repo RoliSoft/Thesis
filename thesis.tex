@@ -530,7 +530,7 @@
 \subsection{Data Acquisition}
 \subsectionhu{Adatgyűjtés} \subsectionro{Achiziție de Date}
 	
-	In order to be useful for independent security researchers, the application needs to be able to utilize open-source intelligence. The two services presented in sections \ref{shodan} and \ref{censys}, namely Shodan\cite{shodan16} and Censys\cite{censys15}, are both candidates for usage within the passive data reconnaissance component.
+	In order to be useful for independent security researchers, the application needs to be able to utilize open-source intelligence. The three services presented in sections \ref{shodan}, \ref{censys} and \ref{looquer}, namely Shodan\cite{shodan16}, Censys\cite{censys15} and Mr Looquer\cite{looquer16}, are all candidates for usage within the passive data reconnaissance component.
 	
 	This way, researchers may execute queries and get instantaneous results, without having to have an infrastructure on which to launch the scans from, and then deal with the consequences, such as abuse emails.
 	
@@ -867,6 +867,7 @@
 	
 	For the purposes of host aliveness detection, an ICMP `PortUnreachable' message to a random UDP port informs the scanner that the host is in fact online, but that specific port is not, as opposed to an ICMP `HostUnreachable' message, which is sometimes sent by a router along the way to the host, informing the scanner that the host is not online.
 
+\newpage
 \subsection{Passive Reconnaissance}
 \subsectionhu{Passzív Feltérképezés} \subsectionro{Scanare Pasivă}
 
@@ -913,18 +914,18 @@
 
 	Mr Looquer\cite{looquer16} is a new open initiative with a focus on IPv6 intelligence, launched by two security researchers in the May of 2016.
 	
-	IPv6 has a much larger address space of $ 2^{128} $ addresses, as compared to the address space of IPv4 consisting of only $ 2^{32} $ addresses. Due to this increased address space, the technique used by the two aforementioned services (\textit{Shodan} and \textit{Censys}) of scanning the whole IPv4 address space, cannot be used in the case of IPv6. While the creators of \textit{ZMap} claim it is possible to scan the whole IPv4 address space under 5 minutes\cite{zmap13}, this speed would translate to $ 7.537 \cdot 10^{23} $ years for the IPv6 address space.
-	
-	As such, this service uses various data acquisition techniques to gather publicly used IPv6 addresses. One example would be the registered domain list various top-level domain NICs publish on request, such as Verisign's \textit{TLD Zone File Access Program}\cite{verisign16} for \textit{.com} and \textit{.net} TLDs. With this list, they can perform zone walking and use heuristics to infer relationships between the pointing domains and the reverse domains of both the IPv4 and IPv6 associated addresses.
-	
-	Similarly to the previously discussed services, it also allows developers and security researchers to initiate structured queries and full-text search queries from their web interface or the exposed RESTful API. Figure \ref{looquerscr} shows the data readily available on the service for a queried IP address.
-	
 	\begin{figure}[!htbp]
 		\centering
 		\includegraphics[scale=0.355]{looquer.png}
 		\caption{Mr Looquer report on an example IPv6 address}
 		\label{looquerscr}
 	\end{figure}
+	
+	IPv6 has a much larger address space of $ 2^{128} $ addresses, as compared to the address space of IPv4 consisting of only $ 2^{32} $ addresses. Due to this increased address space, the technique used by the two aforementioned services (\textit{Shodan} and \textit{Censys}) of scanning the whole IPv4 address space, cannot be used in the case of IPv6. While the creators of \textit{ZMap} claim it is possible to scan the whole IPv4 address space under 5 minutes\cite{zmap13}, this speed would translate to $ 7.537 \cdot 10^{23} $ years for the IPv6 address space.
+	
+	As such, this service uses various data acquisition techniques to gather publicly used IPv6 addresses. One example would be the registered domain list various top-level domain NICs publish on request, such as Verisign's \textit{TLD Zone File Access Program}\cite{verisign16} for \textit{.com} and \textit{.net} TLDs. With this list, they can perform zone walking and use heuristics to infer relationships between the pointing domains and the reverse domains of both the IPv4 and IPv6 associated addresses.
+	
+	Similarly to the previously discussed services, it also allows developers and security researchers to initiate structured queries and full-text search queries from their web interface or the exposed RESTful API. Figure \ref{looquerscr} shows the data readily available on the service for a queried IP address.
 	
 	In order to use Mr Looquer data in the application developed within the scope of this thesis, the user has to create a free account at \url{https://mrlooquer.com/} and specify the generated API key to the application via the \mintinline{bash}{--looquer-key} argument.
 		
@@ -933,7 +934,7 @@
 \subsubsection{Amalgamation}
 \subsubsectionhu{Egyesítés} \subsubsectionro{Amalgamare}
 
-	The \mintinline{cpp}{PassiveScanner} component of the application initiates the requested scan tasks on all three passive components, Shodan[\ref{shodan}], Censys[\ref{censys}] and Mr Looquer[\ref{looquer}], merging the results at the end.
+	The \mintinline{cpp}{PassiveScanner} component of the application initiates the requested scan tasks on all three passive components, Shodan (s. \ref{shodan}), Censys (s. \ref{censys}) and Mr Looquer (s. \ref{looquer}), merging the results at the end.
 	
 	During the development phase of the application it was found that generally most services have had data on a requested IP address, but most of the times one of the services discovered more ports, have done much deeper analysis, or the information is more useful than at the competitor service.
 	
