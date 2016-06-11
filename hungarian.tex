@@ -71,7 +71,7 @@
 
 \subsection*{Adatgyűjtés}
 
-	Ahhoz, hogy hasznos legyen független biztonsági kutatók számára, az alkalmazásnak alkalmaznia kell ``OSINT'' (``open-source intelligence'') módszereket. \Az{\ref{shodan_hu}} és \ref{censys_hu} fejezetekben bemutatott szolgáltatások, név szerint Shodan\cite{shodan16} és Censys\cite{censys15}, tökéletes jelöltek az alkalmazás adatgyűjtési komponenseihez passzív feltérképezési célokra.
+	Ahhoz, hogy hasznos legyen független biztonsági kutatók számára, az alkalmazásnak alkalmaznia kell ``OSINT'' (``open-source intelligence'') módszereket. \Az{\ref{passive_hu}} fejezetben bemutatott szolgáltatások, név szerint Shodan\cite{shodan16}, Censys\cite{censys15} és Mr Looquer\cite{looquer16}, tökéletes jelöltek az alkalmazás adatgyűjtési komponenseihez passzív feltérképezési célokra.
 	
 	Ezáltal, a kutatók lekérdezéseket futtathatnak azonnali választ kapva rájuk, attól függetlenül, hogy lenne egy infrastruktúrájuk a feltérképezések lefuttatására, és be kelljen vállalják ezeknek a következményeit, mint például az ``abuse'' jelentéseket.
 	
@@ -256,7 +256,7 @@
 	
 	Amennyiben csak azt szeretnénk kideríteni, hogy egy hálózaton belül mely kiszolgálók online-ok, egy ICMP `PortUnreachable' üzenet egy véletlenszerű UDP portra azt jelenti, hogy a kiszolgáló online, de maga a port nem, míg az ICMP `HostUnreachable' üzenettel ellentétben, amely általában a letapogató és letapogatott felek közötti forgalomirányító eszköz küldhet a letapogatónak, hogy értesítse a letapogatott fél állapotjáról.
 
-\subsection*{Passzív Feltérképezés}
+\subsection*{Passzív Feltérképezés} \label{passive_hu}
 
 	Ez a fejezet az alkalmazás azon komponenseit mutatja be, amelyek passzív feltérképezést tesznek lehetővé, azaz úgy térképeznek fel egy hálózatot és a kiszolgálókon lévő szolgáltatásokat, hogy nem küldenek aktívan csomagokat a kiszolgálók felé.
 	
@@ -519,7 +519,7 @@
 		\label{cpevulns_hu}
 	\end{table}
 	
-	\Az{\ref{cpevulns_hu}}. táblázatban található a helyesen beazonosított szolgáltatásoknak a megvalósított alkalmazás által felderített sebezhetőségei. A ``Kritikus'', ``Magas'', ``Közepes'' és ``Alacsony'' sorok a felfedezett sebezhetőségek súlyosságát mutatják, míg az ``AV:N'' sor azon sebezhetőségek számát mutatja, amelyek távolról kihasználhatóak. (\Az{\ref{cvss_hu}}. fejezetben tárgyalt \textit{CVSS} pontozási rendszer alapján, azon sebezhetőségek amelyek ``Access Vector'' mezői ``Network'' szintűek.)
+	\Az{\ref{cpevulns_hu}}. táblázatban található a helyesen beazonosított szolgáltatásoknak a megvalósított alkalmazás által felderített sebezhetőségei. A ``Kritikus'', ``Magas'', ``Közepes'' és ``Alacsony'' sorok a felfedezett sebezhetőségek súlyosságát mutatják, míg az ``AV:N'' sor azon sebezhetőségek számát mutatja, amelyek távolról kihasználhatóak.
 	
 	A pénzügyi intézmények IP tartományában felfedezett sebezhetőségek nem meglepőek, ugyanis egy kapcsolódó projektem\footnote{\url{https://github.com/RoliSoft/Bank-Security-Audit}} során mérem bizonyos intézmények válaszidejét frissen felfedezett biztonsági sebezhetőségek kijavítására, és sajnos azt sikerült levonni, hogy egyes bankok esetén a biztonsági frissítések telepítése kritikus hibákra betelhet akár 3 hónapba is.
 	
