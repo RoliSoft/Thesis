@@ -14,6 +14,29 @@
 \setminted{autogobble,breaklines,fontsize=\footnotesize,tabsize=4,bgcolor=whitesmoke}
 \AtBeginEnvironment{minted}{\renewcommand{\fcolorbox}[4][]{#4}}
 
+\usecolortheme{beaver}
+%\setbeamercolor{structure}{fg=OliveGreen}
+\setbeamercolor{titlelike}{fg=Blue}
+\setbeamercolor{palette primary}{bg=white}
+\setbeamercolor{palette quaternary}{fg=Blue}
+\setbeamertemplate{headline}{}
+\setbeamertemplate{footline}
+{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.1\paperwidth,ht=2.25ex,dp=1ex,left]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\hspace{5pt}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.8\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.1\paperwidth,ht=2.25ex,dp=1ex,right]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertframenumber{} / \inserttotalframenumber\hspace{5pt}
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+%\setbeamertemplate{navigation symbols}{}
+
 \title{Black-Box Penetration Testing and Vulnerability Management Platform}
 \author{Roland Bogosi}
 \date{2016}
