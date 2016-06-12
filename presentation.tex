@@ -6,6 +6,7 @@
 \usepackage{fontawesome}
 \usepackage{inconsolata}
 
+\usepackage{multicol}
 \def\arraystretch{1.5}
 
 \usepackage{minted}
@@ -166,19 +167,24 @@
 	
 	\vspace{16pt}
 	
-	\begin{minted}{matlab}
-		SSH-2.0-OpenSSH_5.5p1 Debian-6+squeeze8
-	\end{minted}
-	
-	\ispace
-	
-	\begin{minted}[style=pastie]{http}
-		HTTP/1.1 200 OK
-		Date: Mon, 11 Apr 2016 04:56:08 GMT
-		Server: Apache/2.4.10 (Ubuntu) OpenSSL/0.9.8zb PHP/5.3.29
-		Content-Length: 209
-		Content-Type: text/html; charset=iso-8859-1 
-	\end{minted}
+	\begin{multicols}{2}
+		\begin{minted}{matlab}
+			SSH-2.0-OpenSSH_5.5p1 Debian-6+squeeze8
+			Key type: ssh-rsa
+			Key: AAAAB3NzaC1yc2EAAAADAQABAAACAQC7...
+			Fingerprint: e0:11:dd:c0:62:ad:1d:37:...
+			Kex Algorithms:
+				curve25519-sha256@libssh.org
+				diffie-hellman-group-exchange-sha256
+		\end{minted}
+		\begin{minted}[style=pastie]{http}
+			HTTP/1.1 200 OK
+			Date: Mon, 11 Apr 2016 04:56:08 GMT
+			Server: Apache/2.4.10 (Ubuntu) OpenSSL/0.9.8zb PHP/5.3.29
+			Content-Length: 209
+			Content-Type: text/html; charset=iso-8859-1 
+		\end{minted}
+	\end{multicols}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -191,19 +197,24 @@
 	
 	\ispace
 	
-	\begin{minted}[escapeinside=||,style=bw]{matlab}
-		SSH-2.0-|{\color{RoyalBlue}OpenSSH\_5.5p1}| |{\color{OliveGreen}Debian}{\color{RoyalBlue}-6+}{\color{OliveGreen}squeeze}{\color{RoyalBlue}8}|
-	\end{minted}
-	
-	\ispace
-	
-	\begin{minted}[escapeinside=||,style=bw]{http}
-		HTTP/1.1 200 OK
-		Date: Mon, 11 Apr 2016 04:56:08 GMT
-		Server: |{\color{RoyalBlue}Apache/2.4.10}| (|{\color{BurntOrange}Ubuntu}|) |{\color{OliveGreen}OpenSSL/0.9.8zb}| |{\color{Purple}PHP/5.3.29}|
-		Content-Length: 209
-		Content-Type: text/html; charset=iso-8859-1 
-	\end{minted}
+	\begin{multicols}{2}
+		\begin{minted}[escapeinside=||,style=bw]{matlab}
+			SSH-2.0-|{\color{RoyalBlue}OpenSSH\_5.5p1}| |{\color{OliveGreen}Debian}{\color{RoyalBlue}-6+}{\color{OliveGreen}squeeze}{\color{RoyalBlue}8}|
+			Key type: ssh-rsa
+			Key: AAAAB3NzaC1yc2EAAAADAQABAAACAQC7...
+			Fingerprint: e0:11:dd:c0:62:ad:1d:37:...
+			Kex Algorithms:
+				curve25519-sha256@libssh.org
+				diffie-hellman-group-exchange-sha256
+		\end{minted}
+		\begin{minted}[escapeinside=||,style=bw]{http}
+			HTTP/1.1 200 OK
+			Date: Mon, 11 Apr 2016 04:56:08 GMT
+			Server: |{\color{RoyalBlue}Apache/2.4.10}| (|{\color{BurntOrange}Ubuntu}|) |{\color{OliveGreen}OpenSSL/0.9.8zb}| |{\color{Purple}PHP/5.3.29}|
+			Content-Length: 209
+			Content-Type: text/html; charset=iso-8859-1 
+		\end{minted}
+	\end{multicols}
 \end{frame}
 
 \begin{frame}
@@ -242,15 +253,19 @@
 		\item Method widely used in aforementioned products.
 	\end{itemize}
 	
-	\ispace
+	\vspace{5pt}
 	
+	\begin{center}
+	\begin{minipage}{.8\textwidth}
 	\begin{minted}[escapeinside=||]{matlab}
 		^HTTP/1\.[01] \d{3}.*\r\nServer: |\textcolor{RoyalBlue}{nginx}|(?:/|\textcolor{Purple}{([{\textbackslash}d{\textbackslash}.]+)}|)?
 	\end{minted}
 	
+	\vspace{-7pt}
 	\begin{center}
 		$\downarrow$
 	\end{center}
+	\vspace{-7pt}
 	
 	\begin{minted}[escapeinside=||,style=bw]{http}
 		HTTP/1.1 200 OK
@@ -258,13 +273,17 @@
 		Server: |\textcolor{RoyalBlue}{nginx}|/|\textcolor{Purple}{1.9.10}|
 	\end{minted}
 	
+	\vspace{-7pt}
 	\begin{center}
 		$\downarrow$
 	\end{center}
+	\vspace{-7pt}
 	
 	\begin{minted}[escapeinside=||]{matlab}
 		cpe:/a:|{\color{RoyalBlue}nginx}|:|{\color{RoyalBlue}nginx}|:|{\color{Purple}1.9.10}|
 	\end{minted}
+	\end{minipage}
+	\end{center}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -277,15 +296,19 @@
 		\end{itemize}
 	\end{itemize}
 	
-	\ispace
+	\vspace{5pt}
 	
+	\begin{center}
+	\begin{minipage}{.8\textwidth}
 	\begin{minted}[escapeinside=||]{matlab}
 		cpe:/o:|\textcolor{RoyalBlue}{cisco}|:|\textcolor{RoyalBlue}{ios}|:|\textcolor{OliveGreen}{12.2}\textcolor{BurntOrange}{sxi}\textcolor{OliveGreen}{3}|
 	\end{minted}
 	
+	\vspace{-7pt}
 	\begin{center}
 		$\downarrow$
 	\end{center}
+	\vspace{-7pt}
 	
 	\begin{minted}[escapeinside=||,style=bw]{http}
 		|\textbf{\textcolor{RoyalBlue}{Cisco IOS}}| Software, s72033_rp Software (s72033_rp_WAN-M),
@@ -294,6 +317,8 @@
 		Copyright (c) 1986-2009 by Cisco Systems, Inc.
 		Compiled Tue 27-Oct-09 11:12 by prod_ 
 	\end{minted}
+	\end{minipage}
+	\end{center}
 \end{frame}
 
 \begin{frame}
@@ -343,8 +368,10 @@
 		\end{itemize}
 	\end{itemize}
 	
-	\vspace{20pt}
+	\ispace
 	
+	\begin{center}
+	\begin{minipage}{.91\textwidth}
 	\begin{minted}[escapeinside=||,style=bw]{matlab}
 		[*] 192.168.1.66 is running cpe:/o:|\textbf{debian}|:|\textbf{debian}|_|\textbf{linux}|:|\textbf{8}|
 		[*] 192.168.1.71 is running cpe:/o:|\textbf{redhat}|:|\textbf{enterprise}|_|\textbf{linux}|:|\textbf{7}|
@@ -352,6 +379,8 @@
 		[*] 192.168.1.66 -> |\textbf{sudo apt-get install --only-upgrade apache2 php5 python2.7}|
 		[*] 192.168.1.71 -> |\textbf{sudo yum update httpd php python27-python}|
 	\end{minted}
+	\end{minipage}
+	\end{center}
 \end{frame}
 
 \begin{frame}
