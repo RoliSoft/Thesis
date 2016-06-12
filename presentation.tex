@@ -1,0 +1,378 @@
+\documentclass[aspectratio=169,xcolor={usenames,dvipsnames}]{beamer}
+
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{fontawesome}
+\usepackage{inconsolata}
+
+\def\arraystretch{1.5}
+
+\usepackage{minted}
+\definecolor{whitesmoke}{rgb}{0.96,0.96,0.96}
+\setminted{autogobble,breaklines,fontsize=\footnotesize,tabsize=4,bgcolor=whitesmoke}
+\AtBeginEnvironment{minted}{\renewcommand{\fcolorbox}[4][]{#4}}
+
+\title{Black-Box Penetration Testing and Vulnerability Management Platform}
+\author{Roland Bogosi}
+\date{2016}
+
+\newcommand{\ispace}{\vspace{10pt}}
+
+\begin{document}
+
+	\frame{\titlepage}
+
+\begin{frame}
+	\frametitle{Software Vulnerabilities}
+	
+	\begin{itemize}
+		\item \textbf{Weakness} of a software.
+		\item Through exploitation, \textbf{attacker} can:
+		\begin{itemize}
+			\item \textbf{access information},
+			\item \textbf{perform an action},
+		\end{itemize}
+		\item they would otherwise \textbf{not be privy} to.
+	\end{itemize}
+	
+	\ispace
+	
+	\begin{itemize}
+		\item \textbf{NVD} (``National Vulnerability Database'')
+		\begin{itemize}
+			\item \textbf{NIST} (``National Institute of Standards and Technology'')
+			\item Database of \textbf{vulnerabilities}.
+			\item Consisting of \textbf{software}, \textbf{hardware} and \textbf{OS} reports.
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Penetration Testing}
+	
+	\begin{itemize}
+		\item Simulation of a \textbf{real attack} on the system.
+		\item Generated from the \textbf{attacker's perspective}.
+		\item Performed by trained and authorized personnel.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Commercial Solutions}
+	
+	\begin{itemize}
+		\item \textbf{Nessus}, \textbf{Nexpose}
+		\begin{itemize}
+			\item Most popular penetration testing tools.
+			\item Subscriptions start from \$2,000/year/seat. 
+		\end{itemize}
+		\item \textbf{OpenVAS}
+		\begin{itemize}
+			\item Fork of the last open-source \textit{Nessus} version from 2005.
+		\end{itemize}
+	\end{itemize}
+	
+	\ispace
+	
+	\begin{itemize}
+		\item Based on \textbf{extensions}.
+		\begin{itemize}
+			\item Depends on one extension for each:
+			\begin{itemize}
+				\item \textbf{service identification},
+				\item \textbf{vulnerability detection}.
+			\end{itemize}
+			\item During a scan, \textbf{all} \textit{({\raise.17ex\hbox{$\scriptstyle\sim$}}70,000)} extensions are invoked.
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Project Aim}
+	
+	\begin{itemize}
+		\item \textbf{Penetration testing} system.
+		\item \textbf{Independent} of extensions for:
+		\begin{itemize}
+			\item \textbf{service identification},
+			\item \textbf{vulnerability detection}.
+		\end{itemize}
+		\item Based on the \textbf{vulnerability database}.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Active Scanning}
+	
+	\begin{itemize}
+		\item Sends packets towards the target system.
+		\item \textbf{Detectable} approach.
+	\end{itemize}
+	
+	\ispace
+	
+	\begin{itemize}
+		\item Internal implementation:
+		\begin{itemize}
+			\item Supported protocols: \textbf{TCP}, \textbf{UDP}, \textbf{ICMP}, \textbf{ARP}.
+		\end{itemize}
+	\end{itemize}
+	
+	\ispace
+	
+	\begin{itemize}
+		\item External implementation:
+		\begin{itemize}
+			\item Supported tools: \textbf{nmap}, \textbf{masscan}, \textbf{zmap}.
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Passive Scanning}
+	
+	\begin{itemize}
+		\item Does \textbf{not} contact the target system.
+		\item Information is gathered through external services:
+		\begin{itemize}
+			\item These continuously scan the full IPv4 address range consisting of $2^{32}$ addresses.
+			\item IPv6-oriented services utilize various discovery techniques to gather target addresses.
+		\end{itemize}
+	\end{itemize}
+	
+	\ispace
+	
+	\begin{itemize}
+		\item Supported services:
+		\begin{itemize}
+			\item \textbf{Shodan}
+			\item \textbf{Censys}
+			\item \textbf{Mr Looquer}
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Service Banners}
+	
+	\begin{itemize}
+		\item The \textbf{first} message sent by the service when:
+		\begin{itemize}
+			\item \textbf{opening} the connection,
+			\item \textbf{replying} to an attempted handshake.
+		\end{itemize}
+	\end{itemize}
+	
+	\vspace{16pt}
+	
+	\begin{minted}{matlab}
+		SSH-2.0-OpenSSH_5.5p1 Debian-6+squeeze8
+	\end{minted}
+	
+	\ispace
+	
+	\begin{minted}[style=pastie]{http}
+		HTTP/1.1 200 OK
+		Date: Mon, 11 Apr 2016 04:56:08 GMT
+		Server: Apache/2.4.10 (Ubuntu) OpenSSL/0.9.8zb PHP/5.3.29
+		Content-Length: 209
+		Content-Type: text/html; charset=iso-8859-1 
+	\end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Problem}
+	
+	\begin{itemize}
+		\item \textbf{Identification} of the scanned services.
+		\item \textbf{Protocol-independent} extraction of the announced software names into a \textbf{standardized} naming scheme.
+	\end{itemize}
+	
+	\ispace
+	
+	\begin{minted}[escapeinside=||,style=bw]{matlab}
+		SSH-2.0-|{\color{RoyalBlue}OpenSSH\_5.5p1}| |{\color{OliveGreen}Debian}{\color{RoyalBlue}-6+}{\color{OliveGreen}squeeze}{\color{RoyalBlue}8}|
+	\end{minted}
+	
+	\ispace
+	
+	\begin{minted}[escapeinside=||,style=bw]{http}
+		HTTP/1.1 200 OK
+		Date: Mon, 11 Apr 2016 04:56:08 GMT
+		Server: |{\color{RoyalBlue}Apache/2.4.10}| (|{\color{BurntOrange}Ubuntu}|) |{\color{OliveGreen}OpenSSL/0.9.8zb}| |{\color{Purple}PHP/5.3.29}|
+		Content-Length: 209
+		Content-Type: text/html; charset=iso-8859-1 
+	\end{minted}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Standardized Naming Scheme}
+	
+	\begin{itemize}
+		\item \textbf{NVD} lists \textbf{CPE} names in its \textit{affected software} field.
+	\end{itemize}
+	
+	\ispace
+	
+	\begin{itemize}
+		\item \textbf{CPE} structure:
+		\begin{itemize}
+			\item[] \hspace{-18.2pt} \texttt{cpe:/ type : vendor : product : version : update : edition : lang}
+		\end{itemize}
+	\end{itemize}
+	
+	\ispace
+	
+	\begin{itemize}
+		\item Examples:
+		\begin{itemize}
+			\item \textcolor{RoyalBlue}{Cisco IOS} \textcolor{OliveGreen}{12.2(sxi)3} \hspace{5pt}$\rightarrow$\hspace{5pt} cpe:/o:\textcolor{RoyalBlue}{cisco}:\textcolor{RoyalBlue}{ios}:\textcolor{OliveGreen}{12.2sxi3}
+			\item \textcolor{RoyalBlue}{Nginx} \textcolor{OliveGreen}{1.9.12} \hspace{34.5pt} $\rightarrow$\hspace{5pt} cpe:/a:\textcolor{RoyalBlue}{nginx}:\textcolor{RoyalBlue}{nginx}:\textcolor{OliveGreen}{1.9.12}
+			\item \textcolor{RoyalBlue}{Ubuntu} \textcolor{OliveGreen}{14.04} \textcolor{BurntOrange}{LTS} \hspace{10pt} $\rightarrow$\hspace{5pt} cpe:/o:\textcolor{RoyalBlue}{canonical}:\textcolor{RoyalBlue}{ubuntu}:\textcolor{OliveGreen}{14.04}::\textcolor{BurntOrange}{lts}
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Pattern-based Identification}
+	
+	\begin{itemize}
+		\item Database comprised of \textbf{regular expressions}.
+		\item Method widely used in aforementioned products.
+	\end{itemize}
+	
+	\ispace
+	
+	\begin{minted}[escapeinside=||]{matlab}
+		^HTTP/1\.[01] \d{3}.*\r\nServer: |\textcolor{RoyalBlue}{nginx}|(?:/|\textcolor{Purple}{([{\textbackslash}d{\textbackslash}.]+)}|)?
+	\end{minted}
+	
+	\begin{center}
+		$\downarrow$
+	\end{center}
+	
+	\begin{minted}[escapeinside=||,style=bw]{http}
+		HTTP/1.1 200 OK
+		Date: Mon, 11 Apr 2016 04:58:18 GMT
+		Server: |\textcolor{RoyalBlue}{nginx}|/|\textcolor{Purple}{1.9.10}|
+	\end{minted}
+	
+	\begin{center}
+		$\downarrow$
+	\end{center}
+	
+	\begin{minted}[escapeinside=||]{matlab}
+		cpe:/a:|{\color{RoyalBlue}nginx}|:|{\color{RoyalBlue}nginx}|:|{\color{Purple}1.9.10}|
+	\end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{CPE-based Identification}
+	
+	\begin{itemize}
+		\item Based on \textbf{ShoVAT}:
+		\begin{itemize}
+			\item \textbf{CPE} names are \textit{tokenized} and \textit{matched} using various empirically defined \textit{rules}.
+		\end{itemize}
+	\end{itemize}
+	
+	\ispace
+	
+	\begin{minted}[escapeinside=||]{matlab}
+		cpe:/o:|\textcolor{RoyalBlue}{cisco}|:|\textcolor{RoyalBlue}{ios}|:|\textcolor{OliveGreen}{12.2}\textcolor{BurntOrange}{sxi}\textcolor{OliveGreen}{3}|
+	\end{minted}
+	
+	\begin{center}
+		$\downarrow$
+	\end{center}
+	
+	\begin{minted}[escapeinside=||,style=bw]{http}
+		|\textbf{\textcolor{RoyalBlue}{Cisco IOS}}| Software, s72033_rp Software (s72033_rp_WAN-M),
+		  Version |\textbf{\textcolor{OliveGreen}{12.2}}|(|\textbf{\textcolor{BurntOrange}{SXI}}|)|\textbf{\textcolor{OliveGreen}{3}}|, RELEASE SOFTWARE (fc2)
+		Technical Support: http://www.cisco.com/techsupport
+		Copyright (c) 1986-2009 by Cisco Systems, Inc.
+		Compiled Tue 27-Oct-09 11:12 by prod_ 
+	\end{minted}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Testing Methodology}
+	
+	\begin{itemize}
+		\item Performed against \textbf{real} infrastructures.
+		\item Utilized both \textbf{active} and \textbf{passive} scanning.
+		\item Tested institutions:
+		\begin{itemize}
+			\item \textbf{3} higher education,
+			\item \textbf{5} financial.
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Results}
+	
+	\begin{tabular}{r|ccc|ccc|ccccc|}
+		\cline{2-12}
+		\multicolumn{1}{l|}{}                         & \multicolumn{3}{c|}{\textbf{Active Scan}} & \multicolumn{8}{c|}{\textbf{Passive Scan}}                                                             \\ \hline
+		\multicolumn{1}{|r|}{\textbf{Institution}}      & \textbf{$u_1$}    & \textbf{$u_2$}    & \textbf{$u_3$}   & \textbf{$u_1$} & \textbf{$u_2$} & \textbf{$u_3$} & \textbf{$b_1$} & \textbf{$b_2$} & \textbf{$b_3$} & \textbf{$b_4$} & \textbf{$b_5$} \\
+		\multicolumn{1}{|r|}{\textbf{Services}} & 165            & 178            & 455           & 201         & 269         & 623         & 41          & 19          & 69          & 31          & 11          \\ \hline
+		\multicolumn{1}{|r|}{\textbf{Critical}}       & 183            & 121            & 160           & 161         & 131         & 230         & 8           & 0           & 30          & 6           & 6           \\
+		\multicolumn{1}{|r|}{\textbf{High}}          & 675            & 414            & 645           & 583         & 446         & 826         & 7           & 0           & 67          & 21          & 5           \\
+		\multicolumn{1}{|r|}{\textbf{Medium}}        & 2545           & 1441           & 2775          & 2308        & 1589        & 3247        & 19          & 0           & 299         & 133         & 9           \\
+		\multicolumn{1}{|r|}{\textbf{Low}}       & 231            & 151            & 275           & 195         & 170         & 335         & 7           & 0           & 26          & 13          & 4           \\
+		\multicolumn{1}{|r|}{\textbf{AV:N}}           & 3296           & 1970           & 3493          & 2961        & 2173        & 4248        & 40          & 0           & 393         & 153         & 22          \\ \hline
+	\end{tabular}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Post Assessment}
+	
+	\begin{itemize}
+		\item \LaTeX/\textbf{PDF} report generation.
+	\end{itemize}
+	
+	\ispace
+	
+	\begin{itemize}
+		\item Command line generation to mitigate issues:
+		\begin{itemize}
+			\item \textbf{Debian}, \textbf{Ubuntu};
+			\item \textbf{Red Hat}, \textbf{CentOS} and \textbf{Fedora}.
+		\end{itemize}
+	\end{itemize}
+	
+	\vspace{20pt}
+	
+	\begin{minted}[escapeinside=||,style=bw]{matlab}
+		[*] 192.168.1.66 is running cpe:/o:|\textbf{debian}|:|\textbf{debian}|_|\textbf{linux}|:|\textbf{8}|
+		[*] 192.168.1.71 is running cpe:/o:|\textbf{redhat}|:|\textbf{enterprise}|_|\textbf{linux}|:|\textbf{7}|
+		 ... 
+		[*] 192.168.1.66 -> |\textbf{sudo apt-get install --only-upgrade apache2 php5 python2.7}|
+		[*] 192.168.1.71 -> |\textbf{sudo yum update httpd php python27-python}|
+	\end{minted}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Summary}
+	
+	\begin{itemize}
+		\item Features of the implemented system:
+		\begin{itemize}
+			\item Autonomous identification of services.
+			\item Assessment and validation of vulnerabilities.
+			\item Identification of operating systems.
+			\item Detection of applied security patches.
+			\item Estimation of the last system upgrade date.
+			\item Command line generation for issue mitigation.
+			\item Comprehensive \LaTeX\ report generation.
+		\end{itemize}
+	\end{itemize}
+	
+	\vspace{15pt}
+	
+	{\Large Thank you for your attention.}
+\end{frame}
+
+\end{document}
