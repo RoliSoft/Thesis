@@ -362,6 +362,55 @@
 \end{frame}
 
 \begin{frame}
+	\frametitle{Operating System Integration}
+	
+	\begin{itemize}
+		\item The \textbf{operating system} and its \textbf{version} is identified:
+		\begin{itemize}
+			\item Based on \textit{all the data} gathered by the scan for a \textit{host}.
+			\item \textit{Different} indicators for \textit{each} distribution.
+		\end{itemize}
+		\item Fully supported distributions:
+		\begin{itemize}
+			\item Access to their \textbf{package manager}.
+			\item Support for parsing the \textbf{changelog} and various \textbf{metadata}.
+			\item Currently supported:
+			\begin{itemize}
+				\item \textbf{Debian} (\textbf{oldstable} to \textbf{unstable}), \textbf{Ubuntu} (all \textbf{current} and \textbf{LTS} versions)
+				\item \textbf{Red Hat} (\textbf{5}-\textbf{7}), \textbf{CentOS} (\textbf{5}-\textbf{7}), \textbf{Fedora} (all \textbf{current} and \textbf{rawhide})
+			\end{itemize}
+		\end{itemize}
+		\item Partially supported distributions:
+		\begin{itemize}
+			\item \textbf{Windows}
+			\item \textbf{Mac OS X}, \textbf{FreeBSD}
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Vulnerability Validation}
+	
+	\begin{itemize}
+		\item \textbf{CPE}s are resolved to actual \textbf{package names}.
+		\item \textbf{CVE}s are checked using the distribution's \textbf{repository}, \textbf{security} or \textbf{bug tracker}.
+		\begin{itemize}
+			\item Used to \textbf{discard false-positives} if a distribution patched it.
+		\end{itemize}
+	\end{itemize}
+	
+	\ispace
+	
+	\begin{itemize}
+		\item Support for estimating the \textbf{date range of the last system upgrade} of a host.
+		\begin{itemize}
+			\item Inferred based on the overlaps of the release dates of the installed updates.
+			\item Can be used to \textbf{discard false-positives} if actual update version not available.
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
 	\frametitle{Testing Methodology}
 	
 	\begin{itemize}
