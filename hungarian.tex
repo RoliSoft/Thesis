@@ -254,7 +254,7 @@
 	
 	Sajnos ez a módszer leszűkíti a letapogatható szolgáltatások számát csak azon szolgáltatásokra, amelyekhez hozzá van rendelve egy ismert csomag, amely választ vált ki. Illetve azon esetekben is csak akkor, amikor a szolgáltatás az alapértelmezett portján található. Abban az esetben, amelyben a felhasználó egy olyan UDP port letapogatását kéri, amely nem található az adatbázisban, a letapogató komponens generál egy 16 \mintinline{cpp}{NULL} bájtból álló csomagot, viszont annak az esélye, hogy ez a csomag választ fog kiváltani a letapogatott szolgáltatásból nagyon kevés.
 	
-	Amennyiben csak azt szeretnénk kideríteni, hogy egy hálózaton belül mely kiszolgálók online-ok, egy ICMP `PortUnreachable' üzenet egy véletlenszerű UDP portra azt jelenti, hogy a kiszolgáló online, de maga a port nem, míg az ICMP `HostUnreachable' üzenettel ellentétben, amely általában a letapogató és letapogatott felek közötti forgalomirányító eszköz küldhet a letapogatónak, hogy értesítse a letapogatott fél állapotjáról.
+	Amennyiben csak azt szeretnénk kideríteni, hogy egy hálózaton belül mely kiszolgálók online-ok, egy ICMP `PortUnreachable' válaszüzenet egy véletlenszerű UDP portra küldött csomagnak azt jelenti, hogy a kiszolgáló online, de maga a port nem, míg az ICMP `HostUnreachable' üzenetet ezzel ellentétben, általában a letapogató és letapogatott felek közötti forgalomirányító eszköz küldhet a letapogatónak, hogy értesítse a letapogatott fél állapotáról.
 
 \subsection*{Passzív Feltérképezés}
 
