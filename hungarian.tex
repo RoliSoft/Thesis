@@ -71,7 +71,7 @@
 
 \subsection*{Adatgyűjtés}
 
-	Ahhoz, hogy hasznos legyen független biztonsági kutatók számára, az alkalmazásnak alkalmaznia kell ``OSINT'' (``open-source intelligence'') módszereket. A passzív adatgyűjtésről szóló fejezetben bemutatott szolgáltatások, név szerint Shodan\cite{shodan16}, Censys\cite{censys15} és Mr Looquer\cite{looquer16}, tökéletes jelöltek az alkalmazás adatgyűjtési komponenseihez passzív feltérképezési célokra.
+	Ahhoz, hogy hasznos legyen független biztonsági kutatók számára, az alkalmazásnak alkalmaznia kell ``OSINT'' (``open-source intelligence'') módszereket. \Az{\ref{passive}} fejezetben bemutatott szolgáltatások, név szerint Shodan\cite{shodan16}, Censys\cite{censys15} és Mr Looquer\cite{looquer16}, tökéletes jelöltek az alkalmazás adatgyűjtési komponenseihez passzív feltérképezési célokra.
 	
 	Ezáltal, a kutatók lekérdezéseket futtathatnak azonnali választ kapva rájuk, attól függetlenül, hogy lenne egy infrastruktúrájuk a feltérképezések lefuttatására, és be kelljen vállalják ezeknek a következményeit, mint például az ``abuse'' jelentéseket.
 	
@@ -81,11 +81,11 @@
 
 \subsection*{Adatelemzés}
 
-	Az összegyűjtött szolgáltatási sávok (``service banner'') teljesen autonóm módon kell legyenek elemezve. Tehát a kapcsolódó termékekről szóló fejezetben bemutatott szoftverekkel ellentétben az alkalmazásnak nem kellene különböző kiterjesztésekre támaszkodnia a protokollok, illetve azután a protokoll mögött lévő szerverszoftverek beazonosítására.
+	Az összegyűjtött szolgáltatási sávok (``service banner'') teljesen autonóm módon kell legyenek elemezve. Tehát \az{\ref{relwork}}. fejezetben bemutatott szoftverekkel ellentétben az alkalmazásnak nem kellene különböző kiterjesztésekre támaszkodnia a protokollok, illetve azután a protokoll mögött lévő szerverszoftverek beazonosítására.
 
-	A \textit{NIST} által közzétett adatbázisokat (ahogyan a sebezhetőségi adatbázisokról szóló fejezetben van tárgyalva) kellene felhasználni a legújabb sebezhetőségek beazonosítása céljából. A CPE-alapú illesztésről szóló fejezet bemutatja azon komponenst, amely ezt az adatbázist felhasználva önműködő módon a szolgálati sávokat a nekik megfelelő \textit{CPE} nevükhöz társítja.
+	A \textit{NIST} által közzétett adatbázisokat (ahogyan \az{\ref{vulndbs}}. fejezetben van tárgyalva) kellene felhasználni a legújabb sebezhetőségek beazonosítása céljából. \Az{\ref{matchcpe}}. fejezet bemutatja azon komponenst, amely ezt az adatbázist felhasználva önműködő módon a szolgálati sávokat a nekik megfelelő \textit{CPE} nevükhöz társítja.
 
-	Redundanciaként, a szerverek minta-alapú illesztéséről szóló fejezet bemutat egy alternatív módszert a szolgáltatási sávok CPE nevükhez való társítására, viszont ez a módszer nem támaszkodik az előzőleg említett adatbázisra, ehelyett egy a fejlesztő vagy közösség által készített/kibővített adatbázisra alapul, amely szolgáltatási sávok illeszkedésére tartalmaz reguláris kifejezéseket.
+	Redundanciaként, \az{\ref{patternmatch}}. fejezet bemutat egy alternatív módszert a szolgáltatási sávok CPE nevükhez való társítására, viszont ez a módszer nem támaszkodik az előzőleg említett adatbázisra, ehelyett egy a fejlesztő vagy közösség által készített/kibővített adatbázisra alapul, amely szolgáltatási sávok illeszkedésére tartalmaz reguláris kifejezéseket.
 
 \subsection*{Megoldási Javaslatok}
 
@@ -101,7 +101,7 @@
 	
 	Az \textit{RFC 2828} és számos \textit{NIST} publikáció úgy definiálja a ``sebezhetőséget,'' mint ``egy hiba vagy gyengeség a rendszer biztonsági procedúráiban, tervezésében, implementálásában, vagy belső ellenőrzései között, amelyet ki lehet játszani (véletlenül kiváltva vagy szándékosan kihasználva) és így az eredmény egy biztonsági rés vagy a rendszer biztonságpolitikájának megsértése.''\cite{rfc2828,nist80030} Egyszerűen átfogalmazva ez annyit jelent, hogy a sebezhetőség egy hiba a szoftver vagy webszolgáltatás kódjában, amely kihasználáskor (például a felhasználó egy olyan bemenetet ad meg, amely szándékosan úgy lett formázva, hogy kiváltsa az ismert hibát) megengedi a felhasználó számára, hogy olyan tevékenységet hajtson végre, amelyet különben nem szabadna, vagy olyan információhoz férjen hozzá, amelyhez különben nem kéne.
 	
-\subsection*{Sebezhetőség Adatbázisok} \label{vulndbs_hu}
+\subsection*{Sebezhetőség Adatbázisok}
 	
 	A CERT/CC által egyik szponzorált projekt a \textit{CVE} (\textit{Common Vulnerabilities and Exposures}), amely egy módszert biztosít a publikusan ismert sebezhetőségek címkézésére és követésére. A \textit{NIST} (\textit{National Institute of Standards and Technology}) alapítvány futtat egy weboldalt \textit{NVD} (\textit{National Vulnerability Database}) néven, amelyen keresztül karbantartanak egy adatbázist, amely a publikusan ismert sebezhetőségeket tartalmazza, illetve információkat ezekről, olyan strukturált formátumban, amelyet számítógépes alkalmazások is önműködően olvashatnak\cite{nvd15}.
 	
@@ -140,9 +140,9 @@
 	
 	Egy másik hátránya az IDS típusú rendszereknek, hogy csak figyelnek és nem nyúlnak az adatforgalomhoz. Így értesítést tudnak küldeni egy támadásról, de azt nem előzik meg, amely bizonyos esetekben azt is jelentheti, hogy a támadó már le is töltötte a bankkártya számokat az adatbázisból.
 
-\section*{Kapcsolódó Termékek} \label{relwork_hu}
+\section*{Kapcsolódó Termékek}
 	
-\subsection*{Kereskedelmi Megoldások} \label{comtools_hu}
+\subsection*{Kereskedelmi Megoldások}
 	
 	Az \textit{nmap project} karban tart egy listát a biztonsági eszközökről, népszerűségük szerint rendezve őket\cite{sectools}. A három legnépszerűbb sebezhetőségfelderítő termék kerül bemutatásra ebben a fejezetben.
 	
@@ -158,9 +158,9 @@
 	
 	Új sebezhetőségfelderítő rendszerek készítéséről is találhatók cikkek, mint például a \cite{kals06} cikkben leírt webes alkalmazások sebezhetőségfelderítője, vagy a \cite{guo05} cikk, amely az előzővel ellentétben egy hálózaton lévő csatlakozott eszközök biztonságát vizsgálja.
 	
-	A \textit{ShoVAT}\cite{shovat15} cikk bemutat egy metodológiát, amelyet az ezen dolgozat céljából fejlesztett alkalmazás az CPE-alapú illesztésről szóló fejezetében tárgyalt komponense is használ, kisebb változásokkal.
+	A \textit{ShoVAT}\cite{shovat15} cikk bemutat egy metodológiát, amelyet az ezen dolgozat céljából fejlesztett alkalmazás \ref{matchcpe}. fejezetében tárgyalt CPE-alapú azonosító komponense is használ, kisebb változásokkal.
 
-\section*{Kivitelezés} \label{impl_hu}
+\section*{Kivitelezés}
 
 	A dolgozat céljából fejlesztett alkalmazás és a hozzátartozó szkriptek ingyenesek és nyílt forráskódúak.
 
@@ -172,7 +172,7 @@
 
 	Ez a fejezet bemutatja az alkalmazás azon komponenseit, amelyek aktív feltérképezést végeznek, azaz csomagokat küldenek a feltérképezni kívánt kiszolgáló felé letapogatás céljából.
 
-\subsubsection*{ICMP `EchoRequest' Kérések} \label{icmpping_hu}
+\subsubsection*{ICMP `EchoRequest' Kérések}
 
 	Az \textit{Internet Control Message Protocol} (\textit{ICMP}) definiál egy `EchoRequest' csomagtípust, amelyre válaszként a címzett kiszolgáló kernele, amennyiben nincs ez explicit módon kikapcsolva, egy `EchoReply' típusú csomagot küld vissza a küldőnek. Ebben a csomagban a kapott bájt sorozat illetve a csomag sorozatszáma van visszaküldve, és ezt a küldő felhasználhatja statisztikai analízis célokból.
 
@@ -182,7 +182,7 @@
 
 	Mivel az ilyen típusú ``ping'' csomagokat nem lehet egy bizonyos portnak megcímezni, csak egy bizonyos kiszolgálónak, ezért ezt a komponenst nem lehet használni a kiszolgálón lévő szolgáltatások feltérképezésére, csak egy hálózaton belül lévő online kiszolgálók felderítésére. Mivel az ilyen csomagok nem létfontosságúak egy bizonyos hálózat működéséhez, különböző tűzfalak bekonfigurálhatóak az ezen típusú csomagok szűrésére.
 
-\subsubsection*{ARP `WhoHas' Kérések} \label{arpping_hu}
+\subsubsection*{ARP `WhoHas' Kérések}
 
 	Az \textit{Address Resolution Protocol} (\textit{ARP}) mechanizmus feladata a hálózati réteg által használt IPv4 címek lefordítása az adatkapcsolati rétegben használt MAC címekre.
 	
@@ -190,7 +190,7 @@
 	
 	Az ICMP-hez hasonlóan, ez a funkcionalitás nem használható szolgáltatások letapogatására, csak egy hálózaton lévő kiszolgálók és kliensek feltérképezésére.
 	
-\subsubsection*{TCP Letapogatás} \label{tcpscan_hu}
+\subsubsection*{TCP Letapogatás}
 
 	A TCP port letapogató funkcionalitást a \mintinline{cpp}{TcpScanner} komponens implementálja. A jelenlegi implementáció felhasználásához nem szükséges a felhasználónak adminisztrátori jogokkal rendelkeznie, ugyanis a letapogatás az operációs rendszer által támogatott hálózati API hívásokkal történik.
 	
@@ -235,7 +235,7 @@
 	
 	Mivel a dolgozat keretén belül kivitelezett alkalmazásnak teljes szolgáltatási sávokra van szüksége (a port állapotok listája egymagában nem elég) illetve felhatalmazott felhasználók számára volt szánva (mint például hálózati adminisztrátorok vagy biztonsági kutatók), ezért a tűzfalak átjárása illetve naplózás elkerülése nem célja az alkalmazásnak.
 
-\subsubsection*{UDP Letapogatás} \label{udpscan_hu}
+\subsubsection*{UDP Letapogatás}
 
 	Az UDP protokoll, a TCP-vel ellentétben, kapcsolat nélküli. Ez azt vonja maga után, hogy a letapogató nem tudja megbízhatóan megállapítani, hogy a letapogatott port mögött van-e valamilyen szolgáltatás. Ha van is egy bizonyos szerver hozzárendelve az adott UDP porthoz, lehetséges, hogy a saját protokollja szerint szűri azon üzeneteket, amelyek nem felelnek meg a protokoll által előírt specifikációknak, ahelyett, hogy egy hibaüzenetet küldjön vissza, amelyet fel lehetne használni a protokoll beazonosítása céljából.
 	
@@ -256,7 +256,7 @@
 	
 	Amennyiben csak azt szeretnénk kideríteni, hogy egy hálózaton belül mely kiszolgálók online-ok, egy ICMP `PortUnreachable' üzenet egy véletlenszerű UDP portra azt jelenti, hogy a kiszolgáló online, de maga a port nem, míg az ICMP `HostUnreachable' üzenettel ellentétben, amely általában a letapogató és letapogatott felek közötti forgalomirányító eszköz küldhet a letapogatónak, hogy értesítse a letapogatott fél állapotjáról.
 
-\subsection*{Passzív Feltérképezés} \label{passive_hu}
+\subsection*{Passzív Feltérképezés}
 
 	Ez a fejezet az alkalmazás azon komponenseit mutatja be, amelyek passzív feltérképezést tesznek lehetővé, azaz úgy térképeznek fel egy hálózatot és a kiszolgálókon lévő szolgáltatásokat, hogy nem küldenek aktívan csomagokat a kiszolgálók felé.
 	
@@ -318,19 +318,19 @@
 	
 	Fontos lenne itt megjegyezni, hogy a tiltott félnek küldött üzenet \az{\ref{shodanban_hu}}. kódrészletben nem fedi fel a HTTP szerver nevét és verziószámát, míg a tiltatlan fél \az{\ref{censysnoban_hu}}. kódrészletben a terheléskiegyenlítőn keresztül az élszerverhez kerül, és kiderül a szoftver neve illetve verziószáma, azaz ``nginx 1.8.0,'' amely épp tartalmaz egy \textbf{ismert távolról-kihasználható sebezhetőséget}\cite{nginxcve}.
 	
-	Azon esetekben, amikor mindkét szolgáltatás visszatérít egy szolgáltatási sávot egy bizonyos portnak, a hosszabb sáv lesz kiválasztva az egybevonási folyamat során. Ez a döntés azért volt meghozva így, mivel a tiltóüzenetek általában rövidebbek\cite{qualys11} a szolgáltatásmegtagadási támadások elkerülése végett, illetve az is lehetséges ilyenkor, hogy a hosszabb szolgáltatási sávon a szolgáltatás mélyebb elemzést is végzett (mint például a 'STARTTLS' parancs SMTP szervereknek a Censys által, de nem a Shodan által) amely azt jelenti, hogy a minta-alapú beazonosító komponensnek több bemeneti adat lesz elérhető.
+	Azon esetekben, amikor mindkét szolgáltatás visszatérít egy szolgáltatási sávot egy bizonyos portnak, a hosszabb sáv lesz kiválasztva az egybevonási folyamat során. Ez a döntés azért volt meghozva így, mivel a tiltóüzenetek általában rövidebbek\cite{qualys11} a szolgáltatásmegtagadási támadások elkerülése végett, illetve az is lehetséges ilyenkor, hogy a hosszabb szolgáltatási sávon a szolgáltatás mélyebb elemzést is végzett (mint például a 'STARTTLS' parancs SMTP szervereknek a Censys által, de nem a Shodan által) amely azt jelenti, hogy a minta-alapú beazonosító komponensnek (\az{\ref{patternmatch}}. fejezetben tárgyalva) több bemeneti adat lesz elérhető.
 
-\subsection*{Külső Feltérképezés} \label{nmapscan_hu}
+\subsection*{Külső Feltérképezés}
 
 	Ez a fejezet bemutatja az alkalmazás \mintinline{cpp}{NmapScanner} komponensét, amely egy külső alkalmazást indít el a kért portok letapogatása érdekében, majd a külső alkalmazás által generált eredményeket beolvassa további elemzési célokból a jelenlegi alkalmazásba.
 	
-	Habár az alkalmazás tág körű letapogató komponenseket implementál egyesített interfésszel, amely engedélyezi a feladatok könnyű és hatékony párhuzamosítását, redundanciaként a felhasználóknak fel van ajánlva az a lehetőség is, hogy egy külső alkalmazást használjanak a letapogatási célokra.
+	Habár az alkalmazás tág körű letapogató komponenseket implementál, amint ezek tárgyalva vannak \az{\ref{icmpping}}. fejezettől \az{\ref{udpscan}}. fejezetig, egyesített interfésszel amely engedélyezi a feladatok könnyű és hatékony párhuzamosítását, redundanciaként a felhasználóknak fel van ajánlva az a lehetőség is, hogy egy külső alkalmazást használjanak a letapogatási célokra.
 	
 	A komponens, amint a neve is sugallja, az \textit{nmap} alkalmazást támogatja, viszont bármilyen más alkalmazás is használható amely nmap-kompatibilis XML-alapú jelentéseket képes generálni. Egy ilyen alternatív alkalmazásra példa a \textit{masscan} nevű szoftver lenne.
 	
 	Ahhoz, hogy az nmap-et használni lehessen letapogatásra, az \mintinline{batch}{nmap} alkalmazás elérhető kell legyen a \mintinline{batch}{PATH} környezeti változón belül.
 
-\subsection*{Szerverek Minta-alapú Beazonosítása} \label{patternmatch_hu}
+\subsection*{Szerverek Minta-alapú Beazonosítása}
 
 	A \mintinline{cpp}{ServiceRegexMatcher} komponens feladata, hogy bemenetként fogadja a teljes szolgáltatási sávot, és futtassa le egy adatbázis ellen, amely reguláris kifejezéseket tartalmaz CPE nevekhez társítva.
 
@@ -344,9 +344,9 @@
 	
 	\Az{\ref{nginxregex_hu}}. kódrészletben található reguláris kifejezés illeszkedik az ``nginx'' HTTP szoftver által generált válaszfejlécekre. Továbbá, a reguláris kifejezés tartalmaz egy opcionális csoportot, amely a verziószámot próbálja megkeresni. Amennyiben a kifejezés illeszkedik, a komponens visszatéríti a \mintinline{matlab}{cpe:/a:nginx:nginx:1.9.12} nevet, míg ha a kifejezés parciálisan illeszkedik, azaz a verziószám csoport nélkül, a \mintinline{matlab}{cpe:/a:nginx:nginx} név lesz visszatérítve.
 	
-	Ez különbözik a CPE-alapú illesztésről szóló fejezetben leírt módszertől, ugyanis itt az azonosítás sikeres verziószám nélkül is, így a jövőbeli verziószámok is könnyen felismerhetőek a letapogató szoftver frissítése nélkül.
+	Ez különbözik \az{\ref{matchcpe}}. fejezetben leírt módszertől, ugyanis itt az azonosítás sikeres verziószám nélkül is, így a jövőbeli verziószámok is könnyen felismerhetőek a letapogató szoftver frissítése nélkül.
 	
-\subsection*{Szerverek CPE-alapú Beazonosítása} \label{matchcpe_hu}
+\subsection*{Szerverek CPE-alapú Beazonosítása}
 
 	A \textit{National Institute of Standards and Technology} karban tart egy \textit{National Vulnerability Database} nevű adatbázist, amely tartalmazza a publikusan elismert sebezhetőségek listáját a népszerűbb szoftvereknek. Ebben a fejezetben bemutatott komponens, a \mintinline{cpp}{CpeDictionaryMatcher} felhasználja ezen intézet által szabadon közzétett és naponta frissített \textit{Common Platform Enumeration Dictionary} listáját.
 	
@@ -396,7 +396,7 @@
 	
 	CPE-alapú azonosítás során, a teljes adatbázis átiterálódik, először a termék-specifikus tokeneket próbálva. Amennyiben az összes token megtalálható a bemeneti szövegben, a termékhez csatolt verziószámok vannak kipróbálva. Amennyiben legalább egy verziószám talált, és van neki egy verzió-specifikus token tömbje is, az összes ilyen további tokennek is találnia kell.
 	
-\subsubsection*{Élesetek Kezelése} \label{cpeedges_hu}
+\subsubsection*{Élesetek Kezelése}
 
 	A \textit{Sun Microsystems} cég azonosító komponense a ``sun'', amely olyan CPE neveket eredményez, mint \mintinline{matlab}{cpe:/a:sun:jre}, \mintinline{matlab}{cpe:/a:sun:jdk} és \mintinline{matlab}{cpe:/o:sun:solaris:10.0}. A problémás része ennek a tokennek, hogy a legtöbb protokoll, mint például az SMTP és HTTP, visszatérítik a dátumot a szolgáltatási sávukban RFC 1123 formátumban\cite{rfc2616}, amely így néz ki: ``Sun, 14 Mar 2016 16:33:02 GMT''.
 	
@@ -446,7 +446,7 @@
 	
 	Egy alternatív módszer van bemutatva \az{\ref{httpsvcbnr_hu}}. illetve \ref{httpsvcbnrtokens_hu}. kódrészletekben, amelyet a szoftver még alkalmaz redundanciaként az az, hogy olyan protokollok esetén ahol ismert a szervernév kihirdetésének helye (mint például 'Server' és `X-Powered-By' mezők HTTP esetén) ott csak ezek a mezők ellen lesz lefuttatva a CPE azonosító, míg azon protokollok esetén ahol nincs standard hely a szervernév kihirdetésére (mint például SMTP) ott megpróbál minél több haszontalan információt (mint például hibaüzenetek, hoszt név vagy dátumok) kivágni az álpozitív találatok kiszűrése érdekében.
 
-\subsection*{Operációs Rendszerek Beazonosítása} \label{opsysmatcher_hu}
+\subsection*{Operációs Rendszerek Beazonosítása}
 
 	Az alkalmazás jelenleg a \textbf{Debian}, \textbf{Ubuntu}, \textbf{Red Hat}, \textbf{CentOS} és \textbf{Fedora} disztribúciókat támogatja teljesen, ami alatt az értetendő, hogy képes ezen operációs rendszerek és verzió számuk beazonosítására, illetve a felderített CPE neveket és CVE sebezhetőségeket egy egész pontos csomag nevéhez kötni az operációs rendszeren belül.
 	
@@ -460,11 +460,11 @@
 	
 	Az ``Enterprise Linux'' alapú rendszerek ugyan ezzel nem rendelkeznek, viszont mivel több év is eltelik a disztribúciók között, ezért amennyiben az osztály biztos abban, hogy Red Hat/CentOS fut a kiszolgálón, a disztribúció verziója kinyerhető az SSH szerver által kihirdetett verzió generációjának illesztésével.
 
-\subsection*{Sebezhetőségek Érvényesítése} \label{vulnvalid_hu}
+\subsection*{Sebezhetőségek Érvényesítése}
 
 	A támogatott operációs rendszerek esetén, a szoftver képes a CPE nevek illetve CVE sebezhetőségek állapotát kikeresni a bizonyos disztribúció csomagkezelőjében. Ezen disztribúciók mindegyike rendelkezik egy ``security tracker'' csapattal vagy nyílt ``build system''-mel, amelyek nyilvántartják a disztribúcióba csomagolt alkalmazások biztonsági és a bizonyos sebezhetőségek javítási állapotát.
 	
-	A sebezhetőségek lekérdezése során az alkalmazás el tudja vetni azon sebezhetőségeket, amelyek nem érvényesek a beazonosított disztribúcióra (például ``NOT-FOR-US'' címke a Debian Security Tracker-en) vagy a beazonosított szolgáltatásra már fel lett telepítve az a biztonsági frissítés, amely kijavítja az adott sebezhetőséget.
+	A sebezhetőségek lekérdezése során az alkalmazás el tudja vetni azon sebezhetőségeket, amelyek nem érvényesek a beazonosított disztribúcióra (például \mintinline{matlab}{NOT-FOR-US} címke a Debian Security Tracker-en) vagy a beazonosított szolgáltatásra már fel lett telepítve az a biztonsági frissítés, amely kijavítja az adott sebezhetőséget.
 	
 	Továbbá, ezen osztályok gondoskodnak a sebezhető csomagok nevüknek összegyűjtésére és a frissítési parancs összeállítására, amely feltelepíti a megfelelő biztonsági frissítéseket.
 
@@ -538,10 +538,10 @@
 	\end{table}
 	\footnotetext{A dolgozat körében megvalósított rendszer megnevezése.}
 	
-	\Az{\ref{foundvulns_hu}}. táblázatban a dolgozat körében fejlesztett alkalmazás, illetve a kapcsolódó termékekről szóló fejezetben listázott kereskedelmi alkalmazások le lettek futtatva egy CTF (``Capture the Flag'') versenyfelkészítőre használt virtuális hálózaton összehasonlításként.
+	\Az{\ref{foundvulns_hu}}. táblázatban a dolgozat körében fejlesztett alkalmazás, illetve \az{\ref{comtools}}. fejezetben listázott kereskedelmi alkalmazások le lettek futtatva egy CTF (``Capture the Flag'') versenyfelkészítőre használt virtuális hálózaton összehasonlításként.
 	
 	Az ``OpenVAS'' illetve ``Nessus'' gyenge eredményei azzal magyarázhatóak, hogy a kiterjesztés-alapú architektúrájuknak köszönhetően nem sikerült beazonosítaniuk bizonyos szolgáltatásokat, ugyanis nem volt kiterjesztés írva azon kevésbé népszerű szoftverek beazonosítására.
 	
 	Ezzel ellentétben, a ``Nexpose'' kihasználva az egyik felfedezett sebezhetőséget, bejelentkezett a tesztelt kiszolgálókra, és a kiszolgálón található csomagkezelő rendszertől lekérte a feltelepített csomagokat illetve azok verziószámát. Így elérte, hogy olyan sebezhetőségeket is sikerült felderíteni, amelyek nem szerverszoftverekhez kapcsolódnak és hálózaton keresztül nem érhetőek el.
 	
-	A megvalósított rendszer hatálya alá nem esik a sebezhetőségek kihasználása, ugyanis ez nem kívánatos éles rendszerek esetén, illetve törvénytelen felhatalmazás nélküli biztonsági kutatók számára. A sebezhetőségek érvényesítését az erről szóló fejezetben leírt módszer alapján végzi az alkalmazás, a beazonosított operációs rendszer csomagkezelőjén keresztül, behatolás nélkül.
+	A megvalósított rendszer hatálya alá nem esik a sebezhetőségek kihasználása, ugyanis ez nem kívánatos éles rendszerek esetén, illetve törvénytelen felhatalmazás nélküli biztonsági kutatók számára. A sebezhetőségek érvényesítését \az{\ref{vulnvalid}}. fejezetben leírt módszer alapján végzi az alkalmazás, a beazonosított operációs rendszer csomagkezelőjén keresztül, behatolás nélkül.
