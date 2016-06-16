@@ -121,6 +121,96 @@
 	
 	\textit{ShoVAT}\cite{shovat15} prezintă o metodologie care este folosită și în aplicația dezvoltată în scopul licenței cu mici modificări, componentul fiind detaliat în secțiunea \ref{matchcpe}, vorbind despre identificarea serviciilor într-un mod autonom, folosind baza de date publicat de instituția NIST.
 
+\section*{Realizarea}
+
+	Aplicația realizată în cadrul tezei și scripturile asociate sunt gratuite și open source.
+	
+	Repertoriul git al aplicației principale se poate descărca de pe adresa \url{https://github.com/RoliSoft/Host-Scanner}, și se poate folosi sub termenii al licenței GNU General Public License version 3\cite{gplv3}.
+	
+	Scripturile dezvoltate pentru experimentare și prelucrarea datelor se pot descărca de pe adresa \url{https://github.com/RoliSoft/Host-Scanner-Scripts}, și se pot folosi sub termenii al licenței MIT license\cite{mit}.
+
+\subsection*{Scanare Activă}
+
+\subsubsection*{Scanare cu ICMP `EchoRequest'}
+
+	Protocolul \textit{Internet Control Message Protocol} (\textit{ICMP}) definește un pachet de tip `EchoRequest', la care destinatarii vor răspunde automat cu un pachet de tip `EchoReply'. Acest pachet conține seria originală a cererii și octeți atașați, pe care inițiatorul poată să folosească să facă analize statistice.
+	
+	Implementația componentului folosește socluri de tip ``raw'' pentru a trimite pachete de tip `EchoRequest'. Din acest motiv, utilizatorul care lansează aplicația trebuie să aibă drepturi de administrator pe diverse sisteme de operare, de exemplu Linux, Windows, și diferite distribuții de BSD.
+	
+	Pachetele de acest tip nu se pot adresa la un port exact, numai la o gazdă. Din acest motiv, componentul nu poate să descoperă servicii pe o gazdă, numai gazdele online într-o rețea.
+
+\subsubsection*{Scanare cu ARP `WhoHas'}
+
+	Mecanismul \textit{Address Resolution Protocol} (\textit{ARP}) este responsabil pentru traducerea adreselor IPv4 în adrese MAC (și vice versa) într-o rețea locală de calculatoare.
+	
+	Similar cu ICMP, acest component nu poate să descoperă serviciile a unui gazdă, numai gazdele online într-o rețea locală.
+
+\subsubsection*{Scanare TCP}
+
+	Scanarea porturilor TCP este realizată de componentul \mintinline{cpp}{TcpScanner}. Implementația curentă nu necesită drepturi de administrator de la utilizatorul care lansează aplicația, fiindcă aplicația folosește interfața standard de rețea al sistemului de operare pentru a conecta la destinatari.
+	
+	\begin{figure}[!htbp]
+		\centering
+		\begin{tikzpicture}
+			\node at (0,0) {\Huge \faLaptop};
+			\node at (4.5,0) {\Huge \faServer};
+			\draw (0,-0.5) -- (0,-6.5);
+			\draw (4.5,-0.5) -- (4.5,-6.5);
+			\node at (-1.1,-1) {\mintinline{cpp}{connect()}};
+			\draw [es](0.5,-1) -- (4,-1);
+			\node at (2.25,-0.65) {SYN $i$};
+			\draw [es](4,-2) -- (0.5,-2);
+			\node at (5.5,-2) {\mintinline{cpp}{accept()}};
+			\node at (2.25,-1.65) {SYN $j$, ACK $i+1$};
+			\node at (-1.15,-2) {conectat};
+			\draw [es](0.5,-3) -- (4,-3);
+			\node at (2.25,-2.65) {ACK $j+1$};
+			\draw [es](0.5,-4) -- (4,-4);
+			\node at (5.7,-3) {conectat};
+			\node at (2.25,-3.65) {FIN $k$};
+			\node at (-0.9,-4) {\mintinline{cpp}{close()}};
+			\draw [es](4,-5) -- (0.5,-5);
+			\node at (2.25,-4.65) {ACK $k+1$, FIN $l$};
+			\draw [es](0.5,-6) -- (4,-6);
+			\node at (-0.85,-5) {închis};
+			\node at (2.25,-5.65) {ACK $l+1$};
+			\node at (5.35,-6) {închis};
+		\end{tikzpicture}
+		\caption{Strângere de mână în trei al TCP la conectare și deconectare}
+		\label{tcp3way_ro}
+	\end{figure}
+	
+	Figura \ref{tcp3way_ro} prezintă strângerea de mână în trei al protocolului TCP la procesul de conectare urmat de procesul de deconectare. După ce aplicația cheamă funcția \mintinline{cpp}{connect()} al sistemului, sistemul de operare va începe procesul cerut într-un mod asincron, și va returna cu o eroare sau un soclu deschis.
+	
+	După o conectare cu succes, aplicația va chema funcția \mintinline{cpp}{close()}, care va începe procesul de a încheia conexiunea, altfel ambele terți sunt expuse la problema de epuizarea resurselor, o problemă altfel categorizată în categoria de atacuri\cite{erickson08}.
+	
+	Sunt metode alternative pentru scanarea porturilor TCP, de exemplu cele bazate pe 'SYN', `ACK' și `FIN'\cite{kris07}, care folosesc socluri de tip ``raw'' pentru crearea și trimiterea pachetelor la destinatari, analizând răspunsul (sau lipsa răspunsului) în final.
+	
+	Aceste metode sunt folosite în general pentru a evada logurile și a evita paravanele de protecție. Aplicația realizată în cadrul tezei este orientată spre utilizatori care sunt autorizate. Din acest motiv, aplicația nu conține metodele alternative menționate în paragraful anterior.
+
+\subsubsection*{Scanare UDP}
+
+	Protocolul UDP, contrar protocolului TCP, oferă comunicație fără conexiune. Din acest motiv, nu există o metodă sigură pentru a determina dacă există o serviciu în spatele unui port, sau nu. Chiar dacă este o aplicație asociată la portul UDP scanat, e posibil ca aceasta să nu răspundă la mesajele care nu sunt formatate corect corespunzând specificațiilor al protocolului folosit de server. Cazul preferabil este ca serviciul să răspundă cu un mesaj de eroare, care poate fi analizat și folosit la identificarea protocolului și potențial aplicației.
+	
+	Anumite sisteme răspund cu un ICMP `PortUnreachable' pachet în cazul în care în spatele portul UDP scanat nu există nici o aplicație asociată, dar majoritatea firewall-urilor filtrează mesajele de acest tip în modul explicit pentru a combate posibilitatea de a scana porturile.
+	
+	Metoda cea mai bună pentru descoperea serviciilor pe porturile UDP e ca să trimitem mesaje la care este garantat că serverul (dacă rulează în spatele portului contactat) va răspunde. Componentul \mintinline{cpp}{UdpScanner} conține o bază de date alcătuit de numere de porturi asociate cu pachete care conțin un mesaj corect format al specificațiilor protocolului care e în general în spatele portului asociat. Ca un exemplu, fragmentul de cod \ref{dnsverreq_ro} prezintă reprezentația hexazecimală al unui pachet UDP generat de \mintinline{bash}{xxd}, care când e trimis pe portul 53 al unui gazdă care rulează un server DNS pe acest port, va răspunde cu versiunea aplicației.
+	
+	\begin{listing}[H]
+		\begin{minted}{py}
+			00000000: 34ef 0100 0001 0000 0000 0000 0756 4552  4............VER
+			00000010: 5349 4f4e 0442 494e 4400 0010 0003       SION.BIND.....
+		\end{minted}
+		\caption{Pachet UDP pentru solicitarea versiunii unei server DNS}
+		\label{dnsverreq_ro}
+	\end{listing}
+	
+	Din păcate această metodă limitează lista de servicii detectabile la lista de servicii la care există un pachet de exemplu asociat în baza de date al componentei. Această metodă nu va funcționa nici în cazul în care serviciul a fost mutat de pe portul în care ar funcționa în mod implicit.
+	
+	În cazul în care utilizatorul solicită scanarea a unui port care nu are un pachet asociat în baza de date al componentului, aplicația generează un pachet alcătuit de 16 octeți de \mintinline{cpp}{NULL}, dar acest pachet nu este garantat ca o să genereze un răspuns de la serverul în spatele portului scanat.
+	
+	Dacă vrem să descoperim numai gazdele care sunt online într-o rețea, un răspuns de tip ICMP `PortUnreachable' la un mesaj UDP la un port la întâmplare înseamnă că gazda e online, numai portul nu e. În caz contrar, un răspuns de tip ICMP `HostUnreachable' înseamnă că gazda nu e online sau accesibilă. În general pachetul menționat anterior este generat de un router pe ruta între utilizator și rețeaua destinată.
+
 \section*{Rezultate}
 
 	Pentru a testa aplicația implementată, am lansat o scanare în ambele moduri (activ și pasiv) contra trei universități. Am mai lansat încă o scanare în modul pasiv contra cinci instituții financiare, unde mă așteptam ca aceste instituții să reprezinte standardul ``gold'' în test.
