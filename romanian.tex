@@ -120,3 +120,67 @@
 	Publicația \cite{kals06} detaliază planificarea și realizarea unei sistem de teste de penetrare pentru web, iar dintr-o altă perspectivă, articolul \cite{guo05} studiază securitatea dispozitivelor conectate la o rețea publică.
 	
 	\textit{ShoVAT}\cite{shovat15} prezintă o metodologie care este folosită și în aplicația dezvoltată în scopul licenței cu mici modificări, componentul fiind detaliat în secțiunea \ref{matchcpe_ro}, vorbind despre identificarea serviciilor într-un mod autonom, folosind baza de date publicat de instituția NIST.
+
+\section*{Rezultate}
+
+	Pentru a testa aplicația implementată, am lansat o scanare în ambele moduri (activ și pasiv) contra trei universități. Am mai lansat încă o scanare în modul pasiv contra cinci instituții financiare, unde mă așteptam ca aceste instituții să reprezinte standardul ``gold'' în test.
+
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{r|ccc|ccc|ccccc|}
+			\cline{2-12}
+			\multicolumn{1}{l|}{}                         & \multicolumn{3}{c|}{\textbf{S. Activă}} & \multicolumn{8}{c|}{\textbf{Scanare Pasivă}}                                                             \\ \hline
+			\multicolumn{1}{|r|}{\textbf{Instituția}}      & \textbf{$u_1$}    & \textbf{$u_2$}    & \textbf{$u_3$}   & \textbf{$u_1$} & \textbf{$u_2$} & \textbf{$u_3$} & \textbf{$b_1$} & \textbf{$b_2$} & \textbf{$b_3$} & \textbf{$b_4$} & \textbf{$b_5$} \\ \hline
+			\multicolumn{1}{|r|}{\textbf{Servicii}} & 165            & 178            & 455           & 201         & 269         & 623         & 41          & 19          & 69          & 31          & 11          \\
+			\multicolumn{1}{|r|}{\textbf{Identificabil}} & 143            & 145            & 402           & 112         & 148         & 352         & 24          & 8           & 58          & 9           & 9           \\
+			\multicolumn{1}{|r|}{\textbf{Identificat}}   & 140            & 137            & 394           & 109         & 139         & 348         & 24          & 8           & 58          & 9           & 9           \\ \hline
+		\end{tabular}
+		\caption{Nume de CPE identificabile și identificate de aplicația realizată}
+		\label{cpeids_ro}
+	\end{table}
+	
+	Tabelul \ref{cpeids_ro} prezintă numărul serviciilor descoperite și identificate. Un ``serviciu'' reprezintă un port deschis pe gazdă. Rândul ``Identificabil'' reprezintă numărul serviciilor care au fost descoperite, și au trimis un service banner care să conține informații utilizabile la identificare, de exemplu numele și versiunea softului de server. În ultimul rând, ``Identificat'' reprezintă numărul serviciilor care au fost identificate cu succes de aplicația realizată.
+	
+	Din cele \textbf{1,410} service banner-uri valide colectate, aplicația a identificat \textbf{1,374} servicii corect, care reprezintă o rată de succes de \textbf{97.45\%}.
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{r|ccc|ccc|ccccc|}
+			\cline{2-12}
+			\multicolumn{1}{l|}{}                         & \multicolumn{3}{c|}{\textbf{S. Activă}} & \multicolumn{8}{c|}{\textbf{Scanare Pasivă}}                                                             \\ \hline
+			\multicolumn{1}{|r|}{\textbf{Instituția}}      & \textbf{$u_1$}    & \textbf{$u_2$}    & \textbf{$u_3$}   & \textbf{$u_1$} & \textbf{$u_2$} & \textbf{$u_3$} & \textbf{$b_1$} & \textbf{$b_2$} & \textbf{$b_3$} & \textbf{$b_4$} & \textbf{$b_5$} \\
+			\multicolumn{1}{|r|}{\textbf{Servicii}} & 165            & 178            & 455           & 201         & 269         & 623         & 41          & 19          & 69          & 31          & 11          \\ \hline
+			\multicolumn{1}{|r|}{\textbf{Critic}}       & 183            & 121            & 160           & 161         & 131         & 230         & 8           & 0           & 30          & 6           & 6           \\
+			\multicolumn{1}{|r|}{\textbf{Înalt}}          & 675            & 414            & 645           & 583         & 446         & 826         & 7           & 0           & 67          & 21          & 5           \\
+			\multicolumn{1}{|r|}{\textbf{Mediu}}        & 2545           & 1441           & 2775          & 2308        & 1589        & 3247        & 19          & 0           & 299         & 133         & 9           \\
+			\multicolumn{1}{|r|}{\textbf{Scăzut}}       & 231            & 151            & 275           & 195         & 170         & 335         & 7           & 0           & 26          & 13          & 4           \\
+			\multicolumn{1}{|r|}{\textbf{AV:N}}           & 3296           & 1970           & 3493          & 2961        & 2173        & 4248        & 40          & 0           & 393         & 153         & 22          \\ \hline
+		\end{tabular}
+		\caption{Numărul vulnerabilităților descoperite pentru serviciile identificate}
+		\label{cpevulns_ro}
+	\end{table}
+	
+	Tabelul \ref{cpevulns_ro} prezintă vulnerabilitățile descoperite pentru serviciile identificate cu succes de aplicația realizată. Rândurile ``Critic'', ``Înalt'', ``Mediu'' și ``Scăzut'' reprezintă severitatea a fiecărei vulnerabilități descoperite, iar rândul ``AV:N'' reprezintă numărul vulnerabilităților care pot fi abuzate prin rețea.
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{|r|l|}
+			\hline
+			\multicolumn{1}{|c|}{\textbf{Software}} & \multicolumn{1}{c|}{\textbf{CVE\#}} \\ \hline
+			\textit{Host Scanner\footnotemark{}}                   & 166                                 \\
+			OpenVAS                                 & 107                                 \\
+			Nessus                                  & 68                                  \\
+			Nexpose                                 & 311                                 \\ \hline
+		\end{tabular}
+		\caption{Comparație între vulnerabilitățile descoperite de diverse aplicații}
+		\label{foundvulns_ro}
+	\end{table}
+	\footnotetext{Numele aplicației realizată în cadrul tezei.}
+	
+	Tabelul \ref{foundvulns_ro} prezintă o comparație între diverse aplicații comerciale și aplicația realizată în cadrul tezei. Aplicațiile au fost lansate contra o rețea virtuală alcătuită de diverse mașini virtuale folosite pentru pregătirile la concursuri de tip CTF (``Capture the Flag'').
+	
+	Aplicațiile ``OpenVAS'' și ``Nessus'' au identificat mai puține vulnerabilități, fiindcă nu au avut extensii pentru a identifica câteva servicii mai obscure pe gazdele în rețeaua scanată.
+	
+	În caz contrar, ``Nexpose'' a abuzat una dintre vulnerabilitățile folosite și a obținut acces shell. Având acces, aplicația a folosit managerul de pachete al sistemului de operare pentru a obține o listă cu numele și versiunea aplicațiilor instalate pe gazdă. Așa, a ajuns să descopere vulnerabilități care nu sunt accesibile/abuzabile de pe rețea, numai dacă utilizatorul are acces local.
+	
+	Aplicația realizată nu are ca scop abuzarea vulnerabilităților, fiindcă acest comportament nu este în general preferabil în cazul sistemelor în producție și e ilegal pentru cercetători în domeniul de securitate fără autorizație. Validarea vulnerabilităților se face prin identificarea sistemului de operare urmat de folosirea managerului de pachete a distribuției identificată, fără penetrare.
