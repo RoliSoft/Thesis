@@ -354,13 +354,7 @@
 	
 	Példaként, az ``nginx 1.3.9'' CPE neve \mintinline{matlab}{cpe:/a:igor_sysoev:nginx:1.3.9}.
 	
-	Az előzőleg megemlített \textit{CPE szótár} egy gyűjteménye azon CPE neveknek, amelyekhez publikusan ismert sebezhetőség van csatolva a \textit{CVE adatbázisban}.
-	
-	Sajnos a CPE nevek nincsenek a szolgáltatási sávban feltüntetve, és nem létezik egy jól definiált módszer arra, hogy a szolgáltatási sávok alapján megkeressük a hozzátartozó CPE neveket. A \cite{shovat15} cikkben a szerzők hasonló problémát tárgyaltak, és az általuk bemutatott módszeren alapszik az alkalmazásban implementált CPE-alapú beazonosító komponens is.
-	
-\subsubsection*{Kivitelezés Áttekintése}
-	
-	A jelenlegi CPE azonosító komponens memóriába tölti a teljes CPE szótár egy előre feldolgozott változatát, amelyben a CPE nevek tokenizálva vannak és a felesleges információ el van hanyagolva memóriahatékonysági okok miatt. \Az{\ref{ciscotokens_hu}}. kódrészlet bemutatja a memóriába betöltött struktúrát egy példa CPE névnek.
+	Sajnos a CPE nevek nincsenek a szolgáltatási sávban feltüntetve, és nem létezik egy jól definiált módszer arra, hogy a szolgáltatási sávok alapján megkeressük a hozzátartozó CPE neveket. A \cite{shovat15} cikkben a szerzők hasonló problémát tárgyaltak, és az általuk bemutatott módszeren alapszik az alkalmazásban implementált CPE-alapú beazonosító komponens is, amely memóriába tölti a teljes CPE szótár egy előre feldolgozott változatát, amelyben a CPE nevek tokenizálva vannak és a felesleges információ el van hanyagolva memóriahatékonysági okok miatt. \Az{\ref{ciscotokens_hu}}. kódrészlet bemutatja a memóriába betöltött struktúrát egy példa CPE névnek.
 	
 	\begin{listing}[H]
 		\begin{minted}[style=perldoc]{js}
@@ -372,11 +366,6 @@
 						// cpe:/o:cisco:ios:12.2sxi
 						"VersionNumber": "12.2",
 						"VersionSpecificTokens": ["sxi"]
-					},
-					CpeVersionEntry {
-						// cpe:/o:cisco:ios:12.2sxh
-						"VersionNumber": "12.2",
-						"VersionSpecificTokens": ["sxh"]
 					}
 					// [további verziók kivágva]
 				]
@@ -395,56 +384,6 @@
 	Amennyiben a verzió komponens tartalmaz ezen kívül szavakat, ezek az első tokenizációs lépésben bemutatott reguláris kifejezés ellen vannak illesztve, és egy verzió-specifikus token tömbbe tárolva. Példaként ilyen esetekben, a \mintinline{matlab}{cpe:/o:cisco:ios:12.2sxi} CPE név esetén, a verzió-specifikus tokenek tömb tartalma \mintinline[style=vs]{js}{["sxi"]} lesz.
 	
 	CPE-alapú azonosítás során, a teljes adatbázis átiterálódik, először a termék-specifikus tokeneket próbálva. Amennyiben az összes token megtalálható a bemeneti szövegben, a termékhez csatolt verziószámok vannak kipróbálva. Amennyiben legalább egy verziószám talált, és van neki egy verzió-specifikus token tömbje is, az összes ilyen további tokennek is találnia kell.
-	
-\subsubsection*{Élesetek Kezelése}
-
-	A \textit{Sun Microsystems} cég azonosító komponense a ``sun'', amely olyan CPE neveket eredményez, mint \mintinline{matlab}{cpe:/a:sun:jre}, \mintinline{matlab}{cpe:/a:sun:jdk} és \mintinline{matlab}{cpe:/o:sun:solaris:10.0}. A problémás része ennek a tokennek, hogy a legtöbb protokoll, mint például az SMTP és HTTP, visszatérítik a dátumot a szolgáltatási sávukban RFC 1123 formátumban\cite{rfc2616}, amely így néz ki: ``Sun, 14 Mar 2016 16:33:02 GMT''.
-	
-	A dátum első szava a nap neve, amely három betűre van rövidítve, és vasárnaponként az értéke ``Sun''. Ez bevezet egy bizonyos `véletlenszerűségi' alkotórészt a szoftverbe, ugyanis a pontozási rendszere a CPE alapú azonosítónak minden vasárnap nagyobb pontszámot fog társítani a \textit{Sun Microsystems} általi termékeknek, ugyanis a ``sun'' token immáron megtalálható az elemzett szolgáltatási sávban.
-	
-	\begin{listing}[H]
-		\begin{minted}{matlab}
-			Cisco IOS Software, s72033_rp Software (s72033_rp-IPSERVICESK9_WAN-M), Version 12.2(33)SXI3, RELEASE SOFTWARE (fc2)
-			Technical Support: http://www.cisco.com/techsupport
-			Copyright (c) 1986-2009 by Cisco Systems, Inc.
-			Compiled Tue 27-Oct-09 11:12 by prod_
-		\end{minted}
-		\caption{Példa telnet szolgáltatási sávja bizonyos Cisco routereknek}
-		\label{ciscosvcbnr_hu}
-	\end{listing}
-
-	Egy másik problémás példa a Cisco verziójelölése lenne a saját telnet szolgáltatásuk sávjában. \Az{\ref{ciscosvcbnr_hu}}. kódrészletben bemutatott szolgáltatási sáv a \mintinline{matlab}{cpe:/o:cisco:ios:12.2sxi3} CPE névhez tartozik. A probléma onnan adódik, hogy Cisco a $12.2$-es verziószámmal és ``sxi'' frissítési szint mellett ``by'' frissítési szintet is publikált: \mintinline{matlab}{cpe:/o:cisco:ios:12.2by}.
-	
-	Ha a két CPE nevet tokenizálnánk, a két különböző token tömb úgy nézne ki, hogy \mintinline[style=vs]{js}{["cisco", "ios", "sxi"]} és \mintinline[style=vs]{js}{["cisco", "ios", "by"]}. A verziószám és az első két token mindkét tömbből találna, viszont a harmadik tokenek ``sxi'' és ``by'', mindkét tömbből ugyancsak találnának. A harmadik és negyedik sorában \az{\ref{ciscosvcbnr_hu}}. kódrészletnek a ``copyright'' és ``compiled'' sorok mindketten tartalmazzák a ``by'' szavat.
-
-	Az előzőleg említett ShoVAT\cite{shovat15} cikk úgy oldotta meg ezt a problémát, hogy azon tokeneket amelyek közelebb vannak a verziószámhoz nagyobb súllyal látta el, mint azokat, amelyek messzebb vannak. Ezen dolgozat céljából fejlesztett alkalmazás is ezt a módszert alkalmazza a helyes CPE név kiválasztására hasonló helyzetekben.
-	
-	\begin{multicols}{2}
-		\begin{listing}[H]
-			\begin{minted}[style=pastie]{http}
-				HTTP/1.1 200 OK
-				Server: nginx/1.9.12 (Ubuntu)
-				X-Powered-By: PHP/5.6.19
-				Date: Fri, 11 Mar 2016 16:04:07 GMT
-				Connection: close
-			\end{minted}
-			\caption{Példa HTTP válasz}
-			\label{httpsvcbnr_hu}
-		\end{listing}
-		\begin{listing}[H]
-			\begin{minted}[style=perldoc]{js}
-				[
-					"nginx/1.9.12",
-					"Ubuntu",
-					"PHP/5.6.19"
-				]
-			\end{minted}
-			\caption{Kiszűrt tokenek a példából}
-			\label{httpsvcbnrtokens_hu}
-		\end{listing}
-	\end{multicols}
-	
-	Egy alternatív módszer van bemutatva \az{\ref{httpsvcbnr_hu}}. illetve \ref{httpsvcbnrtokens_hu}. kódrészletekben, amelyet a szoftver még alkalmaz redundanciaként az az, hogy olyan protokollok esetén ahol ismert a szervernév kihirdetésének helye (mint például 'Server' és `X-Powered-By' mezők HTTP esetén) ott csak ezek a mezők ellen lesz lefuttatva a CPE azonosító, míg azon protokollok esetén ahol nincs standard hely a szervernév kihirdetésére (mint például SMTP) ott megpróbál minél több haszontalan információt (mint például hibaüzenetek, hoszt név vagy dátumok) kivágni az álpozitív találatok kiszűrése érdekében.
 
 \subsection*{Operációs Rendszerek Beazonosítása}
 
