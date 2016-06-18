@@ -212,6 +212,32 @@
 	
 	Dacă vrem să descoperim numai gazdele care sunt online într-o rețea, un răspuns de tip ICMP `PortUnreachable' la un mesaj UDP la un port la întâmplare înseamnă că gazda e online, numai portul nu e. În caz contrar, un răspuns de tip ICMP `HostUnreachable' înseamnă că gazda nu e online sau accesibilă. În general pachetul menționat anterior este generat de un router pe ruta între utilizator și rețeaua destinată.
 
+\subsection*{Scanare Pasivă}
+
+	Acest capitol prezintă componentul care realizează funcția de a iniția scanări pasive, prin care se înțelege o scanare care nu trimite pachete către gazdele scanate, deci scanarea astfel nu este detectabil de țintele.
+	
+	Sunt servicii care scanează în continuu toate adresele publice al protocolului IPv4, și publică rezultatele într-un format accesibil. Astfel, când se solicită o scanare pasivă, aplicația nu trimite pachete către serverele numite, ci descarcă datele disponibile pentru adresele specificate de la serviciile menționate anterior.
+	
+	Servicii există și pentru protocolul IPv6, dar din cauza numărului mărit de adrese de la $ 2^{32} $ până la $ 2^{128} $, aceste servicii nu pot să scaneze toate adresele, ci trebuie să folosească trucuri creative pentru a obține liste cu adrese active.
+	
+	Aplicația momentan suportă serviciile Shodan\cite{shodan16}, Censys\cite{censys15} și Mr Looquer\cite{looquer16}.
+	
+	Pentru a folosi aceste servicii, utilizatorul trebuie să se înregistreze la adresa fiecărui serviciu, și să obține cheile de acces pentru API-urile fiecăruia, după ce îl poate furniza aceste chei prin argumentele \mintinline{bash}{--[shodan|censys|looquer]-key} în linia de comandă.
+	
+	Utilizatorul are posibilitatea de a folosi toate trei servicii concomitent, o funcție realizată în componentul \mintinline{cpp}{PassiveScanner}, care descarcă datele pentru adresele solicitate de la toate trei servicii.
+	
+	Amalgamarea datelor este o funcție utilă, fiindcă în majoritatea cazurilor nu toate serviciile au date disponibile pentru fiecare adresă, sau în câteva cazuri mai obscure, unele dintre servicii nu au date utile din cauza a unei restricții impuse de administratorul serverului.
+
+\subsection*{Scanare Externală}
+
+	Acest capitol prezintă componentul \mintinline{cpp}{NmapScanner}, care lansează o aplicație externală pentru a scana o gazdă și citește rezultatul scanării de la aplicația externală.
+	
+	Deși aplicația realizată în cadrul licenței are componente implementate pentru scanări active, ele fiind detaliate de la secția \ref{icmpping} până la secția \ref{udpscan}, acest component asigură o redundanță în cazul în care utilizatorul vrea o a doua opinie.
+	
+	Componentul suportă nativ rularea aplicației \textit{nmap}, dar se poate folosi oricare aplicație care generează un report de XML compatibil cu cel generat de nmap. Ca exemplu, o alternativă ar fi \textit{masscan}, pentru aplicațiile care generează reporturi compatibile și utilizabile.
+	
+	Pentru folosirea aplicației nmap, executabilul \mintinline{batch}{nmap} trebuie să fie accesibilă din variabila de mediu \mintinline{batch}{PATH}.
+
 \section*{Rezultate}
 
 	Pentru a testa aplicația implementată, am lansat o scanare în ambele moduri (activ și pasiv) contra trei universități. Am mai lansat încă o scanare în modul pasiv contra cinci instituții financiare, unde mă așteptam ca aceste instituții să reprezinte standardul ``gold'' în test.
