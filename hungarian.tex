@@ -104,7 +104,7 @@
 	
 \subsection*{Sebezhetőség Adatbázisok}
 	
-	A CERT/CC által egyik szponzorált projekt a \textit{CVE} (\textit{Common Vulnerabilities and Exposures}), amely egy módszert biztosít a publikusan ismert sebezhetőségek címkézésére és követésére. A \textit{NIST} (\textit{National Institute of Standards and Technology}) alapítvány futtat egy weboldalt \textit{NVD} (\textit{National Vulnerability Database}) néven, amelyen keresztül karbantartanak egy adatbázist, amely a publikusan ismert sebezhetőségeket tartalmazza, illetve információkat ezekről, olyan strukturált formátumban, amelyet számítógépes alkalmazások is önműködően olvashatnak\cite{nvd15}.
+	A CERT/CC által egyik szponzorált projekt a \textit{CVE} (\textit{Common Vulnerabilities and Exposures}), amely egy módszert biztosít a publikusan ismert sebezhetőségek címkézésére és követésére. A \textit{NIST} (\textit{National Institute of Standards and Technology}) alapítvány futtat egy weboldalt, \textit{NVD} (\textit{National Vulnerability Database}) néven, amelyen keresztül karbantartanak egy adatbázist, amely a publikusan ismert sebezhetőségeket tartalmazza, illetve információkat ezekről, olyan strukturált formátumban, amelyet számítógépes alkalmazások is önműködően olvashatnak\cite{nvd15}.
 	
 	Az említett adatbázis, illetve egyéb komponenseinek felhasználása bővebben a sebezhetőségkereső komponens implementációjáról szóló fejezetben van tárgyalva.
 	
@@ -273,7 +273,7 @@
 	
 	A felhasználónak meg van adva az a lehetőség is, hogy egy letapogatás során felhasználja mindhárom szolgáltatás adatait egyszerre. Ezt a funkcionalitást a \mintinline{cpp}{PassiveScanner} komponens implementálja, amely egy letapogatás során mindhárom szolgáltatás implementációját példányosítja, majd kérést kezdeményez és a visszatérített adatokat összefűzi bizonyos szabályok szerint, amelyek arra ügyelnek, hogy az a kiválasztott szolgáltatási sáv minél több információt tartalmazzon.
 	
-	Az adatok egyesítése egy hasznos funkcionalitás, ugyanis a legtöbb esetben a különböző szolgáltatásokon a letapogatandó IP címekről csak parciális adat érhető el, vagy akár az sem, így előnyös ha mindhárom szolgáltatás információit összefűzzük, és ezt az egyesített adatot elemezzük. Bizonyos esetekben az is fellép, hogy az egyik szolgáltatás ki lett tiltva a szerver rendszergazdája által a letapogatott szolgáltatásról, és így nem sikerül elemezhető adatot összegyűjtenie, a másik szolgáltatásnak viszont igen.
+	Az adatok egyesítése egy hasznos funkcionalitás, ugyanis a legtöbb esetben a különböző szolgáltatásokon a letapogatandó IP címekről csak parciális adat érhető el, vagy akár az sem, így előnyös, ha mindhárom szolgáltatás információit összefűzzük, és ezt az egyesített adatot elemezzük. Bizonyos esetekben az is fellép, hogy az egyik szolgáltatás ki lett tiltva a szerver rendszergazdája által a letapogatott szolgáltatásról, és így nem sikerül elemezhető adatot összegyűjtenie, a másik szolgáltatásnak viszont igen.
 
 \subsection*{Külső Feltérképezés}
 
