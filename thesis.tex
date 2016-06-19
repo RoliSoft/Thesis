@@ -114,13 +114,13 @@
 \subsection{Security Awareness of IT Professionals}
 \subsectionhu{Biztonsági Tudatosság az IT Szakértőkben} \subsectionro{Conștientizarea Importanței Securității -- Profesioniștilor IT}
 	
-	As one study done by \textit{BSIMM-V} (\textit{Building Security in Maturity Model}) which included 51 top-tier firms (mostly fortune 500) has concluded\cite{gmcgraw12}, a large percentage of product managers, software developers and system administrators have never received security awareness training nor been instructed to lay an emphasis on security, and as a result they do not prioritize it. One of the reasons why one might \textit{not} consider security awareness to be a priority is due to bogusly thinking that security aware application development and deployment is too costly. A study done by the \textit{Aberdeen Group} has shown that companies who invest in security end up with up to a four-fold \textit{ROI} (``\textit{Return on Investments}'').\cite{aberdeen11}
+	As one study done by \textit{BSIMM-V} (\textit{Building Security in Maturity Model}) which included 51 top-tier firms (mostly fortune 500) has concluded\cite{gmcgraw12}, a large percentage of product managers, software developers, and system administrators have never received security awareness training nor been instructed to lay an emphasis on security, and as a result they do not prioritize it. One of the reasons why one might \textit{not} consider security awareness to be a priority is due to bogusly thinking that security aware application development and deployment is too costly. A study done by the \textit{Aberdeen Group} has shown that companies who invest in security end up with up to a four-fold \textit{ROI} (``\textit{Return on Investments}'').\cite{aberdeen11}
 	
 	Companies have a long history of showing ignorance instead of security awareness. They are continuously claiming that they are untouchable, however, this is simply not true, and these companies have been proven wrong time and time again. One recent example would be \textit{General Motor}'s take on their Internet-connected cars, where their spokesperson claimed that their vehicles are not ``hackable'' due to the fact that their entertainment system is separate from the rest of the control systems. A vulnerability was found by two security researchers\cite{cmiller15} which allowed them to inject control messages into the car's CAN bus, effectively allowing them to take control of the car via either Wi-Fi or GSM.
 	
-	Software developers who would like an introduction to security-aware development can look up many of the freely available resources, however, this is not a perfect substitute for the proper training and the appropriate mindset. In some of the times, a vulnerability that was introduced by a developer might not even be their own fault, as more factors come into play in such cases. A developer might be familiar with the quirks and security issues of a specific language/environment/stack, but then be required by circumstance to move out of their comfort zone and either implement a given task in a non-standard way or in a language they are not familiar enough with.
+	Software developers who would like an introduction to security-aware development can look up many of the freely available resources, however, this is not a perfect substitute for the proper training and the appropriate mindset. In some of the times, a vulnerability that was introduced by a developer might not even be their own fault, as more factors come into play in such cases. A developer might be familiar with the quirks and security issues of a specific language/environment/stack, but then be required by circumstance to move out of their comfort zone and either implement a given task in a non-standard way or a language they are not familiar enough with.
 	
-	One such case would be a developer of a managed language (for example, C\#) be required to interface with a non-managed language (for example, a library written in C) in which case the developer is now expected to do memory management in a language that does not promote its language management tools for it is a managed language. If said library is more complex, there are very high chances, that the developer will overlook some aspects (or not be aware they must be considered in the first place) and undesirable consequences may start happening, such as memory leaks and buffer over/underflows. In such case, it is recommended that a seasoned developer write a wrapper for the specific library in \textit{C++/CLI} (successor of \textit{Managed-C++}), a language designed by Microsoft for the intent purpose\cite{hstutter06} of bridging the managed and unmanaged worlds.
+	One such case would be a developer of a managed language (for example, C\#) be required to interface with a non-managed language (for example, a library written in C) in which case the developer is now expected to do memory management in a language that does not promote its language management tools for it is a managed language. If said library is more complex, there are very high chances, that the developer will overlook some aspects (or not be aware they must be considered in the first place), and undesirable consequences may start happening, such as memory leaks and buffer over/underflows. In such case, it is recommended that a seasoned developer should write a wrapper for the specific library in \textit{C++/CLI} (successor of \textit{Managed-C++}), a language designed by Microsoft for the intent purpose\cite{hstutter06} of bridging the managed and unmanaged worlds.
 	
 	There are other special circumstances under this argument, for example, situations in which the developer of the application might be security-aware, or a proper penetration testing/code review was done, but the proposed security fixes might impact performance, ease of use, or even cause minor to major discomfort for the users. In such cases, risk analysis will be done, and some of these proposed solutions will be rejected as being unjustifiably too obtrusive. It is not the \textit{right} course of action in such situations, but risk analysis[\ref{vulnriskanal}] is a pretty standard tool for decision makers.
 	
@@ -217,7 +217,7 @@
 	
 	In order for high-profile companies to encourage security researchers to take the responsible disclosure route instead of the alternative, they have started creating programs called ``bug bounties.'' These programs reward vulnerability reports by offering monetary compensation to the founder person (whose value fluctuates based on the severity and impact of the reported vulnerability) and recognition for their feat.
 	
-	One such notable example is Google's \textit{Vulnerability Reward Program}\cite{googlevrp15}, which pays up to tens of thousands of dollars in rewards for a vulnerability in their own services, but have also extended the bug bounty to several high-risk open-source software, for which they independently pay \$500 to \$3,133.7. Google also has a related program called \textit{Patch Reward Program}, where they pay volunteers who have fixed a security issue in a high-risk open-source application. Rewards for that program range from \$500 (for ``one-liner fixes'') to \$10,000 (for ``complicated, high-impact fixes.'')
+	One such notable example is Google's \textit{Vulnerability Reward Program}\cite{googlevrp15}, which pays up to tens of thousands of dollars in rewards for a vulnerability in their own services, but they have also extended the bug bounty to several high-risk open-source software, for which they independently pay \$500 to \$3,133.7. Google also has a related program called \textit{Patch Reward Program}, where they pay volunteers who have fixed a security issue in a high-risk open-source application. Rewards for that program range from \$500 (for ``one-liner fixes'') to \$10,000 (for ``complicated, high-impact fixes.'')
 	
 \subsection{Regulatory Industry Bodies}
 \subsectionhu{Szabályozó Szervek} \subsectionro{Organismele de Reglementare din Industrie}
@@ -249,8 +249,8 @@
 	\begin{itemize}
 		\item \textit{Common Vulnerabilities and Exposures} (\textit{CVE}) -- Vulnerability reference standard.
 		\item \textit{Common Configuration Enumeration} (\textit{CCE}) -- Unique identifier provider for system configuration in order to facilitate easy misconfiguration testing.
-		\item \textit{Common Platform Enumeration} (\textit{CPE}) -- Standardized method for classifying and identifying applications, operating systems and hardware devices present on a system.
-		\item \textit{Common Weakness Enumeration} (\textit{CWE}) -- Provides common language for identifying the type and source of the vulnerability.
+		\item \textit{Common Platform Enumeration} (\textit{CPE}) -- Standardized method for classifying and identifying applications, operating systems, and hardware devices present on a system.
+		\item \textit{Common Weakness Enumeration} (\textit{CWE}) -- Provides a common language for identifying the type and source of the vulnerability.
 		\item \textit{Common Vulnerability Scoring System} (\textit{CVSS}) -- Standard metric which allows measurement of the vulnerability's impact.
 		\item \textit{Extensible Configuration Checklist Description Format} (\textit{XCCDF}) -- XML-based format for providing security checklists.
 		\item \textit{Open Vulnerability and Assessment Language} (\textit{OVAL}) -- Provides language for encoding vulnerability details in order to aid internationalization.
@@ -704,7 +704,7 @@
 \subsubsubsection{BSD/Darwin-Specific Implementation}
 \subsubsubsectionhu{BSD/Darwin Implementáció} \subsubsubsectionro{Implementarea pentru BSD/Darwin}
 
-	The BSD/Darwin-specific implementation was largely based on the Linux-specific implementation, as most function calls shared the same behavior, however, some subtle argumentation and structure differences have crept up here and there, creating the need for a different implementation.
+	The BSD/Darwin-specific implementation was largely based on the Linux-specific implementation, as most function calls shared the same behavior. However, some subtle argumentation and structure differences have crept up here and there, creating the need for a different implementation.
 
 	As with Linux, the \mintinline{cpp}{getifaddrs(struct ifaddrs **ifap)} function returns the list of connected interfaces, from which the \mintinline{cpp}{AF_LINK} type interfaces are being saved for later use. While both \mintinline{cpp}{AF_PACKET} and \mintinline{cpp}{AF_LINK} represent the same interface, they use a different underlying structure to represent information about them, and as such require differing implementations.
 	
@@ -985,7 +985,7 @@
 
 	This section presents the \mintinline{cpp}{NmapScanner} component of the application which executes an external application in order to scan the requested ports, and then parses the results of the $3^{rd}$-party application for further processing within the $1^{st}$-party application.
 	
-	While the application implements a broad range of protocol scanners as discussed in sections \ref{icmpping} through \ref{udpscan}, with an unified interface for task parallelization as discussed in section \ref{tasks}, as a measure of redundancy, the users are given the choice of using an external scanner for their reconnaissance purposes.
+	While the application implements a broad range of protocol scanners as discussed in sections \ref{icmpping} through \ref{udpscan}, with a unified interface for task parallelization as discussed in section \ref{tasks}, as a measure of redundancy, the users are given the choice of using an external scanner for their reconnaissance purposes.
 	
 	The component, as its name suggests, supports \textit{nmap} out-of-the-box as an alternative scanner, however, any $3^{rd}$-party application which generates nmap-compatible XML-based reports can be used. One such example is the \textit{masscan} scanner.
 	
@@ -1120,7 +1120,7 @@
 			\node[color=gray] at (-2.1,0.25) {I/O Wait};
 			\node[color=gray] at (6.2,0.25) {I/O Wait};
 		\end{tikzpicture}
-		\caption{Phases of an UDP scan as implemented by component in section \ref{udpscan}}
+		\caption{Phases of a UDP scan as implemented by component in section \ref{udpscan}}
 		\label{taskudp}
 	\end{figure}
 	
@@ -1266,7 +1266,7 @@
 \subsubsection{Generic Fallback Tokenizer}
 \subsubsectionhu{Generikus Értelmező} \subsubsectionro{Interpretor Generic}
 	
-	The ``three-digit'' tokenizer is a general purpose solution for parsing protocols which use a three-digit response in their protocol to indicate message type/category of a given server reply. Such protocols include SMTP, NNTP, FTP and a few more. For these protocols, however, unfortunately, there is no standardized way to announce server name and version (like the `Server' header in the HTTP protocol) and as such the server name is generally casually announced in the informational level welcome message part of the service banner. The informational messages are generally within the range of $200-299$, however, this might vary depending on the actual protocol.
+	The ``three-digit'' tokenizer is a general purpose solution for parsing protocols which use a three-digit response in their protocol to indicate message type/category of a given server reply. Such protocols include SMTP, NNTP, FTP and a few more. For these protocols, however, unfortunately, there is no standardized way to announce server name and version (like the `Server' header in the HTTP protocol) and as such the server name is generally casually announced in the informational level welcome message part of the service banner. The informational messages are generally within the range of $200-299$. However, this might vary depending on the actual protocol.
 	
 	\begin{listing}[H]
 		\begin{minted}{matlab}
@@ -1312,7 +1312,7 @@
 	
 	This behavior is different from the matcher described in section \ref{matchcpe}: whereas here a CPE name can be produced with high confidence with or without a known version number, the CPE dictionary-based matcher \textit{requires} a known version number, since it plays a pivotal role in the identifying and scoring process.
 	
-	Figure \ref{seqregex} represents the sequence diagram for the process of pattern-matching unidentified service banners. The ``BannerProcessor'' component of the sequence diagram acts as an intermediary, making sure to properly merge the returned information from the ``ServiceRegexMatcher'' component into the host object, as the latter class only contains the regular expression matching implementation.
+	Figure \ref{seqregex} represents the sequence diagram for the process of pattern-matching unidentified service banners. The ``BannerProcessor'' component of the sequence diagram acts as an intermediary, making sure to merge the returned information properly from the ``ServiceRegexMatcher'' component into the host object, as the latter class only contains the regular expression matching implementation.
 		
 	\begin{figure}[!htbp]
 		%	@startuml
@@ -1358,7 +1358,7 @@
 \subsubsection{Inferring Products Without Express Announcement}
 \subsubsectionhu{Identitás Kikövetkeztetése Névhírdetés Nélkül} \subsubsectionro{Deducerea Identității fără Anunțul cu Nume}
 	
-	While the example presented in listing \ref{nginxregex} is rather straight-forward, the pattern matcher method can be used in a more subtle way, for example, to match software which are not advertising their name or version number.
+	While the example presented in listing \ref{nginxregex} is rather straight-forward, the pattern matcher method can be used in a more subtle way, for example, to match software which is not advertising their name or version number.
 	
 	\begin{listing}[H]
 		\begin{minted}{matlab}
@@ -1418,7 +1418,7 @@
 	
 	For example, the CPE name for ``nginx 1.3.9'' is \mintinline{matlab}{cpe:/a:igor_sysoev:nginx:1.3.9}.
 	
-	The aforementioned \textit{CPE dictionary} is a list of CPE names aggregated and maintained by NIST which are known to be vulnerable, i.e. have associated entries in the \textit{CVE database}.
+	The aforementioned \textit{CPE dictionary} is a list of CPE names aggregated and maintained by NIST, which are known to be vulnerable, i.e. have associated entries in the \textit{CVE database}.
 	
 	In listing \ref{nginxcpe} an excerpt is shown, presenting an entry from the dictionary for the ``nginx 1.9.9'' software.
 	
@@ -1575,15 +1575,15 @@
 	
 	Support for \textbf{Windows} is currently limited: the operating system itself can be identified, however due to the lack of a centralized package manager, the CPE to package name and vulnerability validation functions are not available for scanned hosts running such operating systems.
 	
-	Identification of the operating systems based on the gathered results are done by separate \mintinline{cpp}{*Identifier} classes, where one implementation exists for each operating system, and they are invoked in order of popularity until a certain hit is produced.
+	Identification of the operating systems based on the gathered results are made by separate \mintinline{cpp}{*Identifier} classes, where one implementation exists for each operating system, and they are invoked in order of popularity until a certain hit is produced.
 	
 	A common theme within these identifier implementations is analyzing the discovered SSH server, as the SSH protocol requires every server to identify themselves accurately for compatibility reasons.
 	
 	While most server software have an option to decrease the verbosity of the announced software information (such as name, version, patch level and operating system) due to the aforementioned protocol requirements, no SSH server (at least on the supported Linux distributions) allows silencing the information contained within the service banner of the SSH service.
 	
-	In Debian or Debian-based (such as Ubuntu) distributions, the \mintinline{matlab}{openssh} package is modified to further increase the amount of information announced, as its service banner also contains the installed security patch version number as well. This behavior can be turned off using the \mintinline{matlab}{DebianBanner} configuration option, however, it is on by default, and it is not common practice to turn it off after a fresh installation.
+	In Debian or Debian-based (such as Ubuntu) distributions, the \mintinline{matlab}{openssh} package is modified to further increase the amount of information announced, as its service banner also contains the installed security patch version number as well. This behavior can be turned off using the \mintinline{matlab}{DebianBanner} configuration option. However, it is on by default, and it is not common practice to turn it off after a fresh installation.
 	
-	If the extended version information announcement is not turned off, the distribution can be deduced from that, otherwise, the SSH server version number can be looked up against the list of bundled OpenSSH packages in each distribution generation, as shown in table \ref{debsshvers} for Debian or table \ref{ubnsshvers} for Ubuntu.
+	If the extended version information announcement is not turned off, the distribution can be deduced from that. Otherwise, the SSH server version number can be looked up against the list of bundled OpenSSH packages in each distribution generation, as shown in table \ref{debsshvers} for Debian or table \ref{ubnsshvers} for Ubuntu.
 	
 	The ``Enterprise Linux'' distributions do not suffer from this, however, due to the nature of the release lifecycle of these distributions, multiple years may pass between the versions, and as such the SSH server version number will increase in the newer versions, but stay the same in the current generation ones.
 	
@@ -1700,7 +1700,7 @@
 	
 	For example, \mintinline{matlab}{cpe:/o:microsoft:windows:10} refers to \textit{Windows 10}, while the \textit{Hungarian} version of Windows 10 is referred to as \mintinline{matlab}{cpe:/o:microsoft:windows:10:::hu}. When referred specifically, it means that the other language versions of the same product are not affected. However, if a CVE entry only refers to \mintinline{matlab}{cpe:/o:microsoft:windows:10}, it is assumed that other fields are set to \mintinline{matlab}{*}, being equal to \mintinline{matlab}{cpe:/o:microsoft:windows:10:*:*:*}, and therefore making the Hungarian version of the product affected as well.
 	
-	Figure \ref{seqnvd} presents the sequence diagram of the process through which CPE names are resolved to CVE entries within the application. The ``Database'' component of the diagram represents the aforementioned National Vulnerability Database, however, the application itself is not querying the published XML file directly, it instead is querying a SQLite database, which is filled with the relevant fields of the published XML file. This is done in order to increase performance and lower memory consumption of each lookup request.
+	Figure \ref{seqnvd} presents the sequence diagram of the process through which CPE names are resolved to CVE entries within the application. The ``Database'' component of the diagram represents the aforementioned National Vulnerability Database. However, the application itself is not querying the published XML file directly, it instead is querying a SQLite database, which is filled with the relevant fields of the published XML file. This is done in order to increase performance and lower memory consumption of each lookup request.
 	
 	\begin{figure}[!htbp]
 		%	@startuml
@@ -1848,7 +1848,7 @@
 \subsection{Estimation of the Last System Upgrade Date}
 \subsectionhu{Utolsó Frissítési Dátum Megbecslése} \subsectionro{Estimarea Datei de Ultima Actualizare al Sistemului}
 
-	Some software, besides the regular application name and version number in the service banner (e.g. \mintinline{matlab}{PHP/5.5.12}) also announce the specific vendor patch level (e.g. \mintinline{matlab}{PHP/5.5.12-2ubuntu4.4}) which can be used to identify whether a security fix was applied to the software, or not.
+	Some software, besides the usual application name and version number in the service banner (e.g. \mintinline{matlab}{PHP/5.5.12}), also announce the vendor-specific (e.g. \mintinline{matlab}{PHP/5.5.12-2ubuntu4.4}) patch level, which can be used to identify whether a security fix was applied to the software, or not.
 	
 	The components discussed in sections \ref{opsysmatcher} and \ref{vulnvalid} can work together in order to download the changelog of the identified package from the identified operating system's package manager.
 	
@@ -1970,7 +1970,7 @@
 	\end{listing}
 	
 	\vspace{-0.4in}
-	\paragraph*{Package Identification} Scan the specified targets, then determine the operating system running behind the hosts, identify the services, perform vulnerability analysis, and resolve to a list of packages which are vulnerable on each individual host:
+	\paragraph*{Package Identification} Scan the specified targets, then determine the operating system running on the hosts, identify the services, perform vulnerability analysis, and resolve to a list of packages which are vulnerable on each individual host:
 
 	\begin{listing}[H]
 	\begin{minted}[linenos=false]{matlab}
@@ -2137,7 +2137,7 @@ arguments:
 \section{Results}
 \sectionhu{Eredmények} \sectionro{Rezultate}
 
-	The application was tested against three higher education institutions with both active and passive scanning methods. After these tests have concluded, another one was conducted with only passive scanning against five randomly selected leading\footnote{Based on amount of assets held as per their individual performance reports for the year 2015.} banking institutions, which I would have expected to represent the ``gold standard'' in the test.
+	The application was tested against three higher education institutions with both active and passive scanning methods. After these tests have concluded, another one was conducted with only passive scanning against five randomly selected leading\footnote{Based on the amount of assets held as per their individual performance reports for the year 2015.} banking institutions, which I would have expected to represent the ``gold standard'' in the test.
 
 	\begin{table}[H]
 		\centering
@@ -2195,13 +2195,13 @@ arguments:
 	
 	As a second test, the application was compared to the commercial tools discussed in section \ref{comtools}. Since these applications make a lot of noise (as in, network traffic) plus might take too much time to complete besides potentially overloading the services, not to mention potential licensing issues (most of them only allow home use for the free/community editions, defined as scanning one private $/24$ IP range), rescanning the institutions in table \ref{cpevulns} would not be feasible.
 	
-	The scan targets were instead comprised of virtual machines on a virtual network, compiled of vulnerable machines which were made for the express purpose of CTF (``Capture the Flag'') style wargames, such as \textit{Metasploitable} and \textit{VulnOS}. These VM images were gathered from VulnHub\footnote{\url{https://www.vulnhub.com/}}, as suggested in article \cite{penintro15} and paper \cite{secgen15}, a website whose aim is to provide downloadable VM images which simulate a real-world vulnerable infrastructure in order to allow interested parties to practice and gain hands-on penetration testing experience without breaking the law.
+	The scan targets were instead comprised of virtual machines on a virtual network, compiled of vulnerable machines which were made for the express purpose of CTF (``Capture the Flag'') style wargames, such as \textit{Metasploitable} and \textit{VulnOS}. These VM images were gathered from VulnHub\footnote{\url{https://www.vulnhub.com/}}, as suggested in article \cite{penintro15} and paper \cite{secgen15}, a website whose aim is to provide downloadable VM images which simulate a vulnerable real-world infrastructure in order to allow interested parties to practice and gain hands-on penetration testing experience without breaking the law.
 	
-	The weak results of ``OpenVAS'' and ``Nessus'' can be explain with the fact that their extension-based architecture failed to identify various obscure services on these hosts, as they did not have an extension written for them, and failing to identify some crucial services resulted in a decreased CVE count.
+	The weak results of ``OpenVAS'' and ``Nessus'' can be explained with the fact that their extension-based architecture failed to identify various obscure services on these hosts, as they did not have an extension written for them, and failing to identify some crucial services resulted in a decreased CVE count.
 	
 	On the other side of the spectrum, ``Nexpose'' exploited one of the discovered vulnerabilities, and using the acquired shell access, enumerated the list of installed packages using the operating system's package manager, gaining a clear advantage, as the other three testing applications only analyzed the vulnerability status of public-facing network-accessible servers, without having access to the full list of installed software on the host.
 	
-	It should be noted, that exploitation of the discovered vulnerabilities is out of the scope of this application, as it may not be desirable in live production environments, and straight-up illegal for security researchers without a prior agreement. In the application, vulnerability validation is instead performed without penetration, by gathering environmental information, identifying the operating system, and then using the operating system distribution's package manager to check whether the discovered package is affected by the vulnerability, as described in section \ref{vulnvalid}.
+	It should be noted, that exploitation of the discovered vulnerabilities is out of the scope of this application, as it may not be desirable in live production environments, and straight-up illegal for security researchers without prior agreement. In the application, vulnerability validation is instead performed without penetration, by gathering environmental information, identifying the operating system, and then using the operating system distribution's package manager to check whether the discovered package is affected by the vulnerability, as described in section \ref{vulnvalid}.
 
 \newpage
 \section{Bibliography}
