@@ -1296,7 +1296,7 @@
 	If all of the implemented tokenizers fail to process a service banner, it will be sent to the next stage of discovery (usually to component described in \ref{matchcpe}) as one token, containing the whole service banner.
 	
 \subsection{Pattern Matching of Service Banners} \label{patternmatch}
-\subsectionhu{Szerverek Minta-alapú Beazonosítása} \subsectionro{Identificare Software pe Bază de Model}
+\subsectionhu{Szerverek Minta-alapú Beazonosítása} \subsectionro{Identificare Software cu Expresie Regulată}
 
 	The purpose of the \mintinline{cpp}{ServiceRegexMatcher} component of the application is to take the original full service banner (without any tokenization) as an input and match it against a database of regular expressions, which in turn are mapped to their own CPE names.
 

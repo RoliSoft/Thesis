@@ -238,6 +238,53 @@
 	
 	Pentru folosirea aplicației nmap, executabilul \mintinline{batch}{nmap} trebuie să fie accesibilă din variabila de mediu \mintinline{batch}{PATH}.
 
+\subsection*{Identificare Software cu Expresie Regulată}
+
+	Componentul \mintinline{cpp}{ServiceRegexMatcher} primește ca input un banner de serviciu, și îl testează împotriva unei baze de date conținând expresii regulate asociate cu nume CPE.
+	
+	\begin{listing}[H]
+		\begin{minted}{matlab}
+			^HTTP/1\.[01] \d{3}.*\r\nServer: nginx(?:/([\d.]+))?
+		\end{minted}
+		\caption{Expresie regulată pentru \mintinline{matlab}{cpe:/a:nginx:nginx}}
+		\label{nginxregex_ro}
+	\end{listing}
+	
+	Fragmentul de cod \ref{nginxregex_ro} conține o expresie regulată care potrivește pentru răspunsul generat de serverul de HTTP numit ``nginx''. Expresia regulată mai conține și un grup opțional, care încearcă să extrage versiunea aplicației. În cazul în care acest grup a potrivit, componentul returnează, de exemplu, \mintinline{matlab}{cpe:/a:nginx:nginx:1.9.12}, sau dacă expresia sa potrivit numai parțial, componentul returnează numai \mintinline{matlab}{cpe:/a:nginx:nginx}.
+	
+	Această metodă diferă de la cel care e discutat în secțiunea \ref{matchcpe}, fiindcă acest component, printre altele, poate să identifice și aplicații care nu anunță versiunea.
+	
+\subsection*{Identificare Software pe Bază de CPE}
+
+	Institutul \textit{National Institute of Standards and Technology} menține o bază de date sub numele de \textit{National Vulnerability Database}, care conține vulnerabilitățile aplicaților mai populare. Componentul prezentat în acest capitol, și anume \mintinline{cpp}{CpeDictionaryMatcher}, folosește baza de date menționat anterior pentru identificarea aplicațiilor.
+	
+	\textit{CPE} este o schemă standardizată pe a numi hardware, aplicații și sisteme de operare\cite{cpe22}. Versiunea 2.2 este: \mintinline{matlab}{cpe:/tip:proprietar:produs:versiune:actualizări:ediție:limbă} unde componentul `tip' poate să fie \mintinline{matlab}{h} pentru `hardware', \mintinline{matlab}{o} pentru `sistem de operare' și \mintinline{matlab}{a} pentru `aplicație'.
+	
+	Ca un exemplu, numele pentru ``nginx 1.3.9'' este \mintinline{matlab}{cpe:/a:igor_sysoev:nginx:1.3.9}.
+	
+	Numele CPE nu sunt listate în bannerele de serviciu, și nici nu există o metodă sigură pentru a extrage o nume CPE dintr-un protocol. Publicația \cite{shovat15} abordă această problemă, iar soluția prezentată de autori este cea folosită și în aplicația realizată în cadrul licenței. Componentul folosește dicționarul CPE publicat de NIST, pre-procesat pentru a-l converti într-un format mai avantajos la utilizarea de acest tip, și pentru a înlătura datele neutilizate din motive de performanță și economie de memorie. Fragmentul de cod \ref{ciscotokens_ro} prezintă structura încărcată în memorie pentru o nume de CPE.
+	
+	\begin{listing}[H]
+		\begin{minted}[style=perldoc]{js}
+			CpeEntry {
+				// cpe:/o:cisco:ios
+				"ProductSpecificTokens": ["cisco", "ios"],
+				"Versions": [
+					CpeVersionEntry {
+						// cpe:/o:cisco:ios:12.2sxi
+						"VersionNumber": "12.2",
+						"VersionSpecificTokens": ["sxi"]
+					}
+					// [celelalte versiuni omise]
+				]
+			}
+		\end{minted}
+		\caption{Structura aproximativă în memorie pentru \mintinline{matlab}{cpe:/o:cisco:ios:12.2sxi}}
+		\label{ciscotokens_ro}
+	\end{listing}
+	
+	Prin procesul de identificare pe baza de CPE, structura prezentată cu token-urile al numelor CPE este reiterată în primul rând până cuvintele specifice al aplicației se potrivesc în totalitate. Dacă se găsește o potrivire completă, versiunile asociate aplicației sunt reiterate, cautând o potrivire. Dacă s-a găsit o potrivire și printre numerele de versiuni, dar există cuvinte specifice al versiunii, și aceste trebuie să se potrivesc în totalitate ca numele CPE să fie returnat ca o potrivire.
+
 \section*{Rezultate}
 
 	Pentru a testa aplicația implementată, am lansat o scanare în ambele moduri (activ și pasiv) contra trei universități. Am mai lansat încă o scanare în modul pasiv contra cinci instituții financiare, unde mă așteptam ca aceste instituții să reprezinte standardul ``gold'' în test.
