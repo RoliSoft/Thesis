@@ -68,7 +68,7 @@
 \rhead{\slshape EXTRAS}
 \section*{Scopul Proiectului}
 
-	Scopul proiectului este de a dezvolta o aplicație, care poate să scaneze o rețea și să descoperă vulnerabilitățile rețelei scanate.
+	Scopul proiectului este de a dezvolta o aplicație, care poate să scaneze o rețea și să descopere vulnerabilitățile rețelei scanate.
 
 	Aplicația trebuie să fie complet autonomă în procesul de descoperirea vulnerabilităților, fără a depinde de actualizări de la dezvoltator pentru a identifica servicii și vulnerabilități noi.
 
@@ -76,17 +76,17 @@
 
 \subsection*{Achiziție de Date}
 
-	Pentru a fi folositor cercetătorilor independenți în domeniul de securitate, aplicația trebuie să conține metode de ``OSINT'' (``open-source intelligence''). Serviciile prezentate în secțiunea \ref{passive}, anume Shodan\cite{shodan16}, Censys\cite{censys15} și Mr Looquer\cite{looquer16}, sunt candidate perfecți pentru componentul al aplicației care achiziționează date prin metode pasive.
+	Pentru a fi folositor cercetătorilor independenți în domeniul de securitate, aplicația trebuie să conțină metode de ``OSINT'' (``open-source intelligence''). Serviciile prezentate în secțiunea \ref{passive}, anume Shodan\cite{shodan16}, Censys\cite{censys15} și Mr Looquer\cite{looquer16}, sunt candidate perfecți pentru componentul al aplicației care achiziționează date prin metode pasive.
 	
 	Prin suportarea metodelor pentru a achiziționa date fără o scanare activă, cercetătorii în domeniul de securitate pot să lanseze o scanare pentru care vor primi rezultate instante, fără necesitatea de a avea o infrastructură largă pentru scanare.
 	
-	În cazul contrar, consultanții în domeniul de securitate în general trebuie să lanseze o scanare împotriva unei infrastructuri private, pentru care date nu sunt disponibile pe serviciile menționate anterior. Din acest motiv, aplicația trebuie să conține și metode active pentru achiziționarea datelor.
+	În cazul contrar, consultanții în domeniul de securitate în general trebuie să lanseze o scanare împotriva unei infrastructuri private, pentru care date nu sunt disponibile pe serviciile menționate anterior. Din acest motiv, aplicația trebuie să conțină și metode active pentru achiziționarea datelor.
 	
 	Indiferent de faptul că aplicația implementează mai multe moduri de a achiziționa date, ca un mijloc de redundanță, utilizatorii pot să lanseze scanarea cu o aplicație exterioară, importând rezultatele pentru procesare în final. În mod implicit, aplicația de scanare \textit{nmap} este suportat, dar orice aplicație se poate folosi care generează reporturi în format XML care sunt compatibile cu nmap; un exemplu pentru un astfel de aplicație ar fi \textit{masscan}.
 
 \subsection*{Analizarea Datelor}
 
-	Bannerele de serviciu (``service banner'') care au fost colectate trebuie să fie analizate într-un mod complet autonom. Contrar cu aplicațiile prezentate în secțiunea \ref{relwork}, aplicația dezvoltată nu trebuie să depinde pe extensii pentru a identifica servicii și descoperi vulnerabilități.
+	Bannerele de serviciu (``service banner'') care au fost colectate trebuie să fie analizate într-un mod complet autonom. Contrar cu aplicațiile prezentate în secțiunea \ref{relwork}, aplicația dezvoltată nu trebuie să depindă pe extensii pentru a identifica servicii și descoperi vulnerabilități.
 
 	Aplicația trebuie să folosească bazele de date publicate de instituția \textit{NIST}, discutat în secțiunea \ref{vulndbs}. Secțiunea \ref{matchcpe} prezintă componentele care procesează bannerele de serviciu folosind bazele de date menționate anterior, și asociază o nume \textit{CPE} într-un mod complet autonom.
 
@@ -96,11 +96,11 @@
 
 	După ce serviciile scanate au fost identificate, descoperirea vulnerabilităților este o simplă operațiune de căutarea în baza de date cu vulnerabilități \textit{CVE}.
 	
-	Din punctul acesta, aplicația trebuie să prezintă cât mai multe informații utile utilizatorului despre serviciile și vulnerabilitățile descoperite, ca și cum ar fi punctajul de CVSS al vulnerabilităților în descoperite în infrastructură pentru analiza de risc.
+	Din punctul acesta, aplicația trebuie să prezinte cât mai multe informații utile utilizatorului despre serviciile și vulnerabilitățile descoperite, ca și cum ar fi punctajul de CVSS al vulnerabilităților în descoperite în infrastructură pentru analiza de risc.
 	
-	Ca să fie folositoare și pentru administratorii de rețea care nu au experiențe semnificative în domeniul de securitate, aplicația trebuie să încearcă să generează o listă simplă cu pașii pentru a soluționa vulnerabilitățile descoperite pe fiecare server.
+	Ca să fie folositoare și pentru administratorii de rețea care nu au experiențe semnificative în domeniul de securitate, aplicația trebuie să încerce să genereze o listă simplă cu pașii pentru a soluționa vulnerabilitățile descoperite pe fiecare server.
 	
-	În cazul serverurilor unde sistemul de operare a fost identificat cu succes, aplicația poate să generează o linie de comandă care când este rulat pe serverul cu vulnerabilități va actualiza programele vulnerabile.
+	În cazul serverurilor unde sistemul de operare a fost identificat cu succes, aplicația poate să genereze o linie de comandă care când este rulat pe serverul cu vulnerabilități va actualiza programele vulnerabile.
 
 \section*{Soluții Aferente}
 	
@@ -138,13 +138,13 @@
 	
 	Implementația componentului folosește socluri de tip ``raw'' pentru a trimite pachete de tip `EchoRequest'. Din acest motiv, utilizatorul care lansează aplicația trebuie să aibă drepturi de administrator pe diverse sisteme de operare, de exemplu Linux, Windows, și diferite distribuții de BSD.
 	
-	Pachetele de acest tip nu se pot adresa la un port exact, numai la o gazdă. Din acest motiv, componentul nu poate să descoperă servicii pe o gazdă, numai gazdele online într-o rețea.
+	Pachetele de acest tip nu se pot adresa la un port exact, numai la o gazdă. Din acest motiv, componentul nu poate să descopere servicii pe o gazdă, numai gazdele online într-o rețea.
 
 \subsubsection*{Scanare cu ARP `WhoHas'}
 
 	Mecanismul \textit{Address Resolution Protocol} (\textit{ARP}) este responsabil pentru traducerea adreselor IPv4 în adrese MAC (și vice versa) într-o rețea locală de calculatoare.
 	
-	Similar cu ICMP, acest component nu poate să descoperă serviciile a unui gazdă, numai gazdele online într-o rețea locală.
+	Similar cu ICMP, acest component nu poate să descopere serviciile a unei gazde, numai gazdele online într-o rețea locală.
 
 \subsubsection*{Scanare TCP}
 
@@ -222,7 +222,7 @@
 	
 	Aplicația momentan suportă serviciile Shodan\cite{shodan16}, Censys\cite{censys15} și Mr Looquer\cite{looquer16}.
 	
-	Pentru a folosi aceste servicii, utilizatorul trebuie să se înregistreze la adresa fiecărui serviciu, și să obține cheile de acces pentru API-urile fiecăruia, după ce îl poate furniza aceste chei prin argumentele \mintinline{bash}{--[shodan|censys|looquer]-key} în linia de comandă.
+	Pentru a folosi aceste servicii, utilizatorul trebuie să se înregistreze la adresa fiecărui serviciu, și să obțină cheile de acces pentru API-urile fiecăruia, după ce îl poate furniza aceste chei prin argumentele \mintinline{bash}{--[shodan|censys|looquer]-key} în linia de comandă.
 	
 	Utilizatorul are posibilitatea de a folosi toate trei servicii concomitent, o funcție realizată în componentul \mintinline{cpp}{PassiveScanner}, care descarcă datele pentru adresele solicitate de la toate trei servicii.
 	
@@ -287,13 +287,13 @@
 		\label{ciscotokens_ro}
 	\end{listing}
 	
-	Prin procesul de identificare pe baza de CPE, structura prezentată cu token-urile al numelor CPE este reiterată în primul rând până cuvintele specifice al aplicației se potrivesc în totalitate. Dacă se găsește o potrivire completă, versiunile asociate aplicației sunt reiterate, cautând o potrivire. Dacă s-a găsit o potrivire și printre numerele de versiuni, dar există o listă cu cuvinte specifice ale versiunii, și aceste trebuie să se potrivesc în totalitate ca numele CPE să fie returnat ca o potrivire.
+	Prin procesul de identificare pe baza de CPE, structura prezentată cu token-urile al numelor CPE este reiterată în primul rând până cuvintele specifice al aplicației se potrivesc în totalitate. Dacă se găsește o potrivire completă, versiunile asociate aplicației sunt reiterate, cautând o potrivire. Dacă s-a găsit o potrivire și printre numerele de versiuni, dar există o listă de cuvinte specifice ale versiunii, și aceste trebuie să se potrivesc în totalitate ca numele CPE să fie returnat ca o potrivire.
 		
 \subsection*{Validarea Vulnerabilităților}
 
 	Aplicația realizată suportă identificarea și folosirea al sistemelor de operare \textbf{Debian}, \textbf{Ubuntu}, \textbf{Red Hat}, \textbf{CentOS} și \textbf{Fedora}, cu suport parțial pentru \textbf{Windows}.
 	
-	După scanare și analiza bannerelor de serviciu, aplicația încearcă să identifică sistemul de operare, și versiunea al sistemului de operare pentru fiecare gazdă scanată. Pentru sistemele menționate anterior cu suport complet, aplicația poate să valideze vulnerabilitățile descoperite prin rezolvarea numelor CPE identificate în nume actuale de pachete în distribuție, urmat de descărcarea al informațiilor disponibile pentru CVE-urile descoperite pentru pachetele rezolvate.
+	După scanare și analiza bannerelor de serviciu, aplicația încearcă să identifice sistemul de operare, și versiunea al sistemului de operare pentru fiecare gazdă scanată. Pentru sistemele menționate anterior cu suport complet, aplicația poate să valideze vulnerabilitățile descoperite prin rezolvarea numelor CPE identificate în nume actuale de pachete în distribuție, urmat de descărcarea al informațiilor disponibile pentru CVE-urile descoperite pentru pachetele rezolvate.
 	
 	Informațiile folosite pentru validarea vulnerabilităților astfel provin de la echipa de securitate al sistemului de operare sau de la baza de date de urmărirea erorilor al menținătorul pachetului din distribuție.
 
@@ -315,7 +315,7 @@
 		\label{cpeids_ro}
 	\end{table}
 	
-	Tabelul \ref{cpeids_ro} prezintă numărul serviciilor descoperite și identificate. Un ``serviciu'' reprezintă un port deschis pe gazdă. Rândul ``Identificabil'' reprezintă numărul serviciilor care au fost descoperite, și au trimis un service banner care să conține informații utilizabile la identificare, de exemplu numele și versiunea softului de server. În ultimul rând, ``Identificat'' reprezintă numărul serviciilor care au fost identificate cu succes de aplicația realizată.
+	Tabelul \ref{cpeids_ro} prezintă numărul serviciilor descoperite și identificate. Un ``serviciu'' reprezintă un port deschis pe gazdă. Rândul ``Identificabil'' reprezintă numărul serviciilor care au fost descoperite, și au trimis un service banner care să conțină informații utilizabile la identificare, de exemplu numele și versiunea softului de server. În ultimul rând, ``Identificat'' reprezintă numărul serviciilor care au fost identificate cu succes de aplicația realizată.
 	
 	Din cele \textbf{1,410} service banner-uri valide colectate, aplicația a identificat \textbf{1,374} servicii corect, care reprezintă o rată de succes de \textbf{97.45\%}.
 	
@@ -355,7 +355,7 @@
 	
 	Tabelul \ref{foundvulns_ro} prezintă o comparație între aplicația realizată în cadrul tezei și diversele aplicații comerciale prezentate în secțiunea \ref{comtools}. Aplicațiile au fost lansate contra o rețea virtuală alcătuită de diverse mașini virtuale folosite pentru pregătirile la concursuri de tip CTF (``Capture the Flag'').
 	
-	Aplicațiile ``OpenVAS'' și ``Nessus'' au identificat mai puține vulnerabilități, fiindcă nu au avut extensii pentru a identifica câteva servicii mai obscure pe gazdele în rețeaua scanată.
+	Aplicațiile ``OpenVAS'' și ``Nessus'' au identificat mai puține vulnerabilități, fiindcă nu au avut extensii pentru identificarea a serviciilor mai obscure pe gazdele din rețeaua scanată.
 	
 	În caz contrar, ``Nexpose'' a abuzat una dintre vulnerabilitățile folosite și a obținut acces shell. Având acces, aplicația a folosit managerul de pachete al sistemului de operare pentru a obține o listă cu numele și versiunea aplicațiilor instalate pe gazdă. Așa, a ajuns să descopere vulnerabilități care nu sunt accesibile/abuzabile de pe rețea, numai dacă utilizatorul are acces local.
 	
