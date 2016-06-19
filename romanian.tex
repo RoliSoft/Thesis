@@ -288,6 +288,14 @@
 	\end{listing}
 	
 	Prin procesul de identificare pe baza de CPE, structura prezentată cu token-urile al numelor CPE este reiterată în primul rând până cuvintele specifice al aplicației se potrivesc în totalitate. Dacă se găsește o potrivire completă, versiunile asociate aplicației sunt reiterate, cautând o potrivire. Dacă s-a găsit o potrivire și printre numerele de versiuni, dar există o listă cu cuvinte specifice ale versiunii, și aceste trebuie să se potrivesc în totalitate ca numele CPE să fie returnat ca o potrivire.
+		
+\subsection*{Validarea Vulnerabilităților}
+
+	Aplicația realizată suportă identificarea și folosirea al sistemelor de operare \textbf{Debian}, \textbf{Ubuntu}, \textbf{Red Hat}, \textbf{CentOS} și \textbf{Fedora}, cu suport parțial pentru \textbf{Windows}.
+	
+	După scanare și analiza bannerelor de serviciu, aplicația încearcă să identifică sistemul de operare, și versiunea al sistemului de operare pentru fiecare gazdă scanată. Pentru sistemele menționate anterior cu suport complet, aplicația poate să valideze vulnerabilitățile descoperite prin rezolvarea numelor CPE identificate în nume actuale de pachete în distribuție, urmat de descărcarea al informațiilor disponibile pentru CVE-urile descoperite pentru pachetele rezolvate.
+	
+	Informațiile folosite pentru validarea vulnerabilităților astfel provin de la echipa de securitate al sistemului de operare sau de la baza de date de urmărirea erorilor al menținătorul pachetului din distribuție.
 
 \section*{Rezultate}
 
