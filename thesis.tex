@@ -1844,7 +1844,7 @@
 		\caption{Sequence Diagram for Package Manager-based Vulnerability Validation}
 		\label{seqvuln}
 	\end{figure}
-	
+
 \subsection{Estimation of the Last System Upgrade Date}
 \subsectionhu{Utolsó Frissítési Dátum Megbecslése} \subsectionro{Estimarea Datei de Ultima Actualizare al Sistemului}
 
@@ -1861,6 +1861,124 @@
 	The estimation of the last system update is a useful functionality, as it can provide vulnerability validation for services whose exact patch level is not known. If by the start of the guesstimated update date range, a partially identified service already had a security update for an identified vulnerability, it can be freely discarded, as the corresponding security update was most likely applied later in the date range during the update.
 	
 	This functionality is, of course, only guesswork, and can be freely turned off in order to avoid false negatives during validation.
+
+\subsection{Data Preprocessing} \label{preproc}
+\subsectionhu{Adatok Előfeldolgozása} \subsectionro{Preprocesarea Datelor}
+
+\subsubsection{Vulnerability Database}
+\subsubsectionhu{Sebezhetőségi Adatbázis} \subsubsectionro{Baza de Date cu Vulnerabilități}
+
+	\begin{figure}[H]
+		\centering
+		\begin{tikzpicture}
+\draw  (-3,2.5) rectangle (0.5,1.5);
+\node at (-1.25,2) {\large \textbf{vulns}};
+\node[align=left] at (-1.25,-0.55) {\underline{\textbf{id}} int,\\\textbf{cve} text,\\\textbf{date} int,\\\textbf{descr} text,\\\textbf{severity} real,\\\textbf{access} char(1)};
+\draw  (-3,1.5) node (v2) {} rectangle (0.5,-2.5);
+\draw  (-8,1.5) rectangle (-5,0.5) node (v1) {};
+\node at (-6.5,1) {\large \textbf{affected}};
+\draw  (-8,0.5) rectangle (-5,-1);
+\node[align=left] at (-6.5,-0.3) {\textbf{cpe} text,\\\textbf{vuln\underline{ }id} int};
+\draw (-5,0) -- (-3,0);
+\draw (-4.875,0.1875) -- (-4.875,-0.1875);
+\draw (-4.7188,0.1875) -- (-4.7188,-0.1875);
+\draw (-3.3125,0) -- (-3,0.1875);
+\draw (-3.3125,0) -- (-3,-0.1875);
+		\end{tikzpicture}
+		\caption{Structure of the Vulnerability Database}
+		\label{dbstruct}
+	\end{figure}
+
+	The ``access'' field represents the access vector, and can be:
+	
+	\begin{itemize}
+		\item \mintinline{matlab}{l} for \textbf{local}: physical access or local presence is required to exploit.
+		\item \mintinline{matlab}{a} for \textbf{adjacent}: attacker has to reside on the same local network.
+		\item \mintinline{matlab}{n} for \textbf{network}: vulnerability is remotely exploitable over the Internet.
+	\end{itemize}
+
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{|l|l|}
+			\hline
+			\multicolumn{1}{|c|}{\textbf{vuln\underline{ }id}} & \multicolumn{1}{c|}{\textbf{cpe}} \\ \hline
+			75158 & cpe:/a:nginx:nginx:1.9.0 \\
+			75158 & cpe:/a:nginx:nginx:1.9.1 \\
+			75157 & cpe:/a:nginx:nginx:1.9.7 \\
+			75157 & cpe:/a:nginx:nginx:1.8.0 \\ \hline
+		\end{tabular}
+		\caption{Sample entries of the ``Affected'' table}
+		\label{dbaffected}
+	\end{table}
+
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{|l|l|l|l|l|l|}
+			\hline
+			\multicolumn{1}{|c|}{\textbf{id}} & \multicolumn{1}{c|}{\textbf{cve}} & \multicolumn{1}{c|}{\textbf{date}} & \multicolumn{1}{c|}{\textbf{descr}} & \multicolumn{1}{c|}{\textbf{severity}} & \multicolumn{1}{c|}{\textbf{access}} \\ \hline
+			75158 & 2016-0747 & 1455566342 & The resolver in ... & 5.0 & n \\
+			75157 & 2016-0746 & 1455566341 & Use-after-free ... & 7.5 & n \\ \hline
+		\end{tabular}
+		\caption{Sample entries of the ``Vulns'' table}
+		\label{dbvulns}
+	\end{table}
+
+	\begin{listing}[H]
+		\begin{minted}{matlab}
+			+ uint16      Package type [0x0100]
+			| uint16      Package version [0x0100]
+			| uint32      Number of entries
+			+- string     CPE name
+			 | uint8      Number of common tokens
+			 +- string    Token
+			 | uint32     Number of versions
+			 +- string    CPE version
+			  | string    Version token
+			  | uint8     Number of version-specific tokens
+			  +- string   Token
+		\end{minted}
+		\caption{Binary format of the CPE dictionary}
+		\label{bincpedict}
+	\end{listing}
+
+	\begin{listing}[H]
+		\begin{minted}{matlab}
+			+ uint16      Package type [0x0200]
+			| uint16      Package version [0x0100]
+			| uint32      Number of entries
+			+- uint16     Number of aliases in entry
+			 +- string    CPE name
+		\end{minted}
+		\caption{Binary format of the CPE alias list}
+		\label{bincpealias}
+	\end{listing}
+
+	\begin{listing}[H]
+		\begin{minted}{matlab}
+			+ uint16      Package type [0x0A00]
+			| uint16      Package version [0x0100]
+			| uint32      Number of entries
+			+- string     Payload data
+			 | uint16     Number of ports in entry
+			 +- uint16    Port number
+		\end{minted}
+		\caption{Binary format of the UDP payload database}
+		\label{binudpdb}
+	\end{listing}
+
+	\begin{listing}[H]
+		\begin{minted}{matlab}
+			+ uint16      Package type [0x0F00]
+			| uint16      Package version [0x0100]
+			| uint32      Number of entries
+			+- string     Regular expression
+			 | string     CPE name
+			 | string     Product
+			 + string     Version
+		\end{minted}
+		\caption{Binary format of the service regular expression database}
+		\label{binrgxdb}
+	\end{listing}
 
 \section{User Guide}
 \sectionhu{Használati Útmutató} \sectionro{Ghid de Utilizare}
