@@ -163,19 +163,19 @@
 			\draw [es](4,-2) -- (0.5,-2);
 			\node at (5.5,-2) {\mintinline{cpp}{accept()}};
 			\node at (2.25,-1.65) {SYN $j$, ACK $i+1$};
-			\node at (-1.15,-2) {conectat};
+			\node at (-1,-2) {conectat};
 			\draw [es](0.5,-3) -- (4,-3);
 			\node at (2.25,-2.65) {ACK $j+1$};
 			\draw [es](0.5,-4) -- (4,-4);
-			\node at (5.7,-3) {conectat};
+			\node at (5.5,-3) {conectat};
 			\node at (2.25,-3.65) {FIN $k$};
 			\node at (-0.9,-4) {\mintinline{cpp}{close()}};
 			\draw [es](4,-5) -- (0.5,-5);
 			\node at (2.25,-4.65) {ACK $k+1$, FIN $l$};
 			\draw [es](0.5,-6) -- (4,-6);
-			\node at (-0.85,-5) {închis};
+			\node at (-0.8,-5) {închis};
 			\node at (2.25,-5.65) {ACK $l+1$};
-			\node at (5.35,-6) {închis};
+			\node at (5.25,-6) {închis};
 		\end{tikzpicture}
 		\caption{Strângere de mână în trei al TCP la conectare și deconectare}
 		\label{tcp3way_ro}
@@ -195,7 +195,7 @@
 	
 	Anumite sisteme răspund cu un ICMP `PortUnreachable' pachet în cazul în care în spatele portul UDP scanat nu există nici o aplicație asociată, dar majoritatea firewall-urilor filtrează mesajele de acest tip în modul explicit pentru a combate posibilitatea de a scana porturile.
 	
-	Metoda cea mai bună pentru descoperea serviciilor pe porturile UDP e ca să trimitem mesaje la care este garantat că serverul (dacă rulează în spatele portului contactat) va răspunde. Componentul \mintinline{cpp}{UdpScanner} conține o bază de date alcătuit de numere de porturi asociate cu pachete care conțin un mesaj corect format al specificațiilor protocolului care e în general în spatele portului asociat. Ca un exemplu, fragmentul de cod \ref{dnsverreq_ro} prezintă reprezentația hexazecimală al unui pachet UDP generat de \mintinline{bash}{xxd}, care când e trimis pe portul 53 al unui gazdă care rulează un server DNS pe acest port, va răspunde cu versiunea aplicației.
+	Metoda cea mai bună pentru descoperea serviciilor pe porturile UDP e ca să trimitem mesaje la care este garantat că serverul (dacă rulează în spatele portului contactat) va răspunde. Componentul \mintinline{cpp}{UdpScanner} conține o bază de date alcătuit de numere de porturi asociate cu pachete care conțin un mesaj corect format al specificațiilor protocolului care e în general în spatele portului asociat. Ca un exemplu, fragmentul de cod \ref{dnsverreq_ro} prezintă reprezentația hexazecimală al unui pachet UDP generat de \mintinline{bash}{xxd}, care când e trimis pe portul 53 al unui gazdă care rulează un server DNS pe acest port, aceasta va răspunde cu versiunea aplicației.
 	
 	\begin{listing}[H]
 		\begin{minted}{py}
@@ -250,19 +250,23 @@
 		\label{nginxregex_ro}
 	\end{listing}
 	
-	Fragmentul de cod \ref{nginxregex_ro} conține o expresie regulată care potrivește pentru răspunsul generat de serverul de HTTP numit ``nginx''. Expresia regulată mai conține și un grup opțional, care încearcă să extrage versiunea aplicației. În cazul în care acest grup a potrivit, componentul returnează, de exemplu, \mintinline{matlab}{cpe:/a:nginx:nginx:1.9.12}, sau dacă expresia sa potrivit numai parțial, componentul returnează numai \mintinline{matlab}{cpe:/a:nginx:nginx}.
+	Fragmentul de cod \ref{nginxregex_ro} conține o expresie regulată care se potrivește pentru răspunsul generat de serverul de HTTP numit ``nginx''. Expresia regulată mai conține și un grup opțional, care încearcă să extragă versiunea aplicației. În cazul în care acest grup a potrivit, componentul returnează, de exemplu, \mintinline{matlab}{cpe:/a:nginx:nginx:1.9.12}, sau dacă expresia s-a potrivit numai parțial, componentul returnează numai \mintinline{matlab}{cpe:/a:nginx:nginx}.
 	
-	Această metodă diferă de la cel care e discutat în secțiunea \ref{matchcpe}, fiindcă acest component, printre altele, poate să identifice și aplicații care nu anunță versiunea.
+	Această metodă diferă de la cel discutat în secțiunea \ref{matchcpe}, fiindcă acest component, printre altele, poate să identifice și aplicații care nu anunță versiunea.
 	
 \subsection*{Identificare Software pe Bază de CPE}
 
 	Institutul \textit{National Institute of Standards and Technology} menține o bază de date sub numele de \textit{National Vulnerability Database}, care conține vulnerabilitățile aplicaților mai populare. Componentul prezentat în acest capitol, și anume \mintinline{cpp}{CpeDictionaryMatcher}, folosește baza de date menționat anterior pentru identificarea aplicațiilor.
 	
-	\textit{CPE} este o schemă standardizată pe a numi hardware, aplicații și sisteme de operare\cite{cpe22}. Versiunea 2.2 este: \mintinline{matlab}{cpe:/tip:proprietar:produs:versiune:actualizări:ediție:limbă} unde componentul `tip' poate să fie \mintinline{matlab}{h} pentru `hardware', \mintinline{matlab}{o} pentru `sistem de operare' și \mintinline{matlab}{a} pentru `aplicație'.
+	\textit{CPE} este o schemă standardizată pentru a numi hardware, aplicații și sisteme de operare\cite{cpe22}.
+	
+	Versiunea al 2.2 este \mintinline{matlab}{cpe:/tip:proprietar:produs:versiune:actualizări:ediție:limbă}, unde componentul `tip' poate să fie \mintinline{matlab}{h} pentru `hardware', \mintinline{matlab}{o} pentru `sistem de operare' și \mintinline{matlab}{a} pentru `aplicație'.
 	
 	Ca un exemplu, numele pentru ``nginx 1.3.9'' este \mintinline{matlab}{cpe:/a:igor_sysoev:nginx:1.3.9}.
 	
-	Numele CPE nu sunt listate în bannerele de serviciu, și nici nu există o metodă sigură pentru a extrage o nume CPE dintr-un protocol. Publicația \cite{shovat15} abordă această problemă, iar soluția prezentată de autori este cea folosită și în aplicația realizată în cadrul licenței. Componentul folosește dicționarul CPE publicat de NIST, pre-procesat pentru a-l converti într-un format mai avantajos la utilizarea de acest tip, și pentru a înlătura datele neutilizate din motive de performanță și economie de memorie. Fragmentul de cod \ref{ciscotokens_ro} prezintă structura încărcată în memorie pentru o nume de CPE.
+	Numele CPE nu sunt listate în bannerele de serviciu, și nici nu există o metodă sigură pentru a extrage o nume CPE dintr-un protocol. Publicația \cite{shovat15} abordă această problemă, iar soluția prezentată de autori este cea folosită și în aplicația realizată în cadrul licenței.
+	
+	Componentul folosește dicționarul CPE publicat de NIST, pre-procesat pentru a-l converti într-un format mai avantajos la utilizarea de acest tip, și pentru a înlătura datele neutilizate din motive de performanță și economie de memorie. Fragmentul de cod \ref{ciscotokens_ro} prezintă structura încărcată în memorie pentru o nume de CPE.
 	
 	\begin{listing}[H]
 		\begin{minted}[style=perldoc]{js}
@@ -283,7 +287,7 @@
 		\label{ciscotokens_ro}
 	\end{listing}
 	
-	Prin procesul de identificare pe baza de CPE, structura prezentată cu token-urile al numelor CPE este reiterată în primul rând până cuvintele specifice al aplicației se potrivesc în totalitate. Dacă se găsește o potrivire completă, versiunile asociate aplicației sunt reiterate, cautând o potrivire. Dacă s-a găsit o potrivire și printre numerele de versiuni, dar există cuvinte specifice al versiunii, și aceste trebuie să se potrivesc în totalitate ca numele CPE să fie returnat ca o potrivire.
+	Prin procesul de identificare pe baza de CPE, structura prezentată cu token-urile al numelor CPE este reiterată în primul rând până cuvintele specifice al aplicației se potrivesc în totalitate. Dacă se găsește o potrivire completă, versiunile asociate aplicației sunt reiterate, cautând o potrivire. Dacă s-a găsit o potrivire și printre numerele de versiuni, dar există o listă cu cuvinte specifice ale versiunii, și aceste trebuie să se potrivesc în totalitate ca numele CPE să fie returnat ca o potrivire.
 
 \section*{Rezultate}
 
