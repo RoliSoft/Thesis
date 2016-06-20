@@ -1355,7 +1355,7 @@
 		\label{seqregex}
 	\end{figure}
 	
-\subsubsection{Inferring Products Without Express Announcement}
+\subsubsection{Inferring Products Without Express Announcement} \label{infernoname}
 \subsubsectionhu{Identitás Kikövetkeztetése Névhírdetés Nélkül} \subsubsectionro{Deducerea Identității fără Anunțul cu Nume}
 	
 	While the example presented in listing \ref{nginxregex} is rather straight-forward, the pattern matcher method can be used in a more subtle way, for example, to match software which is not advertising their name or version number.
@@ -1865,6 +1865,249 @@
 \subsection{Data Preprocessing} \label{preproc}
 \subsectionhu{Adatok Előfeldolgozása} \subsectionro{Preprocesarea Datelor}
 
+	The data being used by the application is first processed and converted into another format from the various sources. This is being done for multiple reasons. First and foremost, to harmonize the databases from the various XML, JSON, CSV and arbitrary plain-text formats to a generic binary format. The binary format is preferred due to performance and memory efficiency, which are important factors considering the wide range of environments the application is planned to be ran in, ranging from small VPSes to being virtualized in mobile devices\cite{nethunter14}.
+	
+	The preprocessor component is a separate project, comprised of shell and Go scripts, which download the freshest available data and then convert it into the requested format. As noted in section \ref{impl}, these scripts are available from a different repository, and they are under a permissive non-copyleft license, as opposed to the other components. This change was made in order to allow the reuse of the scripts and generated output in 3$^{rd}$-party projects, without any restrictions.
+
+	The file format which the source data is converted to is a generic binary format. All the data file types start with the header shown in listing \ref{binhdr}. The ``Package type'' field denotes which parser should follow, and ``Package version'' is useful for allowing future modifications to the format, as clearly denoting the version number allows the parser to decide whether the format is supported, or if any workarounds are required to be used during parsing.
+
+	\begin{listing}[H]
+		\begin{minted}{matlab}
+			+ uint16      Package type
+			| uint16      Package version
+			+[uint32      Number of entries]
+		\end{minted}
+		\caption{Header of the utilized binary format}
+		\label{binhdr}
+	\end{listing}
+
+	All integers are written in little-endian format. This endianness has been chosen due to the fact that Intel x86 and x86-64 architectures are little-endian, thereby excluding the need to convert each integer during read. However, the \mintinline{cpp}{DataReader} component has compile-time checks to include endian conversion in case the target architecture is big-endian.
+
+	\begin{listing}[H]
+		\begin{minted}[escapeinside=$$]{matlab}
+			+ uint16      String len$$gth
+			+- char       Characters
+		\end{minted}
+		\caption{String storage in the binary format}
+		\label{binstr}
+	\end{listing}
+	
+	Binary data (such as UDP payloads) and arbitrary strings are stored with a leading length indicator and no trailing \mintinline{cpp}{NULL} terminator, as shown in listing \ref{binstr}. It should be important to note that this convention only allows for 65,535 bytes to be stored per field. At this time, this was not an issue since no fields across the datasets exceeded this limit, and adhering to the YAGNI principle\cite{shore08} it is not implemented, however if it does become one, this will be solved in a backward-compatible way, where a length of \mintinline{cpp}{USHRT_MAX} will instruct the parser to read additional fields of \mintinline{cpp}{uint16} until a value smaller than the maximum is met, and sum them to create the final length of the string to be read.
+
+\subsubsection{CPE Dictionary}
+\subsubsectionhu{CPE Szótár} \subsubsectionro{Dicționarul CPE}
+
+	The \mintinline{bash}{cpe2hs.go} script converts NIST's official CPE dictionary from the published XML format to the binary format in use by the application.
+	
+	Listing \ref{bincpedict} presents the binary format -- including the header and its values -- which is used to store the data on the disk.
+	
+	\begin{listing}[H]
+		\begin{minted}{matlab}
+			+ uint16      Package type [0x0100]
+			| uint16      Package version [0x0100]
+			| uint32      Number of entries
+			+- string     CPE name
+			 | uint8      Number of common tokens
+			 +- string    Token
+			 | uint32     Number of versions
+			 +- string    CPE version
+			  | string    Version token
+			  | uint8     Number of version-specific tokens
+			  +- string   Token
+		\end{minted}
+		\caption{Binary format of the CPE dictionary}
+		\label{bincpedict}
+	\end{listing}
+	
+	Previously discussed in section \ref{matchcpe}, listing \ref{nginxcpe} presents a sample entry from the XML format being converted, while listing \ref{ciscotokens} presents the approximate internal representation of a sample entry from this file as it is being stored in the memory after being read.
+
+\subsubsection{CPE Aliases}
+\subsubsectionhu{CPE Szinonimák} \subsubsectionro{Sinonime CPE}
+
+	Since NIST's CVE database may use multiple CPE names to refer to the same application, the \mintinline{bash}{cpealt2hs.go} script convert's a list of known CPE aliases to the binary format in use by the application.
+	
+	As an example, the server software ``nginx'' may appear as both \mintinline{matlab}{cpe:/a:nginx:nginx} and \mintinline{matlab}{cpe:/a:igor_sysoev:nginx} amongst the CVE entries. However, there are more extreme cases, such as ``X11'', which has 12 CPE names all referring to the same software package:
+	
+	\begingroup
+	\linespread{1}
+	\setlength{\parskip}{0em}
+	\setlist[itemize]{itemsep=-5pt}
+	\begin{itemize}
+		\item \mintinline{matlab}{cpe:/a:x:x.org}
+		\item \mintinline{matlab}{cpe:/a:x.org:libx11}
+		\item \mintinline{matlab}{cpe:/a:x.org:x.org}
+		\item \mintinline{matlab}{cpe:/a:x.org:x11}
+		\item \mintinline{matlab}{cpe:/a:x.org:x11r6}
+		\item \mintinline{matlab}{cpe:/a:x.org:x11r7}
+		\item \mintinline{matlab}{cpe:/a:x.org:xorg-server}
+		\item \mintinline{matlab}{cpe:/a:x.org:xserver}
+		\item \mintinline{matlab}{cpe:/a:x:x11}
+		\item \mintinline{matlab}{cpe:/a:xfree86_project:x11r6}
+		\item \mintinline{matlab}{cpe:/a:xfree86_project:xfree86}
+		\item \mintinline{matlab}{cpe:/a:xorg:x11}
+	\end{itemize}
+	\endgroup
+		
+	Listing \ref{bincpealias} presents the binary format -- including the header and its values -- which is used to store the data on the disk.
+	
+	\begin{listing}[H]
+		\begin{minted}{matlab}
+			+ uint16      Package type [0x0200]
+			| uint16      Package version [0x0100]
+			| uint32      Number of entries
+			+- uint16     Number of aliases in entry
+			 +- string    CPE name
+		\end{minted}
+		\caption{Binary format of the CPE alias list}
+		\label{bincpealias}
+	\end{listing}
+	
+	The internal representation of the CPE alias list is shown in listing \ref{jscpealias}. The author of the data is Debian's Security Tracker team, as mentioned in section \ref{vulnvalid}, and can be freely used under the same license as the scripts themselves. 
+	
+	\begin{listing}[H]
+		\begin{minted}[style=perldoc]{js}
+			[
+				[
+					"cpe:/a:asterisk:asterisk",
+					"cpe:/a:asterisk:open_source",
+					"cpe:/a:asterisk:p_b_x",
+					"cpe:/a:digium:asterisk"
+				],
+				[
+					"cpe:/a:clamav:clamav",
+					"cpe:/a:cclamav:clamav",
+					"cpe:/a:clam_anti-virus:clamav",
+					"cpe:/a:clamavs:clamav"
+				],
+				[
+					"cpe:/a:nginx:nginx",
+					"cpe:/a:igor_sysoev:nginx"
+				],
+				// [further entries omitted]
+			]
+		\end{minted}
+		\caption{Approximate internal representation of the CPE alias list}
+		\label{jscpealias}
+	\end{listing}
+
+\subsubsection{UDP Payloads}
+\subsubsectionhu{UDP Csomagok} \subsubsectionro{Pachete UDP}
+
+	As discussed in section \ref{udpscan}, there needs to exist a list of known UDP payloads associated to their standardized port numbers in order to make sure the service behind the port answers the scanning effort. Two scripts are provided which read such data and convert to the appropriate binary format in use by the application, namely \mintinline{bash}{nudp2hs.go} and \mintinline{bash}{zudp2hs.go}.
+	
+	Listing \ref{binudpdb} presents the binary format -- including the header and its values -- which is used to store the data on the disk.
+	
+	\begin{listing}[H]
+		\begin{minted}{matlab}
+			+ uint16      Package type [0x0A00]
+			| uint16      Package version [0x0100]
+			| uint32      Number of entries
+			+- string     Payload data
+			 | uint16     Number of ports in entry
+			 +- uint16    Port number
+		\end{minted}
+		\caption{Binary format of the UDP payload database}
+		\label{binudpdb}
+	\end{listing}
+	
+	The internal representation of the UDP payloads database is shown in listing \ref{jsudpdb}, as it is being stored in memory after being read from disk. The example entries were picked to showcase the varying type of payloads that are being stored and used.
+	
+	\begin{listing}[H]
+		\begin{minted}[breakanywhere=true,style=perldoc]{js}
+			[
+				{
+					"Ports": [ 53 ],
+					"Data": "4\ufffd\u0001\u0000\u0000\u0001\u0000\u0000\u0000\u0000\u0000\u0000\u0007VERSION\u0004BIND\u0000\u0000\u0010\u0000\u0003"
+				},
+				{
+					"Ports": [ 1900 ],
+					"Data": "M-SEARCH * HTTP/1.1\r\nHost:239.255.255.250:1900\r\nST:upnp:rootdevice\r\nMan:\"ssdp:discover\"\r\nMX:3\r\n\r\n\r\n"
+				},
+				{
+					"Ports": [
+						27910,
+						27911,
+						27912,
+						27913,
+						27914
+					],
+					"Data": "\ufffd\ufffd\ufffd\ufffdstatus"
+				},
+				// [further entries omitted]
+			]
+		\end{minted}
+		\caption{Approximate internal representation of the UDP payload database}
+		\label{jsudpdb}
+	\end{listing}
+	
+	The \mintinline{bash}{nudp2hs.go} script takes a \textit{plain-text file} as an input, where each entry starts on a new line with a comma-separated list of port numbers or ranges, followed by a quoted string containing the payload, which may span across multiple lines for easy readability and maintenance.
+	
+	The \mintinline{bash}{zudp2hs.go} script takes a \textit{path} as an input, where it will look for \mintinline{bash}{*.pkt} files. The content of the files are used as the payload, and the file name is expected to contain the list of port numbers, separated by an underscore in case there are multiple.
+	
+	The \mintinline{bash}{get.sh} script may be used to download the UDP database of \textit{nmap} and \textit{zmap}, as discussed in section \ref{nmapscan}. The license of both applications, and their respective databases, are compatible with the license of the application developed within the scope of the thesis, as such they can be freely used.
+
+\subsubsection{Regular Expression Database}
+\subsubsectionhu{Reguláris Kifejezés Adatbázis} \subsubsectionro{Baza de Date cu Expresii Regulate}
+
+	The database discussed in this section provides the entries for the pattern-matching component discussed in section \ref{patternmatch}. Similarly to the previous section, two scripts are provided which read such data and convert to the appropriate binary format in use by the application, namely \mintinline{bash}{ncpe2hs.go} and \mintinline{bash}{bsvr2hs.go}.
+	
+	Listing \ref{binudpdb} presents the binary format -- including the header and its values -- which is used to store the data on the disk.
+	
+	\begin{listing}[H]
+		\begin{minted}{matlab}
+			+ uint16      Package type [0x0F00]
+			| uint16      Package version [0x0100]
+			| uint32      Number of entries
+			+- string     Regular expression
+			 | string     CPE name
+			 | string     Product
+			 + string     Version
+		\end{minted}
+		\caption{Binary format of the service regular expression database}
+		\label{binrgxdb}
+	\end{listing}
+	
+	The internal representation of the regular expression database is shown in listing \ref{jsrgxdb}, as it is being stored in memory after being read from disk.
+	
+	The first two showcased entries are simple matches to the HTTP responses generated by the server software ``nginx''. This regular expression is also shown as an example in the section regarding the pattern matcher, in listing \ref{nginxregex}. The last entry matches a software-specific string, without the name of the software itself. This specific edge case is discussed in section \ref{infernoname}, where a different example is shown in listing \ref{eximregex}, for a different server software, however, the underlying concept is the same here as well.
+	
+	The \mintinline{bash}{ncpe2hs.go} script takes a \textit{plain-text file} as an input, where each entry starts on a new line with a protocol name, followed by an escaped string containing the regular expression. The line may contain additional fields after the regular expression, such as the CPE name and the version of the software, which is either a static string or a variable referencing a capture group from the regular expression. This format is the same as \textit{nmap}'s database format, as such, the ``service probes'' file may be converted for use within the application.
+	
+	The \mintinline{bash}{bsvr2hs.go} script is a simplified version, taking a \textit{tab-separated file} as an input, where the first column is the regular expression, the second column denotes the optional number of the capturing group inside the regular expression responsible for capturing the version number, while the third column is the CPE field.
+	
+	The \mintinline{bash}{get.sh} script may be used to download the database of \textit{nmap}, as discussed in section \ref{nmapscan}. The license of the application and its database, are compatible with the license of the application developed within the scope of the thesis, as such they can be freely used.
+	
+	\begin{listing}[H]
+		\begin{minted}[escapeinside=$$,style=perldoc]{js}
+			[
+				// simple entry to match nginx
+				{
+					"Regex": "^HTTP/1\\.[01] \\d\\d\\d.*\\r\\nServer: nginx\\r\\n",
+					"CPE": "a:nginx:nginx",
+					"Product": "nginx",
+					"Version": ""
+				},
+				// match nginx and extract version number from group 1
+				{
+					"Regex": "^HTTP/1\\.[01] \\d\\d\\d.*\\r\\nServer: nginx/([\\d.]+)\\r\\n",
+					"CPE": "a:nginx:nginx:$1",
+					"Product": "nginx",
+					"Version": "$1"
+				},
+				// match nginx $\textbf{without}$ its name, based on software-specific string
+				{
+					"Regex": "^HTTP/1.1 400 Bad Request\\r\\n.*The plain HTTP request was sent to HTTPS port",
+					"CPE": "a:nginx:nginx",
+					"Product": "nginx",
+					"Version": ""
+				},
+				// [further entries omitted]
+			]
+		\end{minted}
+		\caption{Approximate internal representation of the service regular expression database}
+		\label{jsrgxdb}
+	\end{listing}
+
 \subsubsection{Vulnerability Database}
 \subsubsectionhu{Sebezhetőségi Adatbázis} \subsubsectionro{Baza de Date cu Vulnerabilități}
 
@@ -1922,63 +2165,6 @@
 		\caption{Sample entries of the ``Vulns'' table}
 		\label{dbvulns}
 	\end{table}
-
-	\begin{listing}[H]
-		\begin{minted}{matlab}
-			+ uint16      Package type [0x0100]
-			| uint16      Package version [0x0100]
-			| uint32      Number of entries
-			+- string     CPE name
-			 | uint8      Number of common tokens
-			 +- string    Token
-			 | uint32     Number of versions
-			 +- string    CPE version
-			  | string    Version token
-			  | uint8     Number of version-specific tokens
-			  +- string   Token
-		\end{minted}
-		\caption{Binary format of the CPE dictionary}
-		\label{bincpedict}
-	\end{listing}
-
-	\begin{listing}[H]
-		\begin{minted}{matlab}
-			+ uint16      Package type [0x0200]
-			| uint16      Package version [0x0100]
-			| uint32      Number of entries
-			+- uint16     Number of aliases in entry
-			 +- string    CPE name
-		\end{minted}
-		\caption{Binary format of the CPE alias list}
-		\label{bincpealias}
-	\end{listing}
-
-	\begin{listing}[H]
-		\begin{minted}{matlab}
-			+ uint16      Package type [0x0A00]
-			| uint16      Package version [0x0100]
-			| uint32      Number of entries
-			+- string     Payload data
-			 | uint16     Number of ports in entry
-			 +- uint16    Port number
-		\end{minted}
-		\caption{Binary format of the UDP payload database}
-		\label{binudpdb}
-	\end{listing}
-
-	\begin{listing}[H]
-		\begin{minted}{matlab}
-			+ uint16      Package type [0x0F00]
-			| uint16      Package version [0x0100]
-			| uint32      Number of entries
-			+- string     Regular expression
-			 | string     CPE name
-			 | string     Product
-			 + string     Version
-		\end{minted}
-		\caption{Binary format of the service regular expression database}
-		\label{binrgxdb}
-	\end{listing}
 
 \section{User Guide}
 \sectionhu{Használati Útmutató} \sectionro{Ghid de Utilizare}
