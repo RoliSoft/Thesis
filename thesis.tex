@@ -874,6 +874,8 @@
 	
 	Unfortunately, this method limits the number of discoverable services to those with a known payload, and even in those cases, it only works when the server is listening on its default designated port number. In cases where a scan of a port not in the database is requested, the scanner sends a UDP packet consisting of 16 \mintinline{cpp}{NULL} bytes, however, the chances of a server replying to this packet are slim.
 	
+	The payloads database is revisited and discussed in greater detail in section \ref{datudp}.
+	
 	As these packets are static bytes and generally request system information or server metadata, which may not be a part of the general use-case flow of the protocol, some intrusion detection systems actively monitor for such UDP packets and trigger alerts if found.
 	
 	Listing \ref{mssqlsnort} shows the hexadecimal dump of a UDP packet which, when sent to port 1434, will trigger the popular open-source intrusion detection system Snort\cite{snort49}.
@@ -898,7 +900,6 @@
 	
 	For the purposes of host aliveness detection, an ICMP `PortUnreachable' message to a random UDP port informs the scanner that the host is in fact online, but that specific port is not, as opposed to an ICMP `HostUnreachable' message, which is sometimes sent by a router along the way to the host, informing the scanner that the host is not online.
 
-\newpage
 \subsection{Passive Reconnaissance} \label{passive}
 \subsectionhu{Passzív Feltérképezés} \subsectionro{Scanare Pasivă}
 
@@ -906,6 +907,7 @@
 	
 	Such feat can be achieved by utilizing $3^{rd}$-party services which scan the public IP address space on a regular basis and make the results available either in a downloadable database dump or a publicly consumable API format.
 
+\newpage
 \subsubsection{Shodan} \label{shodan}
 \subsubsectionhu{Shodan} \subsubsectionro{Shodan}
 
@@ -1346,7 +1348,7 @@
 	This behavior is different from the matcher described in section \ref{matchcpe}: whereas here a CPE name can be produced with high confidence with or without a known version number, the CPE dictionary-based matcher \textit{requires} a known version number, since it plays a pivotal role in the identifying and scoring process.
 	
 	Figure \ref{seqregex} represents the sequence diagram for the process of pattern-matching unidentified service banners. The ``BannerProcessor'' component of the sequence diagram acts as an intermediary, making sure to merge the returned information properly from the ``ServiceRegexMatcher'' component into the host object, as the latter class only contains the regular expression matching implementation.
-		
+	
 	\begin{figure}[!htbp]
 		%	@startuml
 		%	Application -> BannerProcessor: service banners
@@ -1387,6 +1389,8 @@
 		\caption{Sequence diagram for Pattern-based Matching of Service Banners}
 		\label{seqregex}
 	\end{figure}
+	
+	The regular expression database is revisited and discussed in greater detail in section \ref{datregex}.
 	
 \subsubsection{Inferring Products Without Express Announcement} \label{infernoname}
 \subsubsectionhu{Identitás Kikövetkeztetése Névhírdetés Nélkül} \subsubsectionro{Deducerea Identității fără Anunțul cu Nume}
@@ -1476,6 +1480,8 @@
 \subsubsectionhu{Kivitelezés Áttekintése} \subsubsectionro{Prezentare Generală}
 	
 	The current implementation of the CPE matcher component loads a preprocessed version of the CPE dictionary into its memory, where the CPE names are tokenized, and irrelevant data (such as product links) are stripped for memory efficiency. Listing \ref{ciscotokens} presents the tokens loaded into memory for an example CPE name. For the exact implementation, see the structures within the header file of the \mintinline{cpp}{CpeDictionaryMatcher} class.
+	
+	The CPE dictionary is revisited in section \ref{datcpe}, discussing the preprocessing of the published data into a harmonized binary data format for performance and memory efficiency.
 	
 	\begin{listing}[H]
 		\begin{minted}[style=perldoc]{js}
@@ -1778,6 +1784,8 @@
 	
 	Section \ref{matchcpe} briefly introduces the CPE notation, giving an example to ``nginx 1.9.9'' in listing \ref{nginxcpe}. Continuing this example, listing \ref{nginxcve} presents the raw XML entry for the CVE item ``CVE-2016-0742'', which affects the aforementioned server software by having its CPE name in the list of vulnerable software.
 	
+	The CVE database is revisited in section \ref{datcve}, discussing the preprocessing of the published data into a relational SQL database format for performance and memory efficiency.
+	
 	\begin{listing}[H]
 		\begin{minted}[style=borland]{xml}
 			<entry id="CVE-2016-0742">
@@ -1927,7 +1935,7 @@
 	
 	Binary data (such as UDP payloads) and arbitrary strings are stored with a leading length indicator and no trailing \mintinline{cpp}{NULL} terminator, as shown in listing \ref{binstr}. It should be important to note that this convention only allows for 65,535 bytes to be stored per field. At this time, this was not an issue since no fields across the datasets exceeded this limit, and adhering to the YAGNI principle\cite{shore08} it is not implemented, however if it does become one, this will be solved in a backward-compatible way, where a length of \mintinline{cpp}{USHRT_MAX} will instruct the parser to read additional fields of \mintinline{cpp}{uint16} until a value smaller than the maximum is met, and sum them to create the final length of the string to be read.
 
-\subsubsection{CPE Dictionary}
+\subsubsection{CPE Dictionary} \label{datcpe}
 \subsubsectionhu{CPE Szótár} \subsubsectionro{Dicționarul CPE}
 
 	The \mintinline{bash}{cpe2hs.go} script converts NIST's official CPE dictionary from the published XML format to the binary format in use by the application.
@@ -2023,7 +2031,7 @@
 		\label{jscpealias}
 	\end{listing}
 
-\subsubsection{UDP Payloads}
+\subsubsection{UDP Payloads} \label{datudp}
 \subsubsectionhu{UDP Csomagok} \subsubsectionro{Pachete UDP}
 
 	As discussed in section \ref{udpscan}, there needs to exist a list of known UDP payloads associated to their standardized port numbers in order to make sure the service behind the port answers the scanning effort. Two scripts are provided which read such data and convert to the appropriate binary format in use by the application, namely \mintinline{bash}{nudp2hs.go} and \mintinline{bash}{zudp2hs.go}.
@@ -2079,7 +2087,7 @@
 	
 	The \mintinline{bash}{get.sh} script may be used to download the UDP database of \textit{nmap} and \textit{zmap}, as discussed in section \ref{nmapscan}. The license of both applications, and their respective databases, are compatible with the license of the application developed within the scope of the thesis, as such they can be freely used.
 
-\subsubsection{Regular Expression Database}
+\subsubsection{Regular Expression Database} \label{datregex}
 \subsubsectionhu{Reguláris Kifejezés Adatbázis} \subsubsectionro{Baza de Date cu Expresii Regulate}
 
 	The database discussed in this section provides the entries for the pattern-matching component discussed in section \ref{patternmatch}. Similarly to the previous section, two scripts are provided which read such data and convert to the appropriate binary format in use by the application, namely \mintinline{bash}{ncpe2hs.go} and \mintinline{bash}{bsvr2hs.go}.
@@ -2141,7 +2149,7 @@
 		\label{jsrgxdb}
 	\end{listing}
 
-\subsubsection{Vulnerability Database}
+\subsubsection{Vulnerability Database} \label{datcve}
 \subsubsectionhu{Sebezhetőségi Adatbázis} \subsubsectionro{Baza de Date cu Vulnerabilități}
 
 	Initially the vulnerability database used a binary format similar to the ones discussed in the previous sections. However, loading all the required information into the memory resulted in a memory usage of 2 GB, and when run with a debugger attached, the data loader function took 30 seconds to execute, thereby making debugging more difficult due to the introduced penalty to application restarts.
