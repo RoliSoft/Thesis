@@ -523,6 +523,41 @@
 	
 	The target audience of the project should be as wide as possible. It should be a useful tool for security researchers, security consultants and system administrators alike, even without requiring much security experience from the former group.
 	
+	\begin{figure}[!htbp]
+		\centering
+		\begin{tikzpicture}
+\draw  (-2.5,2) rectangle (3,-6);
+\node[align=center] at (-5.25,1.25) {\fontsize{30}{30}\selectfont \faUser};
+\node at (-1.25,1.5) {\underline{Application}};
+\draw [es](-4.25,1) -- (-3,1);
+\draw [es] (-2,1) rectangle (2.5,0);
+\node at (0.25,0.5) {Scanner Components};
+\node[align=center] at (5.25,-0.0625) {\fontsize{30}{30}\selectfont \faGlobe};
+\node[align=center] at (8.5,-0.0625) {\fontsize{30}{30}\selectfont \faServer};
+\draw [es](2.625,0.5) -- (4.25,0.125);
+\draw [es](6.25,0.125) -- (7.5,0.125);
+\draw [es] (-2,-0.5) rectangle (2.5,-1.5);
+\node at (0.25,-1) {Service Identification};
+\draw [es](4.25,-0.375) -- (2.625,-1);
+\draw [es](7.5,-0.375) -- (6.25,-0.375);
+\draw [es] (-2,-2.5) rectangle (2.5,-3.5);
+\node at (0.25,-3) {Vulnerability Analysis};
+\draw [es](0.25,-1.75) -- (0.25,-2.25);
+\draw [es] (-2,-4.5) rectangle (2.5,-5.5);
+\node at (0.25,-5) {Report Generation};
+\draw [es](0.25,-3.75) -- (0.25,-4.25);
+\node[align=center] at (-5.25,-4.75) {\fontsize{30}{30}\selectfont \faFileText};
+\draw [es](-3,-5) -- (-4.25,-5);
+\draw [es](-5.25,-3.625) -- (-5.25,-0.375);
+\node at (-5.25,0.375) {User};
+\node at (-5.25,-5.75) {Report};
+\node at (5.25,-0.9375) {Internet};
+\node at (8.5,-0.9375) {Subnet};
+		\end{tikzpicture}
+		\caption{Block diagram of the proposed application}
+		\label{blockdiag}
+	\end{figure}
+	
 \subsection{Data Acquisition}
 \subsectionhu{Adatgyűjtés} \subsectionro{Achiziție de Date}
 	
