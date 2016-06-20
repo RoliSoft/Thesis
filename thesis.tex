@@ -14,7 +14,7 @@
 %
 
 \begingroup
-	\include{romanian}
+	%\include{romanian}
 \endgroup
 
 \clearcontents
@@ -24,7 +24,7 @@
 %
 
 \begingroup
-	\include{hungarian}
+	%\include{hungarian}
 \endgroup
 
 \clearcontents
@@ -89,8 +89,6 @@
 	\hypersetup{linkcolor=lightblue}
 	\tableofcontents
 	\endgroup
-
-	\newpage
 
 	\begingroup
 	\hypersetup{linkcolor=lightblue}
@@ -1051,7 +1049,7 @@
 			\node (v3_3_1) at (6,-7) {};
 			\draw [triangle 60-triangle 60] (v5) edge (v3_3_1);
 		\end{tikzpicture}
-		\caption{Class Hierarchy of Data Reconnaissance Components}
+		\caption{Class hierarchy of Data Reconnaissance components}
 		\label{classhierdata}
 	\end{figure}
 	\endgroup
@@ -1088,7 +1086,7 @@
 			\node at (4.25,1.25) {Finished with Task};
 			\draw [es] plot[smooth, tension=.7] coordinates {(3.15,-0.4) (3.55,-1.2) (3.1,-1.8) (1.75,-2)};
 		\end{tikzpicture}
-		\caption{Consumer-Producer Queue Process for Tasks}
+		\caption{Consumer-producer queue process for Tasks}
 		\label{taskqueue}
 	\end{figure}
 	
@@ -1165,7 +1163,7 @@
 			\draw[dash pattern=on 2.0pt off 2.0pt] (56.5pt,162.6641pt) -- (350pt,162.6641pt);
 			\node at (68.5pt,144.6641pt)[below right]{results of tasks};
 		\end{tikzpicture}
-		\caption{Sequence Diagram for Task Instantiation and Multiplexed Execution}
+		\caption{Sequence diagram for Task Instantiation and Multiplexed Execution}
 		\label{seqtasks}
 	\end{figure}
 	
@@ -1223,7 +1221,7 @@
 			\draw[dash pattern=on 2.0pt off 2.0pt] (79pt,162.6641pt) -- (351.5pt,162.6641pt);
 			\node at (91pt,144.6641pt)[below right]{return tokens};
 		\end{tikzpicture}
-		\caption{Sequence Diagram for Protocol-based Tokenization of Service Banners}
+		\caption{Sequence diagram for Protocol-based Tokenization of Service Banners}
 		\label{seqtokenize}
 	\end{figure}
 	
@@ -1351,7 +1349,7 @@
 			\draw[dash pattern=on 2.0pt off 2.0pt] (56.5pt,162.6641pt) -- (168pt,162.6641pt);
 			\node at (68.5pt,144.6641pt)[below right]{return CPE};
 		\end{tikzpicture}
-		\caption{Sequence Diagram for Pattern-based Matching of Service Banners}
+		\caption{Sequence diagram for Pattern-based Matching of Service Banners}
 		\label{seqregex}
 	\end{figure}
 	
@@ -1534,7 +1532,7 @@
 			\draw[dash pattern=on 2.0pt off 2.0pt] (56.5pt,223.3672pt) -- (168pt,223.3672pt);
 			\node at (68.5pt,205.3672pt)[below right]{return CPE};
 		\end{tikzpicture}
-		\caption{Sequence Diagram for CPE Token-based Matching of Service Banners}
+		\caption{Sequence diagram for CPE Token-based Matching of Service Banners}
 		\label{seqtoken}
 	\end{figure}
 	
@@ -1683,7 +1681,7 @@
 			\draw[dash pattern=on 2.0pt off 2.0pt] (56.5pt,162.6641pt) -- (207.5pt,162.6641pt);
 			\node at (68.5pt,144.6641pt)[below right]{return OS CPE};
 		\end{tikzpicture}
-		\caption{Sequence Diagram for Operating System Identification}
+		\caption{Sequence diagram for Operating System Identification}
 		\label{seqos}
 	\end{figure}
 	
@@ -1739,7 +1737,7 @@
 			\draw (56.5pt,162.6641pt) -- (209.5pt,162.6641pt);
 			\node at (68.5pt,144.6641pt)[below right]{return processed CVEs};
 		\end{tikzpicture}
-		\caption{Sequence Diagram for Vulnerability Lookup}
+		\caption{Sequence diagram for Vulnerability Lookup}
 		\label{seqnvd}
 	\end{figure}
 	
@@ -1841,7 +1839,7 @@
 			\draw[dash pattern=on 2.0pt off 2.0pt] (56.5pt,162.6641pt) -- (356pt,162.6641pt);
 			\node at (68.5pt,144.6641pt)[below right]{return metadata};
 		\end{tikzpicture}
-		\caption{Sequence Diagram for Package Manager-based Vulnerability Validation}
+		\caption{Sequence diagram for Package Manager-based Vulnerability Validation}
 		\label{seqvuln}
 	\end{figure}
 
@@ -2104,7 +2102,7 @@
 				// [further entries omitted]
 			]
 		\end{minted}
-		\caption{Approximate internal representation of the service regular expression database}
+		\caption{Approximate internal representation of the regular expression database}
 		\label{jsrgxdb}
 	\end{listing}
 
@@ -2467,7 +2465,7 @@ arguments:
 			\multicolumn{1}{|r|}{\textbf{Identifiable}} & 143            & 145            & 402           & 112         & 148         & 352         & 24          & 8           & 58          & 9           & 9           \\
 			\multicolumn{1}{|r|}{\textbf{Identified}}   & 140            & 137            & 394           & 109         & 139         & 348         & 24          & 8           & 58          & 9           & 9           \\ \hline
 		\end{tabular}
-		\caption{Identifiable services and the number of CPE names identified by the application}
+		\caption{Number of identifiable and identified CPE names by the application}
 		\label{cpeids}
 	\end{table}
 	
