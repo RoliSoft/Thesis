@@ -1884,8 +1884,8 @@
 	All integers are written in little-endian format. This endianness has been chosen due to the fact that Intel x86 and x86-64 architectures are little-endian, thereby excluding the need to convert each integer during read. However, the \mintinline{cpp}{DataReader} component has compile-time checks to include endian conversion in case the target architecture is big-endian.
 
 	\begin{listing}[H]
-		\begin{minted}[escapeinside=$$]{matlab}
-			+ uint16      String len$$gth
+		\begin{minted}[escapeinside=||]{matlab}
+			+ uint16      String len||gth
 			+- char       Characters
 		\end{minted}
 		\caption{String storage in the binary format}
@@ -2078,7 +2078,7 @@
 	The \mintinline{bash}{get.sh} script may be used to download the database of \textit{nmap}, as discussed in section \ref{nmapscan}. The license of the application and its database, are compatible with the license of the application developed within the scope of the thesis, as such they can be freely used.
 	
 	\begin{listing}[H]
-		\begin{minted}[escapeinside=$$,style=perldoc]{js}
+		\begin{minted}[escapeinside=||,style=perldoc]{js}
 			[
 				// simple entry to match nginx
 				{
@@ -2094,7 +2094,7 @@
 					"Product": "nginx",
 					"Version": "$1"
 				},
-				// match nginx $\textbf{without}$ its name, based on software-specific string
+				// match nginx |\textbf{without}| its name, based on software-specific string
 				{
 					"Regex": "^HTTP/1.1 400 Bad Request\\r\\n.*The plain HTTP request was sent to HTTPS port",
 					"CPE": "a:nginx:nginx",
@@ -2316,7 +2316,7 @@
 \subsection{Command Line Options} \label{cliopts}
 \subsectionhu{Parancssori Opciók} \subsectionro{Opțiuni ale Interfeței CLI}
 
-	\begin{minted}[linenos=false,bgcolor=,xleftmargin=30pt]{batch}
+	\begin{minted}[linenos=false,bgcolor=,escapeinside=||,xleftmargin=30pt]{batch}
 usage:		HostScanner [args] targets
 arguments:
 
@@ -2352,33 +2352,33 @@ arguments:
 
 --shodan-key arg
 
-  Specifies an API key for Shodan.
+  Specifies an API key f||or Shodan.
 
 --shodan-uri arg
 
-  Overrides the API endpoint used for Shodan. You may specify an URI
+  Overrides the API endpoint used f||or Shodan. You may specify an URI
     starting with file:// pointing to a directory containing previously
     downloaded JSON responses.
       Default: https://api.shodan.io/shodan
 
 --censys-key arg
 
-  Specifies an API key for Censys in the `uid:secret` format.
+  Specifies an API key f||or Censys in the `uid:secret` format.
 
 --censys-uri arg
 
-  Overrides the API endpoint used for Censys. You may specify an URI
+  Overrides the API endpoint used f||or Censys. You may specify an URI
     starting with file:// pointing to a directory containing previously
     downloaded JSON responses.
       Default: https://censys.io/api/v1
 
 --looquer-key arg
 
-  Specifies an API key for Mr Looquer.
+  Specifies an API key f||or Mr Looquer.
 
 --looquer-uri arg
 
-  Overrides the API endpoint used for Mr Looquer. You may specify an URI
+  Overrides the API endpoint used f||or Mr Looquer. You may specify an URI
     starting with file:// pointing to a directory containing previously
     downloaded JSON responses.
       Default: https://mrlooquer.com/api/v1
@@ -2390,7 +2390,7 @@ arguments:
 
 -d [ --delay ] arg
 
-  Delay between packets sent to the same host. Default is 3 for 100ms.
+  Delay between packets sent to the same host. Default is 3 f||or 100ms.
     Possible values are 0..6, which have the same effect as nmap's -T:
       0 - 5m, 1 - 15s, 2 - 400ms, 3 - 100ms, 4 - 10ms, 5 - 5ms,
       6 - no delay
@@ -2398,7 +2398,7 @@ arguments:
 -r [ --resolve ]
 
   Resolves vulnerable CPE names to their actual package names depending
-    on the automatically detected operating system of the host.
+    o||n the automatically detected operating system of the host.
 
 -o [ --output-latex ] arg
 
