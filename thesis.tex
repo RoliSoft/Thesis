@@ -2111,35 +2111,59 @@
 \subsubsection{Vulnerability Database}
 \subsubsectionhu{Sebezhetőségi Adatbázis} \subsubsectionro{Baza de Date cu Vulnerabilități}
 
+	Initially the vulnerability database used a binary format similar to the ones discussed in the previous sections. However, loading all the required information into the memory resulted in a memory usage of 2 GB, and when run with a debugger attached, the data loader function took 30 seconds to execute, thereby making debugging more difficult due to the introduced penalty to application restarts.
+	
+	To combat the memory usage issues, there were attempts at rewriting the reader component to lazily load the data. However, since the data had to be fully iterated sooner or later during the application's runtime, this attempt did not solve any issues, just delayed them.
+	
+	Ultimately the decision was made to switch to a SQL database for this particular dataset. The other datasets were more optimal being in their own respective binary formats. However, due to the size and query style of this particular dataset, a mature relational database was more fit for the job.
+	
+	The SQL database chosen for this project was SQLite3\cite{hipp07}, a small but mature serverless and embeddable relational database. The database contains two tables, as shown in figure \ref{dbstruct}.
+
 	\begin{figure}[H]
 		\centering
 		\begin{tikzpicture}
-\draw  (-3,2.5) rectangle (0.5,1.5);
-\node at (-1.25,2) {\large \textbf{vulns}};
-\node[align=left] at (-1.25,-0.55) {\underline{\textbf{id}} int,\\\textbf{cve} text,\\\textbf{date} int,\\\textbf{descr} text,\\\textbf{severity} real,\\\textbf{access} char(1)};
-\draw  (-3,1.5) node (v2) {} rectangle (0.5,-2.5);
-\draw  (-8,1.5) rectangle (-5,0.5) node (v1) {};
-\node at (-6.5,1) {\large \textbf{affected}};
-\draw  (-8,0.5) rectangle (-5,-1);
-\node[align=left] at (-6.5,-0.3) {\textbf{cpe} text,\\\textbf{vuln\underline{ }id} int};
-\draw (-5,0) -- (-3,0);
-\draw (-4.875,0.1875) -- (-4.875,-0.1875);
-\draw (-4.7188,0.1875) -- (-4.7188,-0.1875);
-\draw (-3.3125,0) -- (-3,0.1875);
-\draw (-3.3125,0) -- (-3,-0.1875);
+			\draw  (-3,2.5) rectangle (0.5,1.5);
+			\node at (-1.25,2) {\large \textbf{vulns}};
+			\node[align=left] at (-1.25,-0.55) {\underline{\textbf{id}} int,\\\textbf{cve} text,\\\textbf{date} int,\\\textbf{descr} text,\\\textbf{severity} real,\\\textbf{access} char(1)};
+			\draw  (-3,1.5) node (v2) {} rectangle (0.5,-2.5);
+			\draw  (-8,1.5) rectangle (-5,0.5) node (v1) {};
+			\node at (-6.5,1) {\large \textbf{affected}};
+			\draw  (-8,0.5) rectangle (-5,-1);
+			\node[align=left] at (-6.5,-0.3) {\textbf{cpe} text,\\\textbf{vuln\underline{ }id} int};
+			\draw (-5,0) -- (-3,0);
+			\draw (-4.875,0.1875) -- (-4.875,-0.1875);
+			\draw (-4.7188,0.1875) -- (-4.7188,-0.1875);
+			\draw (-3.3125,0) -- (-3,0.1875);
+			\draw (-3.3125,0) -- (-3,-0.1875);
 		\end{tikzpicture}
 		\caption{Structure of the Vulnerability Database}
 		\label{dbstruct}
 	\end{figure}
-
-	The ``access'' field represents the access vector, and can be:
+	
+	The ``vulns'' table contains the published vulnerabilities imported from the NVD, and their relevant information. Its ``access'' field represents the access vector, which can be:
 	
 	\begin{itemize}
 		\item \mintinline{matlab}{l} for \textbf{local}: physical access or local presence is required to exploit.
 		\item \mintinline{matlab}{a} for \textbf{adjacent}: attacker has to reside on the same local network.
 		\item \mintinline{matlab}{n} for \textbf{network}: vulnerability is remotely exploitable over the Internet.
 	\end{itemize}
-
+	
+	Table \ref{dbvulns} presents two sample entries from the ``vulns'' table.
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{|l|l|l|l|l|l|}
+			\hline
+			\multicolumn{1}{|c|}{\textbf{id}} & \multicolumn{1}{c|}{\textbf{cve}} & \multicolumn{1}{c|}{\textbf{date}} & \multicolumn{1}{c|}{\textbf{descr}} & \multicolumn{1}{c|}{\textbf{severity}} & \multicolumn{1}{c|}{\textbf{access}} \\ \hline
+			75158 & 2016-0747 & 1455566342 & The resolver in ... & 5.0 & n \\
+			75157 & 2016-0746 & 1455566341 & Use-after-free ... & 7.5 & n \\ \hline
+		\end{tabular}
+		\caption{Sample entries of the ``vulns'' table}
+		\label{dbvulns}
+	\end{table}
+	
+	The ``affected'' table contains the associations between the published CPE names and which published CVE vulnerability affects them from the ``vulns'' table. Table \ref{dbaffected} presents four example entries in the ``affected'' table, where the affected CPE names are listed for the example vulnerabilities shown in table \ref{dbvulns}.
+	
 	\begin{table}[H]
 		\centering
 		\begin{tabular}{|l|l|}
@@ -2150,21 +2174,11 @@
 			75157 & cpe:/a:nginx:nginx:1.9.7 \\
 			75157 & cpe:/a:nginx:nginx:1.8.0 \\ \hline
 		\end{tabular}
-		\caption{Sample entries of the ``Affected'' table}
+		\caption{Sample entries of the ``affected'' table}
 		\label{dbaffected}
 	\end{table}
-
-	\begin{table}[H]
-		\centering
-		\begin{tabular}{|l|l|l|l|l|l|}
-			\hline
-			\multicolumn{1}{|c|}{\textbf{id}} & \multicolumn{1}{c|}{\textbf{cve}} & \multicolumn{1}{c|}{\textbf{date}} & \multicolumn{1}{c|}{\textbf{descr}} & \multicolumn{1}{c|}{\textbf{severity}} & \multicolumn{1}{c|}{\textbf{access}} \\ \hline
-			75158 & 2016-0747 & 1455566342 & The resolver in ... & 5.0 & n \\
-			75157 & 2016-0746 & 1455566341 & Use-after-free ... & 7.5 & n \\ \hline
-		\end{tabular}
-		\caption{Sample entries of the ``Vulns'' table}
-		\label{dbvulns}
-	\end{table}
+	
+	The ``cpe'' field of the ``affected'' table is indexed in order to provide optimal prefix search amongst the CPE names. The query plan of each SQL statement run by the application was carefully examined in order to optimize the table structure and index usage for the best possible performance.
 
 \section{User Guide}
 \sectionhu{Használati Útmutató} \sectionro{Ghid de Utilizare}
