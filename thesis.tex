@@ -2233,17 +2233,23 @@
 		\label{unittestscr}
 	\end{figure}
 	
+\newpage
+	
 	Unit testing was also an integral part of the application developed within the scope of this thesis. The application supports multiple platforms -- several Linux distributions, BSD, Mac OS X and Windows -- multiple compilers -- the GNU Compiler Collection, Clang and Microsoft Visual C++ -- all of which required some macro-based tweaks or in some cases, completely new implementations -- as was the case with the ARP ping component discussed in section \ref{arpping}.
+	
+	The unit testing framework used by the application is the \textit{Boost Test} framework, which comes bundled with the Boost library, thus saving an extra dependency, also decreasing the unnecessary complexity of the project when porting to new platforms. The framework provides a solid foundation for writing test cases, and a CLI application for running them. It has also been integrated into the build system used by the project, \textit{CMake}, providing a fluid testing experience for the users.
 	
 	The test cases have been written in such a way as to first test normal functionality, covering all major code paths, and then to test all discovered edge cases, both those that are expected to succeed in the face of unusual inputs, and also those that are expected to fail, to ensure a graceful failure.
 	
-	There are test cases written, such as \mintinline{c++}{MatchCpeDictionary}, which directly test a specific \textit{component} to ensure all edge cases described in section \ref{matchcpe} are handled correctly, and will not break in the future as a result of a change. However, there are also test cases which do not test a specific component, rather test an exposed \textit{functionality}. This is called \textbf{integration testing}\cite{reddy11} and focus testing the interaction of the components as a whole, one such test case being \mintinline{c++}{MatchAuto} in the application. This test receives a set of service banners as an input, and is expected to output a very strict set of CPE names with exact version numbers. In the case of this test, it does not matter which component does the identification. This is used to ensure the functionality as a whole of the application does not break in face of tweaking a single component, and that fail-overs between redundancies are properly handled.
+	There are test cases written, such as \mintinline{c++}{MatchCpeDictionary}, which directly test a specific \textit{component} to ensure all edge cases described in section \ref{matchcpe} are handled correctly, and will not break in the future as a result of a change.
 	
-	One of the main challenges of unit testing the application was the network-oriented nature of it. Under normal circumstances, functionality such as file system, database or network access would be \textit{mocked}\cite{hamill04}. However, the problem in this case is that the implemented components all use the low-level networking API of the operating system. While strictly speaking it would be possible to ``overwrite'' the used low-level function calls to the network stack (such as \mintinline{c++}{connect()} and \mintinline{c++}{send()}), this would only ensure that the tested components receive the proper response from the network stack every time, thus removing the element of environmental discrepancies.
+	However, there are also test cases which do not test a specific component, rather test an exposed \textit{functionality}. This is called \textbf{integration testing}\cite{reddy11} and focus testing the interaction of the components as a whole, one such test case being \mintinline{c++}{MatchAuto} in the application.
 	
-	Since the same functions of the network stack are present and utilized on all three supported platforms, but with the presence of slight changes, such as them exhibiting different behavior even when invoked with the same argumentation. Furthermore, this behavior discrepancy is not only present going from one platform to another, but also between different versions of the same platform. As a result, it was decided that the best course of action for tackling the testing of the network-dependent components would be to not mock the network stack, but rather, use the native network stack of the operating system directly. 
+	This test receives a set of service banners as an input, and is expected to output a very strict set of CPE names with exact version numbers. In the case of this test, it does not matter which component does the identification. This is used to ensure the functionality as a whole of the application does not break in face of tweaking a single component, and that fail-overs between redundancies are properly handled.
 	
-	Unfortunately, this introduces another element of uncertainty, since in order to test the scanners accurately, a known result is needed for the comparison to occur, which means multiple consistent targets are required for the scanners to be pointed at. This issue was solved by pointing the scanners to public services (such as Google's DNS resolver) and various services on servers owned by me, ultimately also to bogon (unroutable/unallocated) addresses for those that are expected to fail. Listing \ref{arptest} presents an example test case.
+	One of the main challenges of unit testing the application was the network-oriented nature of it. Under normal circumstances, functionality such as file system, database or network access would be \textit{mocked}\cite{hamill04}. However, the problem in this case is that the implemented components all use the low-level networking API of the operating system.
+	
+	While strictly speaking it would be possible to ``overwrite'' the used low-level function calls to the network stack (such as \mintinline{c++}{connect()} and \mintinline{c++}{send()}), this would only ensure that the tested components receive the proper response from the network stack every time, thus removing the element of environmental discrepancies.
 	
 	\begin{listing}[H]
 		\begin{minted}{c++}
@@ -2267,14 +2273,24 @@
 		\label{arptest}
 	\end{listing}
 	
+	Since the same functions of the network stack are present and utilized on all three supported platforms, but with the presence of slight changes, such as them exhibiting different behavior even when invoked with the same argumentation. Furthermore, this behavior discrepancy is not only present going from one platform to another, but also between different versions of the same platform.
+	
+	As a result, it was decided that the best course of action for tackling the testing of the network-dependent components would be to not mock the network stack, but rather, use the native network stack of the operating system directly. 
+	
+	Unfortunately, this introduces another element of uncertainty, since in order to test the scanners accurately, a known result is needed for the comparison to occur, which means multiple consistent targets are required for the scanners to be pointed at.
+	
+	This issue was solved by pointing the scanners to public services (such as Google's DNS resolver) and various services on servers owned by me, ultimately also to bogon (unroutable/unallocated) addresses for those that are expected to fail. Listing \ref{arptest} presents an example test case written using this method.
+	
+	An added benefit of using the operating system's network stack and actually sending and receiving packets over the Internet is that it is possible to test for unforeseen factors which might affect the scanner components. One such factor would be the MTU size (``maximum transmission unit'') of the unit test runner's network, which might inhibit the proper functioning of the ICMP pinger or UDP scanner components.
+	
+	While there is no code written to gracefully handle this specific issue, this, and other similar factors, can be tracked down if the test case fails on a new platform amongst perfect conditions.
+	
 	\begin{figure}[H]
 		\centering
 		\includegraphics[scale=0.825]{fuzzing.png}
 		\caption{American Fuzzy Lop fuzzing the UDP payloads database loader}
 		\label{aflsrc}
 	\end{figure}
-	
-\newpage
 	
 	Besides the various functional tests present in the application, \textit{non-functional} aspects are also tested, such as \textit{performance} tests -- ensuring the use of the fastest implementation between components, \textit{failover} tests -- ensuring proper failover where redundancy is available, and \textit{stress} tests -- ensuring proper functioning when scanning a large IP space.
 	
@@ -2340,7 +2356,7 @@
 	\end{listing}
 	
 	\vspace{-0.1in}
-	After the dependencies have been installed, the repository can be checked out and compiled with the following commands:
+	After the dependencies have been installed, the repository can be checked out and compiled with the commands shown in listing \ref{clonebuild}.
 	
 	\begin{listing}[H]
 		\begin{minted}{matlab}
