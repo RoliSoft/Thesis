@@ -2243,7 +2243,7 @@
 	
 	Since the same functions of the network stack are present and utilized on all three supported platforms, but with the presence of slight changes, such as them exhibiting different behavior even when invoked with the same argumentation. Furthermore, this behavior discrepancy is not only present going from one platform to another, but also between different versions of the same platform. As a result, it was decided that the best course of action for tackling the testing of the network-dependent components would be to not mock the network stack, but rather, use the native network stack of the operating system directly. 
 	
-	Unfortunately, this introduces another element of uncertainty, since in order to test the scanners accurately, a known result is needed for the comparison to occur, which means multiple consistent targets are required for the scanners to be pointed at. This issue was solved by pointing the scanners to public services (such as Google's DNS resolver) and various services on servers owned by me, ultimately also to bogon (unroutable/unallocated) addresses for those that are expected to fail. Listing \ref{arptest} presents an example test case written using this method for testing.
+	Unfortunately, this introduces another element of uncertainty, since in order to test the scanners accurately, a known result is needed for the comparison to occur, which means multiple consistent targets are required for the scanners to be pointed at. This issue was solved by pointing the scanners to public services (such as Google's DNS resolver) and various services on servers owned by me, ultimately also to bogon (unroutable/unallocated) addresses for those that are expected to fail. Listing \ref{arptest} presents an example test case.
 	
 	\begin{listing}[H]
 		\begin{minted}{c++}
@@ -2261,22 +2261,24 @@
 			BOOST_TEST_CHECK(!hosts[1]->alive, "192.168.1.254 should not answer.");
 			BOOST_TEST_CHECK(!hosts[2]->alive, "188.166.36.214 should not answer.");
 			
-			// further checks omitted, such as reason for failure
+			// further checks omitted from listing, such as reason for failure
 		\end{minted}
 		\caption{Example test case for the \mintinline{c++}{ArpPinger} component}
 		\label{arptest}
 	\end{listing}
 	
-	Besides the various functional tests present in the application, \textit{non-functional} aspects are also tested, such as \textit{performance} tests -- ensuring the use of the fastest implementation between components, \textit{failover} tests -- ensuring proper failover where redundancy is available, and \textit{stress} tests -- ensuring proper functioning when scanning a large IP space.
-	
-	Continuous integration was also used during the development of the application, with unit test execution on successful builds and \textit{static code analysis} with various free (\textbf{Cppcheck}) and commercial, but free for open-source (\textbf{Coverity}) tools. The importance and advantages of checking the source code with static analyzers is discussed in this thesis as a means of white-box vulnerability assessment, in section \ref{staticcode}.
-	
 	\begin{figure}[H]
 		\centering
-		\includegraphics[scale=0.85]{fuzzing.png}
+		\includegraphics[scale=0.825]{fuzzing.png}
 		\caption{American Fuzzy Lop fuzzing the UDP payloads database loader}
 		\label{aflsrc}
 	\end{figure}
+	
+\newpage
+	
+	Besides the various functional tests present in the application, \textit{non-functional} aspects are also tested, such as \textit{performance} tests -- ensuring the use of the fastest implementation between components, \textit{failover} tests -- ensuring proper failover where redundancy is available, and \textit{stress} tests -- ensuring proper functioning when scanning a large IP space.
+	
+	Continuous integration was also used during the development of the application, with unit test execution on successful builds and \textit{static code analysis} with various free (\textbf{Cppcheck}) and commercial, but free for open-source (\textbf{Coverity}) tools. The importance and advantages of checking the source code with static analyzers is discussed in this thesis as a means of white-box vulnerability assessment, in section \ref{staticcode}.
 	
 	Components taking an input (such as the data loader implementations discussed in \ref{preproc}) were tested using \textbf{afl}\cite{mzalewski15}, a popular \textit{fuzz testing} application, which is mentioned in section \ref{fuzztest} as a means of black-box vulnerability assessment. Furthermore, \textbf{Valgrind} was used during the unit test session runs to ensure no memory leaks occur in the implemented components.
 
