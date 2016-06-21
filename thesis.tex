@@ -403,7 +403,7 @@
 	
 	In order to ensure the continuous security of an application, server or whole infrastructure, proactive measures need to be taken by the competent bodies. These measures generally include periodic scanning of the infrastructure in order to identify possible attack surfaces and test against newly discovered vulnerabilities.
 	
-\subsection{Static Code Analysis}
+\subsection{Static Code Analysis} \label{staticcode}
 \subsectionhu{Statikus Kódelemzés} \subsectionro{Analiză Statică de Cod}
 	
 	One of the ways this can be carried out is through \textit{static analysis} of the source code. This is generally done by an automated tool, and then a software developer goes through the results, reviewing and evaluating the possibly erroneous code in the meantime.
@@ -414,7 +414,7 @@
 	
 	Using static analysis tools have their pros and cons, for example, they can be enforced by integrating it into the build process, but they also have cons, for example, not being able to analyze binaries that have been provided without a source code or the fact that pattern matching cannot account for everything, resulting in \textit{false negatives}. (Also known as, malicious code that was analyzed but not deemed malicious.)
 	
-\subsection{Fuzz Testing}
+\subsection{Fuzz Testing} \label{fuzztest}
 \subsectionhu{``Fuzz'' Tesztelés} \subsectionro{Testare ``Fuzz''}
 	
 	A similar software testing technique that has proven useful in the field of security is \textit{fuzz testing}. This technique feeds random malformed data to the software as input and observes the behavior of the software as a result.
@@ -2220,6 +2220,65 @@
 	\end{table}
 	
 	The ``cpe'' field of the ``affected'' table is indexed in order to provide optimal prefix search amongst the CPE names. The query plan of each SQL statement run by the application was carefully examined in order to optimize the table structure and index usage for the best possible performance.
+
+\subsection{Unit Testing}
+\subsectionhu{Egységtesztelés} \subsectionro{Testare Unitară}
+
+	Unit testing is an integral part of every project in order to ensure new changes do not alter or break the functionality of the existing components in a continuous development life cycle.
+	
+	\begin{figure}[!htbp]
+		\centering
+		\includegraphics[scale=0.75]{unittests.png}
+		\caption{Some of the test cases in the Visual Studio Unit Test runner}
+		\label{unittestscr}
+	\end{figure}
+	
+	Unit testing was also an integral part of the application developed within the scope of this thesis. The application supports multiple platforms -- several Linux distributions, BSD, Mac OS X and Windows -- multiple compilers -- the GNU Compiler Collection, Clang and Microsoft Visual C++ -- all of which required some macro-based tweaks or in some cases, completely new implementations -- as was the case with the ARP ping component discussed in section \ref{arpping}.
+	
+	The test cases have been written in such a way as to first test normal functionality, covering all major code paths, and then to test all discovered edge cases, both those that are expected to succeed in the face of unusual inputs, and also those that are expected to fail, to ensure a graceful failure.
+	
+	There are test cases written, such as \mintinline{c++}{MatchCpeDictionary}, which directly test a specific \textit{component} to ensure all edge cases described in section \ref{matchcpe} are handled correctly, and will not break in the future as a result of a change. However, there are also test cases which do not test a specific component, rather test an exposed \textit{functionality}. This is called \textbf{integration testing}\cite{reddy11} and focus testing the interaction of the components as a whole, one such test case being \mintinline{c++}{MatchAuto} in the application. This test receives a set of service banners as an input, and is expected to output a very strict set of CPE names with exact version numbers. In the case of this test, it does not matter which component does the identification. This is used to ensure the functionality as a whole of the application does not break in face of tweaking a single component, and that fail-overs between redundancies are properly handled.
+	
+	One of the main challenges of unit testing the application was the network-oriented nature of it. Under normal circumstances, functionality such as file system, database or network access would be \textit{mocked}\cite{hamill04}. However, the problem in this case is that the implemented components all use the low-level networking API of the operating system. While strictly speaking it would be possible to ``overwrite'' the used low-level function calls to the network stack (such as \mintinline{c++}{connect()} and \mintinline{c++}{send()}), this would only ensure that the tested components receive the proper response from the network stack every time, thus removing the element of environmental discrepancies.
+	
+	Since the same functions of the network stack are present and utilized on all three supported platforms, but with the presence of slight changes, such as them exhibiting different behavior even when invoked with the same argumentation. Furthermore, this behavior discrepancy is not only present going from one platform to another, but also between different versions of the same platform. As a result, it was decided that the best course of action for tackling the testing of the network-dependent components would be to not mock the network stack, but rather, use the native network stack of the operating system directly. 
+	
+	Unfortunately, this introduces another element of uncertainty, since in order to test the scanners accurately, a known result is needed for the comparison to occur, which means multiple consistent targets are required for the scanners to be pointed at. This issue was solved by pointing the scanners to public services (such as Google's DNS resolver) and various services on servers owned by me, ultimately also to bogon (unroutable/unallocated) addresses for those that are expected to fail. Listing \ref{arptest} presents an example test case written using this method for testing.
+	
+	\begin{listing}[H]
+		\begin{minted}{c++}
+			ArpPinger scan;
+			
+			Hosts hosts = {
+				new Host("192.168.1.1"),    // local, alive
+				new Host("192.168.1.254"),  // local, not alive
+				new Host("188.166.36.214"), // remote, excelsior.rolisoft.net
+			};
+			
+			scan.Scan(&hosts);
+			
+			BOOST_TEST_CHECK( hosts[0]->alive, "192.168.1.1 should answer.");
+			BOOST_TEST_CHECK(!hosts[1]->alive, "192.168.1.254 should not answer.");
+			BOOST_TEST_CHECK(!hosts[2]->alive, "188.166.36.214 should not answer.");
+			
+			// further checks omitted, such as reason for failure
+		\end{minted}
+		\caption{Example test case for the \mintinline{c++}{ArpPinger} component}
+		\label{arptest}
+	\end{listing}
+	
+	Besides the various functional tests present in the application, \textit{non-functional} aspects are also tested, such as \textit{performance} tests -- ensuring the use of the fastest implementation between components, \textit{failover} tests -- ensuring proper failover where redundancy is available, and \textit{stress} tests -- ensuring proper functioning when scanning a large IP space.
+	
+	Continuous integration was also used during the development of the application, with unit test execution on successful builds and \textit{static code analysis} with various free (\textbf{Cppcheck}) and commercial, but free for open-source (\textbf{Coverity}) tools. The importance and advantages of checking the source code with static analyzers is discussed in this thesis as a means of white-box vulnerability assessment, in section \ref{staticcode}.
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[scale=0.85]{fuzzing.png}
+		\caption{American Fuzzy Lop fuzzing the UDP payloads database loader}
+		\label{aflsrc}
+	\end{figure}
+	
+	Components taking an input (such as the data loader implementations discussed in \ref{preproc}) were tested using \textbf{afl}\cite{mzalewski15}, a popular \textit{fuzz testing} application, which is mentioned in section \ref{fuzztest} as a means of black-box vulnerability assessment. Furthermore, \textbf{Valgrind} was used during the unit test session runs to ensure no memory leaks occur in the implemented components.
 
 \section{User Guide}
 \sectionhu{Használati Útmutató} \sectionro{Ghid de Utilizare}
