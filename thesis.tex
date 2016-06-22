@@ -1160,7 +1160,7 @@
 		\label{taskqueue}
 	\end{figure}
 	
-	As such, the parallelization method of using a thread pool and multiple threads is not efficient, since most threads would spend their time sleeping. Given the costly nature of thread spawning and managing, this is not efficient unless more lightweight threads can be spawned, such as `goroutines' in the Go programming language.
+	As such, the parallelization method of using a thread pool and multiple threads is not efficient, since most threads would spend their time sleeping. Given the costly nature of thread spawning and managing, this is not efficient unless more lightweight threads can be spawned, such as `goroutines' in the Go programming language\cite{go15}.
 	
 	The application instead implements a consumer-producer queue for storing and retrieving its tasks during scheduling, as shown in figure \ref{taskqueue}.
 	
@@ -2606,7 +2606,7 @@ arguments:
 \section{Results}
 \sectionhu{Eredmények} \sectionro{Rezultate}
 
-	The application was tested against three higher education institutions with both active and passive scanning methods. After these tests have concluded, another one was conducted with only passive scanning against five randomly selected leading\footnote{Based on the amount of assets held as per their individual performance reports for the year 2015.} banking institutions, which I would have expected to represent the ``gold standard'' in the test.
+	The application was tested against three higher education institutions with both active and passive scanning methods. After these tests have concluded, another one was conducted with only passive scanning against five randomly selected leading\footnote{Based on the amount of assets held as per performance reports for the year 2015\cite{del15}.} banking institutions, which I would have expected to represent the ``gold standard'' in the test.
 
 	\begin{table}[H]
 		\centering
