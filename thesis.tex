@@ -162,7 +162,7 @@
 		\vspace{-10pt}
 		\centering
 		\includegraphics[scale=0.5]{pci.png}
-		\caption{PCI Logo}
+		\caption[Payment Card Industry Data Security Standard logo]{PCI Logo\cite{pcidss31}}
 	\end{wrapfigure}
 
 	In the financial sector, major card vendors (such as Visa and MasterCard) have joined forces in order to form a council called \textit{Payment Card Industry Security Standards Council} which would then set forth a list of strict rules and requirements for parties handling sensitive financial data. These are outlined in a document called \textit{PCI DSS}. (\textit{Payment Card Industry Data Security Standard})
@@ -224,7 +224,7 @@
 		\vspace{-10pt}
 		\centering
 		\includegraphics[scale=0.75]{cert.png}
-		\caption{CERT/CC Logo}
+		\caption[Computer Emergency Response Team Coordination Center logo]{CERT/CC Logo\cite{cert15}}
 	\end{wrapfigure}
 	
 	One of the responsible industry bodies in the United States is \textit{CERT/CC} (\textit{Computer Emergency Response Team Coordination Center}) which was created by \textit{DARPA} (\textit{Defense Advanced Research Projects Agency}) in November 1988 in order to be the first organization of its kind. The need for the organization was created by the first ever computer virus distributed over the Internet, namely the \textit{Morris worm}\cite{cert15}, which was the first of its kind, generating notable mainstream media attention, and resulting in the first ever arrest related to computer abuse/fraud laws in history.
@@ -341,7 +341,7 @@
 		\vspace{-10pt}
 		\centering
 		\includegraphics[scale=0.4]{cvss.png}
-		\caption{CVSS Logo}
+		\caption[Common Vulnerability Scoring System logo]{CVSS Logo\cite{cvssv2}}
 	\end{wrapfigure}
 	
 	NIST's \textit{CVE} database has \textit{CVSS} scores associated to their vulnerability entries. This greatly enhances the ability of the tool implemented within this thesis to aid risk analysis, as the detected vulnerabilities can be set up to map automatically onto OWASP's risk analysis (or any other similar methodology in use by the business) for easier analysis of the latest vulnerabilities that may appear on a business's infrastructure.
@@ -894,7 +894,7 @@
 		\begin{minted}{perl}
 			alert udp $EXTERNAL_NET any -> $HOME_NET 1434 (msg:"MS-SQL ping attempt"; content:"|02|"; depth:1; reference:nessus,10674; classtype:misc-activity; sid:2049; rev:4;)
 		\end{minted}
-		\caption{Snort rule 2049 for blocking Microsoft SQL ping attempts\cite{snort49}}
+		\caption[Snort rule 2049 for blocking Microsoft SQL ping attempts]{Snort rule 2049 for blocking Microsoft SQL ping attempts\cite{snort49}}
 		\label{snortrule}
 	\end{listing}
 	
