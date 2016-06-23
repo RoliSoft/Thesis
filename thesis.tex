@@ -86,12 +86,10 @@
 
 	\begingroup
 	\renewcommand{\section}[2]{}
-	\hypersetup{linkcolor=lightblue}
 	\tableofcontents
 	\endgroup
 
 	\begingroup
-	\hypersetup{linkcolor=lightblue}
 	\listoffigures
 	\listoftables
 	\listoflistings
@@ -872,7 +870,7 @@
 		\label{dnsverreq}
 	\end{listing}
 	
-	Unfortunately, this method limits the number of discoverable services to those with a known payload, and even in those cases, it only works when the server is listening on its default designated port number. In cases where a scan of a port not in the database is requested, the scanner sends a UDP packet consisting of 16 \mintinline{cpp}{NULL} bytes, however, the chances of a server replying to this packet are slim.
+	Unfortunately, this method limits the number of discoverable services to those with a known payload, and even in those cases, it only works when the server is listening on its default designated port number. In cases where a scan of a port not in the database is requested, the scanner sends a UDP packet consisting of 16 \mintinline{matlab}{NULL} bytes, however, the chances of a server replying to this packet are slim.
 	
 	The payloads database is revisited and discussed in greater detail in section \ref{datudp}.
 	
@@ -1063,8 +1061,6 @@
 \subsection{Class Hierarchy of Data Reconnaissance Components}
 \subsectionhu{Adatszerző Komponensek Osztályhierarchiája} \subsectionro{Ierarhia de Clasă a Componentelor Colectoare de Date}
 
-	\begingroup
-	\hypersetup{linkcolor=blue}
 	\begin{figure}[!htbp]
 		\centering
 		\begin{tikzpicture}[scale=0.85,transform shape]
@@ -1122,7 +1118,6 @@
 		\caption{Class hierarchy of Data Reconnaissance components}
 		\label{classhierdata}
 	\end{figure}
-	\endgroup
 	
 \subsection{Multiplexing Task Runner} \label{tasks}
 \subsectionhu{Feladatok Párhuzamosítása} \subsectionro{Paralelizarea Sarcinilor}
@@ -1966,7 +1961,7 @@
 		\label{binstr}
 	\end{listing}
 	
-	Binary data (such as UDP payloads) and arbitrary strings are stored with a leading length indicator and no trailing \mintinline{cpp}{NULL} terminator, as shown in listing \ref{binstr}. It should be important to note that this convention only allows for 65,535 bytes to be stored per field. At this time, this was not an issue since no fields across the datasets exceeded this limit, and adhering to the YAGNI principle\cite{shore08} it is not implemented, however if it does become one, this will be solved in a backward-compatible way, where a length of \mintinline{cpp}{USHRT_MAX} will instruct the parser to read additional fields of \mintinline{cpp}{uint16} until a value smaller than the maximum is met, and sum them to create the final length of the string to be read.
+	Binary data (such as UDP payloads) and arbitrary strings are stored with a leading length indicator and no trailing \mintinline{matlab}{NULL} terminator, as shown in listing \ref{binstr}. It should be important to note that this convention only allows for 65,535 bytes to be stored per field. At this time, this was not an issue since no fields across the datasets exceeded this limit, and adhering to the YAGNI principle\cite{shore08} it is not implemented, however if it does become one, this will be solved in a backward-compatible way, where a length of \mintinline{cpp}{USHRT_MAX} will instruct the parser to read additional fields of \mintinline{cpp}{uint16} until a value smaller than the maximum is met, and sum them to create the final length of the string to be read.
 
 \subsubsection{CPE Dictionary} \label{datcpe}
 \subsubsectionhu{CPE Szótár} \subsubsectionro{Dicționarul CPE}
@@ -2481,7 +2476,7 @@
 \subsection{Command Line Options} \label{cliopts}
 \subsectionhu{Parancssori Opciók} \subsectionro{Opțiuni ale Interfeței CLI}
 
-	\begin{minted}[linenos=false,bgcolor=,escapeinside=||,xleftmargin=30pt]{batch}
+	\begin{minted}[linenos=false,bgcolor=,xleftmargin=30pt]{html}
 usage:		HostScanner [args] targets
 arguments:
 
@@ -2517,33 +2512,33 @@ arguments:
 
 --shodan-key arg
 
-  Specifies an API key f||or Shodan.
+  Specifies an API key for Shodan.
 
 --shodan-uri arg
 
-  Overrides the API endpoint used f||or Shodan. You may specify an URI
+  Overrides the API endpoint used for Shodan. You may specify an URI
     starting with file:// pointing to a directory containing previously
     downloaded JSON responses.
       Default: https://api.shodan.io/shodan
 
 --censys-key arg
 
-  Specifies an API key f||or Censys in the `uid:secret` format.
+  Specifies an API key for Censys in the `uid:secret` format.
 
 --censys-uri arg
 
-  Overrides the API endpoint used f||or Censys. You may specify an URI
+  Overrides the API endpoint used for Censys. You may specify an URI
     starting with file:// pointing to a directory containing previously
     downloaded JSON responses.
       Default: https://censys.io/api/v1
 
 --looquer-key arg
 
-  Specifies an API key f||or Mr Looquer.
+  Specifies an API key for Mr Looquer.
 
 --looquer-uri arg
 
-  Overrides the API endpoint used f||or Mr Looquer. You may specify an URI
+  Overrides the API endpoint used for Mr Looquer. You may specify an URI
     starting with file:// pointing to a directory containing previously
     downloaded JSON responses.
       Default: https://mrlooquer.com/api/v1
@@ -2555,7 +2550,7 @@ arguments:
 
 -d [ --delay ] arg
 
-  Delay between packets sent to the same host. Default is 3 f||or 100ms.
+  Delay between packets sent to the same host. Default is 3 for 100ms.
     Possible values are 0..6, which have the same effect as nmap's -T:
       0 - 5m, 1 - 15s, 2 - 400ms, 3 - 100ms, 4 - 10ms, 5 - 5ms,
       6 - no delay
@@ -2563,7 +2558,7 @@ arguments:
 -r [ --resolve ]
 
   Resolves vulnerable CPE names to their actual package names depending
-    o||n the automatically detected operating system of the host.
+    on the automatically detected operating system of the host.
 
 -o [ --output-latex ] arg
 

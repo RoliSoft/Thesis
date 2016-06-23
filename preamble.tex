@@ -17,9 +17,11 @@
 \definecolor{flame}{rgb}{0.89,0.35,0.13}
 
 \usepackage[unicode,pdfusetitle,backref=false,pagebackref=true]{hyperref}
-\hypersetup{colorlinks=true,urlcolor=lightblue,citecolor=darkpastelgreen,linkcolor=flame,pdfborder={0 0 0}}
+%\hypersetup{colorlinks=true,urlcolor=lightblue,citecolor=darkpastelgreen,linkcolor=flame,pdfborder={0 0 0}}
+\hypersetup{colorlinks=true,urlcolor=black,citecolor=black,linkcolor=black,pdfborder={0 0 0}}
 \usepackage[all]{hypcap}
 \usepackage{multirow}
+\usepackage{letltxmacro}
 
 \usepackage{graphicx}
 \usepackage{wrapfig}
@@ -59,13 +61,26 @@
 }
 
 %
+%	Override \cite and \ref to use bold face instead of a color.
+%
+
+\makeatletter
+\def\@cite#1#2{[\textbf{#1\if@tempswa , #2\fi}]}
+\makeatother
+
+\AtBeginDocument{%
+	\LetLtxMacro{\latexref}{\ref}%
+	\def\ref#1{\textbf{\latexref{#1}}}%
+}
+
+%
 %	Add "Retrieved from" and backlinks stylized by red arrows to the bibliography.
 %
 
 \newcommand{\urlprefix}{Retrieved from \urlstyle{rm}}
 
 \newcommand{\refspace}{\vspace{-2mm}}
-\newcommand{\redarrow}{\textcolor{darkred}{$\mathbf{\to}$}}
+\newcommand{\redarrow}{\textbf{\textcolor{gray}{$\mathbf{\to}$}}}
 
 \makeatletter
 \def\BR@@bibitem#1#2\par{

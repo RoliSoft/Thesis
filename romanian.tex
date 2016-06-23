@@ -59,7 +59,6 @@
 
 	\begingroup
 	\renewcommand{\section}[2]{}
-	\hypersetup{linkcolor=lightblue}
 	\romaniantableofcontents
 	\endgroup
 
@@ -208,7 +207,7 @@
 	
 	Din păcate această metodă limitează lista de servicii detectabile la lista de servicii la care există un pachet de exemplu asociat în baza de date al componentei. Această metodă nu va funcționa nici în cazul în care serviciul a fost mutat de pe portul în care ar funcționa în mod implicit.
 	
-	În cazul în care utilizatorul solicită scanarea a unui port care nu are un pachet asociat în baza de date al componentului, aplicația generează un pachet alcătuit de 16 octeți de \mintinline{cpp}{NULL}, dar acest pachet nu este garantat ca o să genereze un răspuns de la serverul în spatele portului scanat.
+	În cazul în care utilizatorul solicită scanarea a unui port care nu are un pachet asociat în baza de date al componentului, aplicația generează un pachet alcătuit de 16 octeți de \mintinline{matlab}{NULL}, dar acest pachet nu este garantat ca o să genereze un răspuns de la serverul în spatele portului scanat.
 	
 	Dacă vrem să descoperim numai gazdele care sunt online într-o rețea, un răspuns de tip ICMP `PortUnreachable' la un mesaj UDP la un port la întâmplare înseamnă că gazda e online, numai portul nu e. În caz contrar, un răspuns de tip ICMP `HostUnreachable' înseamnă că gazda nu e online sau accesibilă. În general pachetul menționat anterior este generat de un router pe ruta între utilizator și rețeaua destinată.
 
