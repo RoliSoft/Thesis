@@ -955,6 +955,7 @@
 	
 	Implementation-wise, the \mintinline{cpp}{ShodanScanner} component takes care of contacting the Shodan JSON API interface and retrieving the data available for the specified IP addresses. This component extends the \mintinline{cpp}{HostScanner} class, and as such it is possible to substitute the default scanner to Shodan data for any scanning needs.
 
+\newpage
 \subsubsection{Censys} \label{censys}
 \subsubsectionhu{Censys} \subsubsectionro{Censys}
 
@@ -972,11 +973,12 @@
 	In order to use Censys data in the application developed within the scope of this thesis, the user has to create a free account at \url{https://censys.io/} and specify the generated UID and secret key to the application via the \mintinline{bash}{--censys-key} argument.
 		
 	Implementation-wise, the \mintinline{cpp}{CensysScanner} component takes care of contacting the Censys JSON API interface and retrieving the data available for the specified IP addresses. Similarly, this component also extends the \mintinline{cpp}{HostScanner} class, and as such it is possible to substitute the default scanner to Censys data for any scanning needs.
-	
+
+\newpage
 \subsubsection{Mr Looquer} \label{looquer}
 \subsubsectionhu{Mr Looquer} \subsubsectionro{Mr Looquer}
 
-	Mr Looquer\cite{looquer16} is a new open initiative with a focus on IPv6 intelligence, launched by two security researchers in the May of 2016.
+	Mr Looquer\footnote{I would like to thank the creators of Mr Looquer as well, since they were also cooperative and supported the project.}\cite{looquer16} is a new open initiative with a focus on IPv6 intelligence, launched by two security researchers in the May of 2016.
 	
 	\begin{figure}[!htbp]
 		\centering
@@ -2375,7 +2377,7 @@
 	\end{listing}
 		
 	\vspace{-0.4in}
-	\paragraph*{Windows} Install the following packages from the project root using \textit{Conan}\footnote{\url{https://conan.io/}}:
+	\paragraph*{Windows} Install the following packages from the project root using \textit{Conan}\footnote{\url{https://conan.io/}}$^{,}$\footnote{\url{https://conan.io/source/WinPcap/4.1.2/RoliSoft/stable} -- the WinPcap WDK build script and package was contributed by me}:
 	
 	\begin{listing}[H]
 	\begin{minted}[linenos=false]{matlab}
