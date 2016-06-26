@@ -2609,6 +2609,52 @@ arguments:
 		\label{clihelp}
 	\end{listing}
 
+\subsection{Configuration} \label{config}
+\subsectionhu{Beállítások} \subsectionro{Setări}
+
+	The application developed within the scope of this thesis, supports reading configuration files. The available configuration options are the same as the options presented in section \ref{cliopts}. As such, this functionality allows for settings to persist between sessions.
+	
+	The software has different code for handling the Linux, BSD, Mac platforms and Windows. The paths shown in listing \ref{confpaths} will be probed in the listed order, and the first found file will be read. This allows the user the have either a global configuration, or a local one tied to the user account.
+	
+	\begin{listing}[H]
+		\begin{minted}{batch}
+			Linux, BSD, Mac:
+				%AppPath%/HostScanner.ini
+				~/.HostScanner.conf
+				/etc/HostScanner/HostScanner.conf
+			
+			Windows:
+				%AppPath%\HostScanner.ini
+				%AppData%\RoliSoft\Host Scanner\HostScanner.ini
+		\end{minted}
+		\caption{Configuration file locations on each supported platform}
+		\label{confpaths}
+	\end{listing}
+	
+	A particularly useful use-case for this feature is the ability to store API keys of the supported online services (see section \ref{passive}) and lose the need to constantly resupply them as command line arguments. Listing \ref{confapi} presents the contents of a configuration file, which stores Shodan, Censys and Mr Looquer keys. All the user needs to do is to store one or more of these lines (with the proper key filled) into one of the paths listed in \ref{confpaths}.
+	
+	\begin{listing}[H]
+		\begin{minted}{matlab}
+			shodan-key=abcdefghijklmnopqrstuvwxyz012345
+			censys-key=abcdefgh-ijkl-mnop-qrst-uvwxyz012345:abcdefghijklmnopqrstuvwxyz012345
+			looquer-key=abcdefghijklmnopqrstuvwxyz012345
+		\end{minted}
+		\caption{Persist keys of online services in the configuration file}
+		\label{confapi}
+	\end{listing}
+	
+	Another use-case is storing the \mintinline{matlab}{x} option in a global configuration file, as shown in listing \ref{confpsv}. Doing so results in the globally disallowed usage of any of the active scanners as a fail-safe. The user cannot unset or disable this options after it has been loaded from a configuration file.
+		
+	\begin{listing}[H]
+		\begin{minted}{matlab}
+			passive
+		\end{minted}
+		\caption{Disallow any active scanner usage globally from the configuration file}
+		\label{confpsv}
+	\end{listing}
+	
+	With the passive mode globally enabled, the user is only allowed to use passive scanners, such as Shodan, Censys, Mr Looquer, and to load and analyze earlier Nmap reports, but not to launch new Nmap scans.
+
 \section{Results}
 \sectionhu{Eredmények} \sectionro{Rezultate}
 
