@@ -2013,7 +2013,7 @@
 \subsubsection{CPE Aliases}
 \subsubsectionhu{CPE Szinonimák} \subsubsectionro{Sinonime CPE}
 
-	Since NIST's CVE database may use multiple CPE names to refer to the same application, the \mintinline{bash}{cpealt2hs.go} script convert's a list of known CPE aliases to the binary format in use by the application.
+	Since NIST's CVE database may use multiple CPE names to refer to the same application, the \mintinline{bash}{cpealt2hs.go} script converts a list of known CPE aliases to the binary format in use by the application.
 	
 	As an example, the server software ``nginx'' may appear as both \mintinline{matlab}{cpe:/a:nginx:nginx} and \mintinline{matlab}{cpe:/a:igor_sysoev:nginx} amongst the CVE entries. However, there are more extreme cases, such as ``X11'', which has 12 CPE names all referring to the same software package:
 	
@@ -2082,7 +2082,7 @@
 \subsubsection{UDP Payloads} \label{datudp}
 \subsubsectionhu{UDP Csomagok} \subsubsectionro{Pachete UDP}
 
-	As discussed in section \ref{udpscan}, there needs to exist a list of known UDP payloads associated to their standardized port numbers in order to make sure the service behind the port answers the scanning effort. Two scripts are provided which read such data and convert to the appropriate binary format in use by the application, namely \mintinline{bash}{nudp2hs.go} and \mintinline{bash}{zudp2hs.go}.
+	As discussed in section \ref{udpscan}, there needs to exist a list of known UDP payloads associated with their standardized port numbers in order to make sure the service behind the port answers the scanning effort. Two scripts are provided which read such data and convert to the appropriate binary format in use by the application, namely \mintinline{bash}{nudp2hs.go} and \mintinline{bash}{zudp2hs.go}.
 	
 	Listing \ref{binudpdb} presents the binary format -- including the header and its values -- which is used to store the data on the disk.
 	
@@ -2133,7 +2133,7 @@
 	
 	The \mintinline{bash}{zudp2hs.go} script takes a \textit{path} as an input, where it will look for \mintinline{bash}{*.pkt} files. The content of the files are used as the payload, and the file name is expected to contain the list of port numbers, separated by an underscore in case there are multiple.
 	
-	The \mintinline{bash}{get.sh} script may be used to download the UDP database of \textit{nmap} and \textit{zmap}, as discussed in section \ref{nmapscan}. The license of both applications, and their respective databases, are compatible with the license of the application developed within the scope of the thesis, as such they can be freely used.
+	The \mintinline{bash}{get.sh} script may be used to download the UDP database of \textit{nmap} and \textit{zmap}, as discussed in section \ref{nmapscan}. The license of both applications, and their respective databases, are compatible with the license of the application developed within the scope of the thesis, as such, they can be freely used.
 
 \subsubsection{Regular Expression Database} \label{datregex}
 \subsubsectionhu{Reguláris Kifejezés Adatbázis} \subsubsectionro{Baza de Date cu Expresii Regulate}
@@ -2200,7 +2200,7 @@
 \subsubsection{Vulnerability Database} \label{datcve}
 \subsubsectionhu{Sebezhetőségi Adatbázis} \subsubsectionro{Baza de Date cu Vulnerabilități}
 
-	Initially the vulnerability database used a binary format similar to the ones discussed in the previous sections. However, loading all the required information into the memory resulted in a memory usage of 2 GB, and when run with a debugger attached, the data loader function took 30 seconds to execute, thereby making debugging more difficult due to the introduced penalty to application restarts.
+	Initially, the vulnerability database used a binary format similar to the ones discussed in the previous sections. However, loading all the required information into the memory resulted in a memory usage of 2 GB, and when running with a debugger attached, the data loader function took 30 seconds to execute, thereby making debugging more difficult due to the introduced penalty to application restarts.
 	
 	To combat the memory usage issues, there were attempts at rewriting the reader component to lazily load the data. However, since the data had to be fully iterated sooner or later during the application's runtime, this attempt did not solve any issues, just delayed them.
 	
@@ -2229,7 +2229,7 @@
 		\label{dbstruct}
 	\end{figure}
 	
-	The ``vulns'' table contains the published vulnerabilities imported from the NVD, and their relevant information. Its ``access'' field represents the access vector, which can be:
+	The ``vulns'' table contains the published vulnerabilities imported from the NVD and their relevant information. Its ``access'' field represents the access vector, which can be:
 	
 	\begin{itemize}
 		\item \mintinline{matlab}{l} for \textbf{local}: physical access or local presence is required to exploit.
@@ -2283,9 +2283,9 @@
 	
 \newpage
 	
-	Unit testing was also an integral part of the application developed within the scope of this thesis. The application supports multiple platforms -- several Linux distributions, BSD, Mac OS X and Windows -- multiple compilers -- the GNU Compiler Collection, Clang and Microsoft Visual C++ -- all of which required some macro-based tweaks or in some cases, completely new implementations -- as was the case with the ARP ping component discussed in section \ref{arpping}.
+	Unit testing was also an integral part of the application developed within the scope of this thesis. The application supports multiple platforms -- several Linux distributions, BSD, Mac OS X and Windows -- multiple compilers -- the GNU Compiler Collection, Clang, and Microsoft Visual C++ -- all of which required some macro-based tweaks or in some cases, completely new implementations -- as was the case with the ARP ping component discussed in section \ref{arpping}.
 	
-	The unit testing framework used by the application is the \textit{Boost Test} framework, which comes bundled with the Boost library, thus saving an extra dependency, also decreasing the unnecessary complexity of the project when porting to new platforms. The framework provides a solid foundation for writing test cases, and a CLI application for running them. It has also been integrated into the build system used by the project, \textit{CMake}, providing a fluid testing experience for the users.
+	The unit testing framework used by the application is the \textit{Boost Test} framework, which comes bundled with the Boost library, thus saving an extra dependency, also decreasing the unnecessary complexity of the project when porting to new platforms. The framework provides a solid foundation for writing test cases and a CLI application for running them. It has also been integrated into the build system used by the project, \textit{CMake}, providing a fluid testing experience for the users.
 	
 	The test cases have been written in such a way as to first test normal functionality, covering all major code paths, and then to test all discovered edge cases, both those that are expected to succeed in the face of unusual inputs, and also those that are expected to fail, to ensure a graceful failure.
 	
@@ -2293,9 +2293,9 @@
 	
 	However, there are also test cases which do not test a specific component, rather test an exposed \textit{functionality}. This is called \textbf{integration testing}\cite{reddy11} and focus testing the interaction of the components as a whole, one such test case being \mintinline{c++}{MatchAuto} in the application.
 	
-	This test receives a set of service banners as an input, and is expected to output a very strict set of CPE names with exact version numbers. In the case of this test, it does not matter which component does the identification. This is used to ensure the functionality as a whole of the application does not break in face of tweaking a single component, and that fail-overs between redundancies are properly handled.
+	This test receives a set of service banners as an input and is expected to output a very strict set of CPE names with exact version numbers. In the case of this test, it does not matter which component does the identification. This is used to ensure the functionality as a whole of the application does not break in the face of tweaking a single component, and that fail-overs between redundancies are properly handled.
 	
-	One of the main challenges of unit testing the application was the network-oriented nature of it. Under normal circumstances, functionality such as file system, database or network access would be \textit{mocked}\cite{hamill04}. However, the problem in this case is that the implemented components all use the low-level networking API of the operating system.
+	One of the main challenges of unit testing the application was the network-oriented nature of it. Under normal circumstances, functionality such as file system, database or network access would be \textit{mocked}\cite{hamill04}. However, the problem, in this case, is that the implemented components all use the low-level networking API of the operating system.
 	
 	While strictly speaking it would be possible to ``overwrite'' the used low-level function calls to the network stack (such as \mintinline{c++}{connect()} and \mintinline{c++}{send()}), this would only ensure that the tested components receive the proper response from the network stack every time, thus removing the element of environmental discrepancies.
 	
@@ -2323,9 +2323,9 @@
 	
 	Since the same functions of the network stack are present and utilized on all three supported platforms, but with the presence of slight changes, such as them exhibiting different behavior even when invoked with the same argumentation. Furthermore, this behavior discrepancy is not only present going from one platform to another, but also between different versions of the same platform.
 	
-	As a result, it was decided that the best course of action for tackling the testing of the network-dependent components would be to not mock the network stack, but rather, use the native network stack of the operating system directly. 
+	As a result, it was decided that the best course of action for tackling the testing of the network-dependent components would be not to mock the network stack, but rather, use the native network stack of the operating system directly. 
 	
-	Unfortunately, this introduces another element of uncertainty, since in order to test the scanners accurately, a known result is needed for the comparison to occur, which means multiple consistent targets are required for the scanners to be pointed at.
+	Unfortunately, this introduces another element of uncertainty, since, in order to test the scanners accurately, a known result is needed for the comparison to occur, which means multiple consistent targets are required for the scanners to be pointed at.
 	
 	This issue was solved by pointing the scanners to public services (such as Google's DNS resolver) and various services on servers owned by me, ultimately also to bogon (unroutable/unallocated) addresses for those that are expected to fail. Listing \ref{arptest} presents an example test case written using this method.
 	
@@ -2342,7 +2342,7 @@
 	
 	Besides the various functional tests present in the application, \textit{non-functional} aspects are also tested, such as \textit{performance} tests -- ensuring the use of the fastest implementation between components, \textit{failover} tests -- ensuring proper failover where redundancy is available, and \textit{stress} tests -- ensuring proper functioning when scanning a large IP space.
 	
-	Continuous integration was also used during the development of the application, with unit test execution on successful builds and \textit{static code analysis} with various free (\textbf{Cppcheck}) and commercial, but free for open-source (\textbf{Coverity}) tools. The importance and advantages of checking the source code with static analyzers is discussed in this thesis as a means of white-box vulnerability assessment, in section \ref{staticcode}.
+	Continuous integration was also used during the development of the application, with unit test execution on successful builds and \textit{static code analysis} with various free (\textbf{Cppcheck}) and commercial, but free for open-source (\textbf{Coverity}) tools. The importance and advantages of checking the source code with static analyzers are discussed in this thesis as a means of white-box vulnerability assessment, in section \ref{staticcode}.
 	
 	Components taking an input (such as the data loader implementations discussed in \ref{preproc}) were tested using \textbf{afl}\cite{mzalewski15}, a popular \textit{fuzz testing} application, which is mentioned in section \ref{fuzztest} as a means of black-box vulnerability assessment. Furthermore, \textbf{Valgrind} was used during the unit test session runs to ensure no memory leaks occur in the implemented components.
 
@@ -2632,7 +2632,7 @@ arguments:
 
 	The application developed within the scope of this thesis, supports reading configuration files. The available configuration options are the same as the options presented in section \ref{cliopts}. As such, this functionality allows for settings to persist between sessions.
 	
-	The software has different code for handling the Linux, BSD, Mac platforms and Windows. The paths shown in listing \ref{confpaths} will be probed in the listed order, and the first found file will be read. This allows the user the have either a global configuration, or a local one tied to the user account.
+	The software has different code for handling the Linux, BSD, Mac platforms and Windows. The paths shown in listing \ref{confpaths} will be probed in the listed order, and the first found file will be read. This allows the user the have either a global configuration or a local one tied to the user account.
 	
 	\begin{listing}[H]
 		\begin{minted}{batch}
@@ -2649,7 +2649,7 @@ arguments:
 		\label{confpaths}
 	\end{listing}
 	
-	A particularly useful use-case for this feature is the ability to store API keys of the supported online services (see section \ref{passive}) and lose the need to constantly resupply them as command line arguments. Listing \ref{confapi} presents the contents of a configuration file, which stores Shodan, Censys and Mr Looquer keys. All the user needs to do is to store one or more of these lines (with the proper key filled) into one of the paths listed in \ref{confpaths}.
+	A particularly useful use-case for this feature is the ability to store API keys of the supported online services (see section \ref{passive}) and lose the need to resupply them constantly as command line arguments. Listing \ref{confapi} presents the contents of a configuration file, which stores Shodan, Censys, and Mr Looquer keys. All the user needs to do is to store one or more of these lines (with the proper key filled) into one of the paths listed in \ref{confpaths}.
 	
 	\begin{listing}[H]
 		\begin{minted}{matlab}
